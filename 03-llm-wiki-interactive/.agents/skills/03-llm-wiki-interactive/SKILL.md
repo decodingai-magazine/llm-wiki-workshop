@@ -106,8 +106,9 @@ run it, report the failure plainly, and continue with the other inputs.
 
 Expand every path the user gave you:
 
-- a directory → **recursively every `*.md` inside it**. Anything that is not
-  `.md` (images, `.srt`, an `assets/` folder) is silently ignored.
+- a directory → **recursively every `*.md` inside it**. An `assets/` folder is not
+  a list of inputs — nothing inside it becomes a source. Its files travel later,
+  in 1.2, as attachments of the notes that embed them.
 - a file → itself.
 
 For each input compute its raw path from the routing table — for a local note
@@ -139,8 +140,10 @@ spawning 50 agents, and batch them in groups your harness can actually run.
 One adapter call per input, per the recipes in `SOURCES.md`:
 
 ```bash
-# local
+# local — the note, then the attachments it embeds (see CONVENTIONS.md §4)
 cp "<input path>" "wiki-<slug>/raw/<slug>.md"
+mkdir -p "wiki-<slug>/raw/assets"
+cp "<dir of the input note>/assets/<embedded file>" "wiki-<slug>/raw/assets/"   # skip if it exists
 
 # article
 uv run --script .agents/skills/03-llm-wiki-interactive/scripts/fetch_article.py \

@@ -67,5 +67,9 @@ not exist yet.
 - **Mermaid where it helps.** If the source describes a system or a flow, one
   compact diagram in the summary beats three paragraphs. Do not force one onto an
   argumentative text.
+- **Attachments.** A local note's images travel with it into `raw/assets/`. When one
+  is genuinely load-bearing — the architecture diagram the note is written around —
+  embed it once in the summary as `![[raw/assets/<file>]]`. Do not open every image,
+  and do not embed one to decorate the page.
 - **Idempotent.** If `output_path` exists, preserve its `created` timestamp and
   overwrite the rest.

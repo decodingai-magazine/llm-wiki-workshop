@@ -30,7 +30,7 @@ Two shapes of adapter, distinguished only by what they leave on disk:
 
 | Shape | Raw artifact | Read by |
 |---|---|---|
-| **File adapter** — local, article, youtube | one markdown file | `agents/source_writer.md` |
+| **File adapter** — local, article, youtube | one markdown file (plus, for local notes, the attachments it embeds → `raw/assets/`) | `agents/source_writer.md` |
 | **Tree adapter** — repo | one directory | `agents/repo_writer.md` |
 
 The rest of the pipeline sees a page under `wiki/sources/` or `wiki/repos/`, and
@@ -53,10 +53,13 @@ it exists (CONVENTIONS.md §4). Repos are the exception — they refresh.
 
 ## Per-origin recipes
 
-**local** — no script needed.
+**local** — no script needed. Copy the note, then the files it embeds; the
+attachments land beside it so the embeds keep resolving (`CONVENTIONS.md` §4).
 
 ```bash
 cp "<input path>" "wiki-<slug>/raw/<slug>.md"
+mkdir -p "wiki-<slug>/raw/assets"
+cp "<dir of the input note>/assets/<embedded file>" "wiki-<slug>/raw/assets/"
 ```
 
 **article** — `curl` with a browser user agent, isolate the body, markdownify.

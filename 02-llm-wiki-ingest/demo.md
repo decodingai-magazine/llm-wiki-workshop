@@ -35,6 +35,10 @@ This is the exact input that made layer 01 stop and refuse.
       from 1 mention to 11, because the GraphRAG and scaling notes are its other
       witnesses. `agentic-invocation` stayed hollow at 1 — 40 more notes and still
       only one source engages with it, which is the threshold doing its job.
+- [ ] `raw/assets/` now holds 37 images and transcripts — every attachment the 50
+      notes embed, copied in beside them. Three are `.srt` files: present in `raw/`,
+      never read, because only `*.md` is ingested as a source. That gap is the
+      exercise in `SOURCES.md § How to add a source`.
 - [ ] **Look at the thin ones.** `wiki/sources/marketing.md`,
       `wiki/sources/constraints.md`, `wiki/sources/feedback-from-v1.md` are short
       and link almost nothing. A three-line note gets a three-line page — the
@@ -42,7 +46,7 @@ This is the exact input that made layer 01 stop and refuse.
 
 ## 2. Ingest a repo
 
-The URL comes from `../data_input_examples/github_links.md`:
+The URL comes from `../data_input_examples/github_repositories.md`:
 
 ```
 /02-llm-wiki-ingest ingest https://github.com/decodingai-magazine/building-a-coding-agent-from-scratch-course
@@ -67,7 +71,7 @@ The URL comes from `../data_input_examples/github_links.md`:
 
 ## 3. Ingest two articles
 
-URLs from `../data_input_examples/substack_links.md`:
+URLs from `../data_input_examples/substack_articles.md`:
 
 ```
 /02-llm-wiki-ingest ingest https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design https://www.decodingai.com/p/the-coding-agent-loop

@@ -19,7 +19,10 @@ The skill has no wiki to find, so it proposes a slug. Accept `ai-engineering`.
 **Verify**
 
 - [ ] `wiki-ai-engineering/` exists with `raw/`, `wiki/`, `log.md`.
-- [ ] `ls wiki-ai-engineering/raw | wc -l` → 5.
+- [ ] `ls wiki-ai-engineering/raw/*.md | wc -l` → 5, plus `raw/assets/` holding the
+      one image those notes embed — attachments travel with their note, and the
+      embed still resolves because `raw/assets/` is its sibling.
+- [ ] Open `raw/the-future-of-mcp-….md` in Obsidian: the image renders.
 - [ ] `ls wiki-ai-engineering/wiki/sources | wc -l` → 6 (5 pages + the generated `index.md`).
 - [ ] Pages appeared for every slug that ≥2 of the five notes engage with. In the
       reference run that is 5 entities (`mcp`, `claude-code`, `fastmcp`, `prefect`,

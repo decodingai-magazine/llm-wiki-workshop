@@ -56,8 +56,9 @@ You do this inline. No subagents in this layer — that is the lesson it teaches
 
 Expand every path the user gave you:
 
-- a directory → **recursively every `*.md` inside it**. Anything that is not
-  `.md` (images, `.srt`, an `assets/` folder) is silently ignored.
+- a directory → **recursively every `*.md` inside it**. An `assets/` folder is not
+  a list of inputs — nothing inside it becomes a source. Its files travel later,
+  in 1.2, as attachments of the notes that embed them.
 - a file → itself.
 
 For each input compute its raw path — `raw/<slug>.md`, where `<slug>` is the
@@ -93,6 +94,22 @@ cp "<input path>" "wiki-<slug>/raw/<slug>.md"
 Copy verbatim — no reformatting, no frontmatter, no cleanup. Note each file's
 `original_path` (the path as given, normalized relative to the project root) and
 its title (first H1 in the file, else the filename stem); you need both in 1.3.
+
+**Then copy the note's attachments.** Scan the copied note for embeds and
+attachment links — `![[assets/…]]` and `[[assets/…|label]]` — and for each one copy
+the file from the note's sibling `assets/` folder into `raw/assets/`, keeping the
+filename:
+
+```bash
+mkdir -p "wiki-<slug>/raw/assets"
+cp "<dir of the input note>/assets/<file>" "wiki-<slug>/raw/assets/<file>"   # skip if it exists
+```
+
+Because `raw/assets/` sits beside `raw/<slug>.md`, the embed in the copy resolves
+exactly as it did in the source folder — you never rewrite a link, and `raw/`
+stays verbatim. Attachments are payload, not sources (`CONVENTIONS.md` §4): they
+get no page and never count toward the threshold. Report them as a count, not by
+name.
 
 ### 1.3 Write one source page per new raw file
 

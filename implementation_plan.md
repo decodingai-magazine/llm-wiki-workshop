@@ -27,8 +27,8 @@ Audience: 1-hour workshop, entry/mid-level AI engineers who know Claude Code or 
 | 03 = interaction | Question log (`wiki/questions/`, slim pointers), knowledge notes (`wiki/notes/`), `wiki/open-questions.md`. Repo questions → `repo_writer` in `question` mode → `wiki/repos/<repo>/<slug>.md` (`type: repo_note`) → **ingest tail** re-runs (recount, pages, overview, index, log). General notes are never re-ingested. Spawn the repo agent only when the answer needs code beyond ARCHITECTURE.md. |
 | Save policy (03) | Always write the slim question page. Write/enrich a note only when the answer cites ≥2 wiki pages or the user says "save". |
 | Open questions (03) | Triggers: user flags one; wiki can't answer. Append-only. Next ingest reports which ones the new sources appear to address (no auto-resolve). |
-| Fixture | `data_input_examples/` at repo root (already populated). `notes/{01-easy,02-medium,03-hard}/` are **nested scenarios** (5 ⊂ 10 ⊂ 50 AI-Engineering notes) with a shared `notes/assets/`; `github_links.md` and `substack_links.md` hold the 02+ targets. Append demo = ingest `01-easy/`, then `02-medium/` (5 skipped). See `data_input_examples/README.md` for the scenario table. |
-| Demo targets | Listed in `data_input_examples/github_links.md` (repo: `https://github.com/decodingai-magazine/building-a-coding-agent-from-scratch-course` — 526 files, `src/` = 82 Python files, ~40 MB of GIFs in `assets/`) and `data_input_examples/substack_links.md` (`https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design`, `https://www.decodingai.com/p/the-coding-agent-loop`). Demos and READMEs reference the link files, not hard-coded URLs, so swapping targets is a one-file edit. |
+| Fixture | `data_input_examples/` at repo root (already populated). `notes/{01-easy,02-medium,03-hard}/` are **nested scenarios** (5 ⊂ 10 ⊂ 50 AI-Engineering notes), each with its own `assets/` holding the files its notes embed (sibling paths, so the links resolve from any vault root; +1.2 MB over a shared folder); `github_repositories.md` and `substack_articles.md` hold the 02+ targets. Append demo = ingest `01-easy/`, then `02-medium/` (5 skipped). See `data_input_examples/README.md` for the scenario table. |
+| Demo targets | Listed in `data_input_examples/github_repositories.md` (repo: `https://github.com/decodingai-magazine/building-a-coding-agent-from-scratch-course` — 526 files, `src/` = 82 Python files, ~40 MB of GIFs in `assets/`) and `data_input_examples/substack_articles.md` (`https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design`, `https://www.decodingai.com/p/the-coding-agent-loop`). Demos and READMEs reference the link files, not hard-coded URLs, so swapping targets is a one-file edit. |
 | Prereqs | Python ≥3.12 + `uv` (scripts are PEP 723, run with `uv run --script`), `git`, `curl`, Obsidian optional. No `gh`. |
 | Git hygiene | Live runs (`wiki-*/` in each layer root) are gitignored. `examples/` holds one committed reference run per layer (without `raw/repos/`): 01 = `02-medium` end state, 02 = `03-hard` + repo + articles, 03 = 02 + the demo interactions. |
 
@@ -43,10 +43,10 @@ llm-wiki-workshop/
 ├── .gitignore                         # + rules in §8
 ├── data_input_examples/               # fixture (populated)
 │   ├── README.md                      # scenario table (01-easy/02-medium/03-hard), how to reference inputs from a layer
-│   ├── github_links.md                # repo URLs for 02+ (currently 1)
-│   ├── substack_links.md              # article URLs for 02+ (currently 2)
+│   ├── github_repositories.md                # repo URLs for 02+ (currently 1)
+│   ├── substack_articles.md              # article URLs for 02+ (currently 2)
 │   └── notes/
-│       ├── assets/                    # images/.srt embedded via ![[assets/…]]; shared by all scenarios; never ingested
+│       ├── <tier>/assets/             # images/.srt embedded via ![[assets/…]]; per tier; copied into raw/assets/ on ingest, never a source
 │       ├── 01-easy/                   # 5 notes  — MCP vs. skills vs. CLIs cluster
 │       ├── 02-medium/                 # 10 notes — easy + context layer / agent memory / GraphRAG / harness architecture
 │       └── 03-hard/                   # 50 notes — everything (incl. tiny + noisy notes)
@@ -313,10 +313,10 @@ Bullets: why the cap existed and how fan-out removes it (the §"context discipli
 CONVENTIONS: repos layout + hidden clone rationale, origin prefixes (`article-`, `youtube-`), repo refresh rule, source-like pages now include `wiki/repos/*/*.md`, Obsidian note (dot-dir ignored automatically). PAGES: `repo` contract.
 
 ### 5.7 demo.md
-All paths relative to `02-llm-wiki-ingest/`. Targets come from `../data_input_examples/{github_links,substack_links}.md`.
+All paths relative to `02-llm-wiki-ingest/`. Targets come from `../data_input_examples/{github_repositories,substack_articles}.md`.
 1. Ingest `../data_input_examples/notes/03-hard/` (fresh wiki, or continue from 01's `02-medium` wiki → 10 skipped) → no cap; observe parallel `source_writer` spawns (40–50); concept pages consolidate across clusters; tiny/noisy notes (e.g. `Constraints.md`, `Marketing.md`) get thin source pages and contribute few links — point this out.
-2. Ingest the repo URL from `github_links.md` → clone under `raw/repos/.github-decodingai-magazine-building-a-coding-agent-from-scratch-course/`, `wiki/repos/github-.../ARCHITECTURE.md` with mermaid, receipt lists entities/concepts, tail runs, `wiki/repos/index.md` exists, overview has a Repos section.
-3. Ingest the two URLs from `substack_links.md` → `raw/article-*.md` with frontmatter, source pages, new/updated concept pages (expect overlap with the repo and the notes: agent loop, tools, context window, harness, skills…).
+2. Ingest the repo URL from `github_repositories.md` → clone under `raw/repos/.github-decodingai-magazine-building-a-coding-agent-from-scratch-course/`, `wiki/repos/github-.../ARCHITECTURE.md` with mermaid, receipt lists entities/concepts, tail runs, `wiki/repos/index.md` exists, overview has a Repos section.
+3. Ingest the two URLs from `substack_articles.md` → `raw/article-*.md` with frontmatter, source pages, new/updated concept pages (expect overlap with the repo and the notes: agent loop, tools, context window, harness, skills…).
 4. Re-ingest the repo URL → action `updated`, SHA unchanged, ARCHITECTURE rewritten, log says refresh.
 5. Ingest a YouTube URL → skeleton fails loudly with the exercise message; nothing else written.
 6. Query: "how does the coding agent's loop work?" → answer from `ARCHITECTURE.md` + article source pages.

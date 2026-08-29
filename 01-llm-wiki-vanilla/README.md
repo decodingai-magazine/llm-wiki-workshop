@@ -74,6 +74,8 @@ one mention. That last list is the wiki telling you what it is about to learn.
 - Any `wiki/concepts/*.md` — every claim cites a **source page**, never raw. This
   is the compounding layer: it gets better as sources accumulate, without anyone
   re-reading the notes.
+- `raw/assets/` — the images the notes embed, copied in beside them so the embeds
+  keep working. Attachments are payload, not sources: no page, no threshold vote.
 - `log.md` — the whole history of the wiki, append-only, greppable.
 
 **In Obsidian** (open this directory as a vault): the graph view shows

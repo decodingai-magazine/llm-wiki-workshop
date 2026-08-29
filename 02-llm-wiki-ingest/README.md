@@ -73,8 +73,8 @@ Then follow `demo.md`:
 /02-llm-wiki-ingest ingest https://www.decodingai.com/p/the-coding-agent-loop
 ```
 
-The repo and article URLs live in `../data_input_examples/github_links.md` and
-`../data_input_examples/substack_links.md` — swap them there and every demo step
+The repo and article URLs live in `../data_input_examples/github_repositories.md` and
+`../data_input_examples/substack_articles.md` — swap them there and every demo step
 follows.
 
 ## What to look at when it finishes

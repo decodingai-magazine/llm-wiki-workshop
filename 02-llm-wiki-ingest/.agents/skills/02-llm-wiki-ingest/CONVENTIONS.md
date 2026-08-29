@@ -16,7 +16,8 @@ One wiki per project, in the project root, named `wiki-<slug>/`:
 wiki-<slug>/
 ├── log.md                       # append-only history; oldest first
 ├── raw/                         # immutable copies of what was ingested
-│   └── <slug>.md                # one file per ingested note
+│   ├── <slug>.md                # one file per ingested note
+│   └── assets/                  # the images and transcripts those notes embed
 └── wiki/                        # the knowledge bundle — every .md carries a `type`
     ├── index.md                 # GENERATED bundle root (carries okf_version)
     ├── overview.md              # type: overview
@@ -85,6 +86,19 @@ already been ingested.
 
 Dedup is therefore an `ls`, not a frontmatter walk: compute the raw path, check
 whether it exists, done.
+
+**Attachments travel with their note.** A note that embeds `![[assets/x.png]]`
+is only half a note without the image, so ingest copies the files it references
+into `raw/assets/`, keeping the filename. Because `raw/assets/` is then a sibling
+of `raw/<slug>.md`, the embed keeps resolving inside the wiki exactly as it did in
+the source folder — no link rewriting, and `raw/` stays a verbatim copy.
+
+Attachments are **not sources**: no wiki page, no `entities:`/`concepts:`, no
+count toward the ≥2 threshold. They are payload the source page may point at.
+Identity is the filename, so the same image referenced by five notes is copied
+once and skipped four times. Only `*.md` is ingested *as a source* — which is why
+an embedded `.srt` transcript lands in `raw/assets/` and stays unread until
+someone writes an adapter for it.
 
 `original_path` on a source page records **provenance, not identity** — the path
 as it was given, normalized relative to the project root
