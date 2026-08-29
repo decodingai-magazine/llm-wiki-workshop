@@ -5,7 +5,6 @@ description: Retries, result caching, checkpoints, scheduling and observability 
 aliases: [Async tasks, Long-running work, Workflow orchestration]
 sources:
   - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
-  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing]]"
   - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
   - "[[wiki/sources/building-graphrag-from-scratch-infrastructure-over]]"
   - "[[wiki/sources/deep-dive-on-how-to-scale-your-graphrag-ingestion-pipeline]]"
@@ -27,8 +26,8 @@ related:
   - "[[wiki/concepts/agent-harness]]"
   - "[[wiki/entities/prefect]]"
 created: 2026-08-29T09:20:00Z
-timestamp: 2026-08-29T11:35:00Z
-source_count: 16
+timestamp: 2026-08-29T10:45:00Z
+source_count: 15
 ---
 
 # Durable execution
@@ -64,7 +63,6 @@ it.
 - Read paths are deliberately left un-orchestrated: cheap, idempotent, already retried by the agent. [[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]
 - Applied to an agent loop rather than a pipeline: each turn is checkpointed, so a crash replays finished turns from cache. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
 - Human-in-the-loop survives the same way — gated tools pause on durable waits resolved out of band. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
-- The same paused tool call is an in-memory `await` interactively and a checkpointed wait when headless — one mechanism, two postures. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing]]
 
 ## Relationships
 

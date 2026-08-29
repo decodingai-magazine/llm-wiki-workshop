@@ -27,10 +27,10 @@ Audience: 1-hour workshop, entry/mid-level AI engineers who know Claude Code or 
 | 03 = interaction | Question log (`wiki/questions/`, slim pointers), knowledge notes (`wiki/notes/`), `wiki/open-questions.md`. Repo questions → `repo_writer` in `question` mode → `wiki/repos/<repo>/<slug>.md` (`type: repo_note`) → **ingest tail** re-runs (recount, pages, overview, index, log). General notes are never re-ingested. Spawn the repo agent only when the answer needs code beyond ARCHITECTURE.md. |
 | Save policy (03) | Always write the slim question page. Write/enrich a note only when the answer cites ≥2 wiki pages or the user says "save". |
 | Open questions (03) | Triggers: user flags one; wiki can't answer. Append-only. Next ingest reports which ones the new sources appear to address (no auto-resolve). |
-| Fixture | `data_input_examples/` at repo root (already populated). `notes/{01-easy,02-medium,03-hard}/` are **nested scenarios** (5 ⊂ 10 ⊂ 50 AI-Engineering notes), each with its own `assets/` holding the files its notes embed (sibling paths, so the links resolve from any vault root; +1.2 MB over a shared folder); `github_repositories.md` and `substack_articles.md` hold the 02+ targets. Append demo = ingest `01-easy/`, then `02-medium/` (5 skipped). See `data_input_examples/README.md` for the scenario table. |
+| Fixture | `data_input_examples/` at repo root (already populated). `notes/{01-easy,02-medium,03-hard}/` are **nested scenarios** (5 ⊂ 10 ⊂ 50 AI-Engineering notes), each with its own `assets/` holding the files its notes embed (sibling paths, so the links resolve from any vault root; +1.2 MB over a shared folder); `github_repositories.md` and `substack_articles.md` hold the 02+ targets. Layer 01's demo ingests `01-easy/`; layer 02's starts from scratch on `02-medium/` and optionally finishes with `03-hard/` (40 new, 10 skipped by raw path). The scenario table lives in the root README (the only README in the repo). |
 | Demo targets | Listed in `data_input_examples/github_repositories.md` (repo: `https://github.com/decodingai-magazine/building-a-coding-agent-from-scratch-course` — 526 files, `src/` = 82 Python files, ~40 MB of GIFs in `assets/`) and `data_input_examples/substack_articles.md` (`https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design`, `https://www.decodingai.com/p/the-coding-agent-loop`). Demos and READMEs reference the link files, not hard-coded URLs, so swapping targets is a one-file edit. |
 | Prereqs | Python ≥3.12 + `uv` (scripts are PEP 723, run with `uv run --script`), `git`, `curl`, Obsidian optional. No `gh`. |
-| Git hygiene | Live runs (`wiki-*/` in each layer root) are gitignored. `examples/` holds one committed reference run per layer (without `raw/repos/`): 01 = `02-medium` end state, 02 = `03-hard` + repo + articles, 03 = 02 + the demo interactions. |
+| Git hygiene | Live runs (`wiki-*/` in each layer root) are gitignored. `examples/` holds one committed reference run per layer (without `raw/repos/` or `raw/assets/`): 01 = `01-easy` end state, 02 = `03-hard` + repo + articles, 03 = a copy of 02 — the 03 demo's start point, with nothing asked of it yet. |
 
 ---
 
@@ -38,11 +38,10 @@ Audience: 1-hour workshop, entry/mid-level AI engineers who know Claude Code or 
 
 ```
 llm-wiki-workshop/
-├── README.md                          # workshop narrative: what an LLM wiki is, the 3-layer progression, prereqs, how to run
+├── README.md                          # the ONLY README: what an LLM wiki is, prereqs, how to run, inputs, one tight section per layer
 ├── implementation_plan.md             # this file
 ├── .gitignore                         # + rules in §8
 ├── data_input_examples/               # fixture (populated)
-│   ├── README.md                      # scenario table (01-easy/02-medium/03-hard), how to reference inputs from a layer
 │   ├── github_repositories.md                # repo URLs for 02+ (currently 1)
 │   ├── substack_articles.md              # article URLs for 02+ (currently 2)
 │   └── notes/
@@ -51,7 +50,6 @@ llm-wiki-workshop/
 │       ├── 02-medium/                 # 10 notes — easy + context layer / agent memory / GraphRAG / harness architecture
 │       └── 03-hard/                   # 50 notes — everything (incl. tiny + noisy notes)
 ├── 01-llm-wiki-vanilla/
-│   ├── README.md                      # layer goal, what's inside, demo walkthrough, what to look at in Obsidian
 │   ├── demo.md                        # exact prompts to type + expected outcomes (verification checklist)
 │   ├── .claude/skills -> ../.agents/skills      # symlink (committed)
 │   ├── .agents/skills/01-llm-wiki-vanilla/
@@ -63,7 +61,6 @@ llm-wiki-workshop/
 │   │       └── count_mentions.py      # frontmatter walk over source-like pages → {slug: [pages]} for the ≥2 threshold
 │   └── examples/wiki-ai-engineering/  # committed reference run
 ├── 02-llm-wiki-ingest/
-│   ├── README.md
 │   ├── CHANGES-FROM-PREVIOUS.md       # what moved into agents and why; new origins; new scripts
 │   ├── demo.md
 │   ├── .claude/skills -> ../.agents/skills
@@ -85,7 +82,6 @@ llm-wiki-workshop/
 │   │       └── fetch_youtube.py       # skeleton: argparse + docstring contract + raise NotImplementedError
 │   └── examples/wiki-ai-engineering/
 └── 03-llm-wiki-interactive/
-    ├── README.md
     ├── CHANGES-FROM-PREVIOUS.md
     ├── demo.md
     ├── .claude/skills -> ../.agents/skills
@@ -263,16 +259,13 @@ Sections:
 - `build_index_md.py --wiki-dir <wiki-<slug>>` — port of scrabble's `build_index_md.py` minus everything about `index.yaml`. Walks `wiki/`, writes `wiki/index.md` (frontmatter `okf_version: "0.1"` + autogenerated comment, links `overview`, each subdir index with counts, and in 03 `open-questions`) and `wiki/<subdir>/index.md` (no frontmatter; `- [[wiki/<subdir>/<slug>|<title>]] — <description>` sorted by slug). Subdirs in 01: `sources`, `entities`, `concepts`. Deterministic; byte-stable. Conformance check as in §2.10. Dep: `pyyaml`.
 - `count_mentions.py --wiki-dir <wiki-<slug>> [--json]` — walks source-like pages, parses `entities`/`concepts` wikilinks, prints `{"entities": {"<slug>": ["wiki/sources/a", ...]}, "concepts": {...}}` plus a human table on stderr. Dep: `pyyaml`. In 01 covers `wiki/sources/` only.
 
-### 4.3 README.md + demo.md
+### 4.3 demo.md (the layer's section in the root README carries goal, key idea, prompts, what to look at)
 
-`demo.md` prompts (verify after each):
-All paths relative to `01-llm-wiki-vanilla/`.
-1. `/01-llm-wiki-vanilla ingest ../data_input_examples/notes/01-easy/` → asks slug → `wiki-ai-engineering/` created; 5 source pages; concept pages for the MCP/skills/CLI slugs shared by ≥2 notes (expect ≥4: e.g. `mcp`, `skills`, `cli-tools`, `claude-code`); overview; index files; log has 1 entry.
-2. `/01-llm-wiki-vanilla ingest ../data_input_examples/notes/02-medium/` → 5 skipped (reported by name + existing `original_path`), 5 ingested; cross-cluster concept pages appear (context layer, agent memory, GraphRAG, harness); updated pages keep `created`; overview rewritten; index regenerated; log has 2 entries.
-3. Re-run step 2 → everything skipped; `build_index_md.py` output byte-identical (`git diff`/`diff -r` check); log has 3 entries.
-4. `/01-llm-wiki-vanilla ingest ../data_input_examples/notes/03-hard/` → cap message: "40 new sources > cap of 10 …"; nothing written (no log entry). This is the hand-off to 02.
-5. `/01-llm-wiki-vanilla what do my notes say about <concept>?` → answer with wikilinks, no files written except `log.md`.
-6. Open in Obsidian → graph view shows hub-and-spoke around concept pages; hollow nodes = promissory links.
+`demo.md` prompts — one or two checks after each, never a script for the user to run (the skill runs its own scripts; everything else is verified by eye or in Obsidian). All paths relative to `01-llm-wiki-vanilla/`.
+1. `/01-llm-wiki-vanilla ingest ../data_input_examples/notes/01-easy/` → asks slug → `wiki-ai-engineering/` created; 5 source pages; a page for every slug ≥2 notes engage with and nothing else (reference run: 4 entities, 5 concepts, 3 waiting at 1); overview; index files; log has 1 entry.
+2. `/01-llm-wiki-vanilla what do my notes say about when to use an MCP server vs. a CLI?` → answer with wikilinks and a `Pages used:` line; nothing written except `log.md`.
+3. Open `wiki-ai-engineering/` in Obsidian → hub-and-spoke around concept pages; hollow nodes = promissory links; the embedded image renders from `raw/assets/`.
+Then "start over" (`rm -rf wiki-ai-engineering`) and a one-paragraph pointer that `03-hard/` trips the cap — the hand-off to 02, mentioned, not stepped through.
 
 ---
 
@@ -313,13 +306,14 @@ Bullets: why the cap existed and how fan-out removes it (the §"context discipli
 CONVENTIONS: repos layout + hidden clone rationale, origin prefixes (`article-`, `youtube-`), repo refresh rule, source-like pages now include `wiki/repos/*/*.md`, Obsidian note (dot-dir ignored automatically). PAGES: `repo` contract.
 
 ### 5.7 demo.md
-All paths relative to `02-llm-wiki-ingest/`. Targets come from `../data_input_examples/{github_repositories,substack_articles}.md`.
-1. Ingest `../data_input_examples/notes/03-hard/` (fresh wiki, or continue from 01's `02-medium` wiki → 10 skipped) → no cap; observe parallel `source_writer` spawns (40–50); concept pages consolidate across clusters; tiny/noisy notes (e.g. `Constraints.md`, `Marketing.md`) get thin source pages and contribute few links — point this out.
-2. Ingest the repo URL from `github_repositories.md` → clone under `raw/repos/.github-decodingai-magazine-building-a-coding-agent-from-scratch-course/`, `wiki/repos/github-.../ARCHITECTURE.md` with mermaid, receipt lists entities/concepts, tail runs, `wiki/repos/index.md` exists, overview has a Repos section.
-3. Ingest the two URLs from `substack_articles.md` → `raw/article-*.md` with frontmatter, source pages, new/updated concept pages (expect overlap with the repo and the notes: agent loop, tools, context window, harness, skills…).
-4. Re-ingest the repo URL → action `updated`, SHA unchanged, ARCHITECTURE rewritten, log says refresh.
+All paths relative to `02-llm-wiki-ingest/`. Starts from scratch — no layer 01 wiki. Targets come from `../data_input_examples/{github_repositories,substack_articles}.md`. One check per step.
+1. Ingest `../data_input_examples/notes/02-medium/` → fresh wiki, 10 source pages, one `source_writer` per note in parallel, the orchestrator sees only receipts.
+2. Ingest the repo URL from `github_repositories.md` → the skill clones it under `raw/repos/.github-decodingai-magazine-building-a-coding-agent-from-scratch-course/`, `wiki/repos/github-.../ARCHITECTURE.md` with mermaid and SHA-pinned permalinks, tail runs, a concept page lists the repo beside a note.
+3. Ingest the two URLs from `substack_articles.md` → `raw/article-*.md` hold the body only, with frontmatter; concept pages cite notes, repo and article side by side.
+4. Re-ingest the repo URL → refreshed, not skipped; ARCHITECTURE rewritten with `created` preserved.
 5. Ingest a YouTube URL → skeleton fails loudly with the exercise message; nothing else written.
-6. Query: "how does the coding agent's loop work?" → answer from `ARCHITECTURE.md` + article source pages.
+6. Query: "how does the coding agent's loop actually work?" → answer from `ARCHITECTURE.md` + an article source page; only `log.md` changed.
+7. Optional: ingest `../data_input_examples/notes/03-hard/` → 40 new, 10 skipped by raw path; the big graph layer 03 starts from; thin notes get thin pages. Verified in Obsidian.
 
 ---
 
@@ -342,12 +336,14 @@ New `QUERY.md`; SKILL.md query section replaced by a pointer; new page types; th
 Query path → "read `QUERY.md`". Ingest path: after the tail, read `open-questions.md` (if present) and add one report bullet naming open questions the new sources appear to address (no edits). CONVENTIONS: interaction-owned pages, regimes table, ingest-tail-from-query rule. PAGES: `question`, `note`, `repo_note`, `open_question`.
 
 ### 6.4 demo.md
-1. Start from the 02 end state (copy `02/examples/wiki-ai-engineering` or re-run 02 demo).
-2. General question answered from ≥2 pages → `wiki/questions/<date>-<slug>.md` + `wiki/notes/<slug>.md`; indexes show both; log `query`.
-3. Same question rephrased → note enriched in place (`spawned_by_question` has 2 entries), a second slim question page.
-4. Repo question needing code ("how does tool execution handle errors in the coding agent?") → `repo_writer` spawned → `wiki/repos/<repo>/<slug>.md` (`type: repo_note`, permalinks pinned to SHA) → tail runs → at least one concept page's `sources:` grows → question page points at the repo note.
-5. Unanswerable question → honest answer + `open-questions.md` created/appended.
-6. Ingest one more note that addresses the open question → ingest report mentions it; `open-questions.md` untouched.
+Start from `cp -r examples/wiki-ai-engineering .` — this layer's own `examples/` is layer 02's end state with nothing asked of it. The clone is not in it; the skill re-clones on its own when a question needs the code (QUERY.md Q.6). One check per step.
+1. General question answered from ≥2 pages → `wiki/questions/<date>-<slug>.md` + `wiki/notes/<slug>.md`; no ingest-owned page changed.
+2. Same question rephrased → note enriched in place (`spawned_by_question` has 2 entries, `created` unchanged), a second slim question page, no second note.
+3. Unanswerable question → honest answer + `open-questions.md` created; no note.
+4. Repo question needing code (tool call → permission gate routing) → skill reads `ARCHITECTURE.md`, clones, spawns `repo_writer` → `wiki/repos/<repo>/<slug>.md` (`type: repo_note`, permalinks pinned to SHA) → tail runs → a concept page's `sources:` grows.
+5. A second repo question (subagent spawning) → a second repo note beside the first; `wiki/repos/index.md` lists both.
+6. `log this as open: …` → second entry in `open-questions.md`, flagged by the user; nothing resolves it automatically.
+7. Read the trail: `log.md`, `wiki/questions/index.md`, the graph in Obsidian. Then "start over" = `rm -rf` + re-copy from `examples/`.
 
 ---
 
@@ -362,7 +358,7 @@ Query path → "read `QUERY.md`". Ingest path: after the tail, read `open-questi
 - **Timestamps:** ISO-8601 UTC (`date -u +%Y-%m-%dT%H:%M:%SZ`).
 - **Every SKILL.md ends with an "Agent reference" and "Script reference" table** (02+/01 respectively) like scrabble.
 - **Symlinks:** create with `ln -s ../.agents/skills .claude/skills` inside each layer; commit them; README notes `git config core.symlinks true` for Windows.
-- **Fixture references:** every demo/README references inputs as `../data_input_examples/...` from the layer dir and reads URLs from the two link files. Never copy fixture notes into a layer.
+- **Fixture references:** every demo and README section references inputs as `../data_input_examples/...` from the layer dir and reads URLs from the two link files. Never copy fixture notes into a layer.
 
 ## 8. `.gitignore` additions
 
@@ -393,7 +389,7 @@ __pycache__/
 ## 10. Implementation order
 
 1. Root `README.md`, `.gitignore`. (`data_input_examples/` already exists — do not touch its contents.)
-2. 01: `CONVENTIONS.md`, `PAGES.md`, scripts (+ unit-test them on a hand-made 3-page fixture in the scratchpad), `SKILL.md`, symlink, `README.md`, `demo.md`. Run the demo on `01-easy` → `02-medium`; commit `examples/`.
+2. 01: `CONVENTIONS.md`, `PAGES.md`, scripts (+ unit-test them on a hand-made 3-page fixture in the scratchpad), `SKILL.md`, symlink, `demo.md`, the layer's section in the root README. Run the demo on `01-easy` → `02-medium`; commit `examples/`.
 3. Copy 01 → 02. Add `SOURCES.md`, agents, `clone_repo.py`, `fetch_article.py`, `fetch_youtube.py`; extend scripts; patch SKILL/CONVENTIONS/PAGES; `CHANGES-FROM-PREVIOUS.md`; demo; examples.
 4. Copy 02 → 03. Add `QUERY.md`; patch SKILL/CONVENTIONS/PAGES; extend scripts; wire `repo_writer` question mode; `CHANGES-FROM-PREVIOUS.md`; demo; examples.
 5. Final `diff -r` audit across layers; root README progression table with links to each CHANGES file.

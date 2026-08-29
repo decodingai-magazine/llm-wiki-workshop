@@ -20,7 +20,7 @@ Only in 02/scripts: fetch_youtube.py
 ```
 
 Nothing was deleted. No page contract changed. The data on disk from a layer-01
-run is a valid layer-02 wiki — the 02 demo starts by continuing one.
+run is a valid layer-02 wiki, though the 02 demo starts from scratch.
 
 ---
 

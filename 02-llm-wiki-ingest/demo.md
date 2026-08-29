@@ -1,93 +1,63 @@
 # Layer 02 — demo
 
-Run from this directory (`cd 02-llm-wiki-ingest && claude`). All paths are
-relative to it. A committed run of these steps lives in
-`examples/wiki-ai-engineering/`.
+Run from this directory (`cd 02-llm-wiki-ingest && claude`). Paths are relative
+to it. You only type prompts — the skill fetches, clones and counts by itself.
 
-**Start point.** These steps assume you continue from layer 01's end state:
+This demo starts from nothing: no wiki from layer 01 is needed. The repo and
+article URLs come from `../data_input_examples/github_repositories.md` and
+`../data_input_examples/substack_articles.md` — swap them there and every step
+below follows.
 
-```bash
-cp -r ../01-llm-wiki-vanilla/examples/wiki-ai-engineering .
-```
-
-You can also start empty — then step 1 ingests 50 notes instead of 40 and nothing
-is skipped.
+`examples/wiki-ai-engineering/` is where this demo ends up **including step 7**:
+50 notes, the repo and both articles. (Its `log.md` shows the notes arriving in
+three batches rather than two — it was grown from layer 01's run — but the pages
+are what these steps produce.)
 
 ---
 
-## 1. The batch that layer 01 refused
+## 1. Ingest 10 notes
 
 ```
-/02-llm-wiki-ingest ingest ../data_input_examples/notes/03-hard/
+/02-llm-wiki-ingest ingest ../data_input_examples/notes/02-medium/
 ```
 
-This is the exact input that made layer 01 stop and refuse.
+Accept the proposed slug `ai-engineering`. Then watch the harness: one
+`source_writer` per note, in parallel. The orchestrator never prints a note — it
+only ever sees receipts.
 
 **Verify**
 
-- [ ] No cap message. The skill reports 40 new and 10 skipped (the notes already
-      ingested in layer 01, matched by raw path — not by the directory you typed).
-- [ ] It spawns one `source_writer` per new note, in parallel batches. Watch the
-      harness: this is the fan-out.
-- [ ] The orchestrator never printed a note's contents. It only ever saw receipts.
-- [ ] `ls wiki-ai-engineering/wiki/sources | wc -l` → 51 (50 pages + `index.md`).
-- [ ] Slugs that were hollow after layer 01 now have pages: `append-only-log` went
-      from 1 mention to 11, because the GraphRAG and scaling notes are its other
-      witnesses. `agentic-invocation` stayed hollow at 1 — 40 more notes and still
-      only one source engages with it, which is the threshold doing its job.
-- [ ] `raw/assets/` now holds 37 images and transcripts — every attachment the 50
-      notes embed, copied in beside them. Three are `.srt` files: present in `raw/`,
-      never read, because only `*.md` is ingested as a source. That gap is the
-      exercise in `SOURCES.md § How to add a source`.
-- [ ] **Look at the thin ones.** `wiki/sources/marketing.md`,
-      `wiki/sources/constraints.md`, `wiki/sources/feedback-from-v1.md` are short
-      and link almost nothing. A three-line note gets a three-line page — the
-      threshold makes noise cheap instead of dangerous.
+- [ ] `wiki-ai-engineering/wiki/sources/` has 10 pages, and the report lists the
+      entity and concept pages that materialized at ≥2 mentions, plus the slugs
+      waiting at 1.
 
 ## 2. Ingest a repo
-
-The URL comes from `../data_input_examples/github_repositories.md`:
 
 ```
 /02-llm-wiki-ingest ingest https://github.com/decodingai-magazine/building-a-coding-agent-from-scratch-course
 ```
 
+The skill clones it (shallow, ~100 MB, into a dot-prefixed folder Obsidian never
+sees) and spawns `repo_writer`.
+
 **Verify**
 
-- [ ] `clone_repo.py` reports `"action": "cloned"` with a full `commit_sha`.
-- [ ] The clone is at `wiki-ai-engineering/raw/repos/.github-decodingai-magazine-…/`
-      — dot-prefixed, so Obsidian never sees ~100 MB of someone else's code.
-      `git status` stays clean: `**/raw/repos/` is gitignored.
-- [ ] `wiki/repos/github-…/ARCHITECTURE.md` exists, is ≤300 lines, opens each
-      section with a mermaid diagram, and every code permalink pins the SHA (not
-      `main`).
-- [ ] `wiki/repos/index.md` was generated, grouped by repo, and the wiki root index
-      has a `Repos` browse line.
-- [ ] The tail ran: at least one concept page now lists the repo page under
-      `sources:` alongside a note. **This is the moment worth pausing on** — a
-      claim from someone's notes and a codebase that implements it are two
-      independent witnesses.
-- [ ] `overview.md` gained a Repos entry.
+- [ ] `wiki/repos/github-…/ARCHITECTURE.md` exists — mermaid per section, ≤300
+      lines, every permalink pinned to a commit SHA — **and** at least one concept
+      page now lists it under `sources:` next to a note. A codebase and a note are
+      two independent witnesses; that is what pushed the page over the threshold.
 
 ## 3. Ingest two articles
 
-URLs from `../data_input_examples/substack_articles.md`:
-
 ```
-/02-llm-wiki-ingest ingest https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design https://www.decodingai.com/p/the-coding-agent-loop
+/02-llm-wiki-ingest ingest the substack articles from ../data_input_examples/substack_articles.md
 ```
 
 **Verify**
 
-- [ ] `raw/article-*.md` exist, with frontmatter carrying title, subtitle, author
-      and published date pulled from the page's metadata.
-- [ ] Open one and scroll: it is the article body, not the whole page. Body
-      isolation (`<article>` → `div.body.markup` → `main` → `body`) is the step
-      that makes the raw layer worth keeping.
-- [ ] Two new source pages; concept pages gain sources — expect overlap with both
-      the notes and the repo (agent loop, tools, context window, harness, skills).
-- [ ] No `warning` in the fetch receipts. If you see "body under 500 chars", you
-      hit a paywall or a bot wall — the adapter is telling you not to trust it.
+- [ ] `raw/article-*.md` hold the article body only — title, author and date in
+      frontmatter, no navigation, no cookie banner — and concept pages now cite
+      notes, the repo and an article side by side.
 
 ## 4. Re-ingest the repo — refresh, not skip
 
@@ -97,25 +67,23 @@ URLs from `../data_input_examples/substack_articles.md`:
 
 **Verify**
 
-- [ ] `"action": "updated"`. The clone was fetched and hard-reset, not re-cloned.
-- [ ] `ARCHITECTURE.md` was rewritten and `commit_sha` still matches HEAD; `created`
-      is preserved.
-- [ ] `log.md` records a refresh. Every other origin would have been skipped here —
-      repos are the one exception, because the code moves.
+- [ ] The report says the repo was **refreshed** (fetched, not re-cloned) and
+      `ARCHITECTURE.md` was rewritten with its `created` preserved. Every other
+      origin would have been skipped here; repos are the exception because the
+      code moves.
 
 ## 5. Ingest a YouTube URL — fail loudly
 
 ```
-/02-llm-wiki-ingest ingest https://www.youtube.com/watch?v=v3Fr2JR47KA
+/02-llm-wiki-ingest ingest https://www.youtube.com/watch?v=sJpop1juVBQ
 ```
 
 **Verify**
 
-- [ ] `fetch_youtube.py` raises `NotImplementedError` with the exercise message.
-- [ ] **Nothing else was written** — no raw file, no page, no log entry.
-- [ ] Read `SOURCES.md § How to add a source`. The exercise is three steps, and
-      the hard one is not fetching the transcript — it is deciding what the raw
-      path should be. (Hint: the video id, never the title.)
+- [ ] The skill reports that the adapter is not implemented, and **nothing was
+      written** — no raw file, no page, no log entry. Wiring it up is the exercise
+      in `SOURCES.md § How to add a source`; the hard part is not the transcript,
+      it is choosing the raw path. (Hint: the video id, never the title.)
 
 ## 6. Query across origins
 
@@ -125,11 +93,26 @@ URLs from `../data_input_examples/substack_articles.md`:
 
 **Verify**
 
-- [ ] The answer draws on `ARCHITECTURE.md` **and** the article source pages, and
-      cites both with wikilinks.
-- [ ] It never opened the clone or a raw article. The wiki layer was enough — that
-      is the whole return on the ingest cost.
-- [ ] Only `log.md` changed.
+- [ ] The answer cites `ARCHITECTURE.md` **and** an article source page with
+      wikilinks, never opened the clone or a raw file, and only `log.md` changed.
+      That is the whole return on the ingest cost.
+
+## 7. Optional — the big graph
+
+```
+/02-llm-wiki-ingest ingest ../data_input_examples/notes/03-hard/
+```
+
+`03-hard/` is all 50 notes, the 10 you already ingested included: 40 new, 10
+skipped by raw path. It is the batch layer 01 refuses, it takes a while, and the
+graph it leaves behind is the one layer 03 starts from.
+
+**Verify**
+
+- [ ] Open `wiki-ai-engineering/` as an Obsidian vault: slugs that were hollow
+      after step 1 now have pages, and the three-line notes (`constraints`,
+      `marketing`, `feedback-from-v1`) got three-line pages that link almost
+      nothing. Noise is cheap; the threshold made it so.
 
 ---
 
@@ -139,5 +122,5 @@ URLs from `../data_input_examples/substack_articles.md`:
 rm -rf wiki-ai-engineering
 ```
 
-To keep the wiki but drop the 100 MB of clones: `rm -rf wiki-ai-engineering/raw/repos`.
-Re-ingesting any repo brings it back.
+To keep the wiki but drop the clone: `rm -rf wiki-ai-engineering/raw/repos`.
+Re-ingesting the repo brings it back.

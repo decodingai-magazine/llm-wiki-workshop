@@ -5,10 +5,8 @@ description: The runtime layer that owns the LLM–tool loop, memory, permission
 aliases: [Harness, Runtime]
 sources:
   - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
-  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing]]"
   - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
   - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
-  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
   - "[[wiki/sources/article-the-coding-agent-loop]]"
   - "[[wiki/sources/choosing-an-inference-architecture-for-your-agents]]"
   - "[[wiki/sources/how-you-pay-for-llm-inference]]"
@@ -25,8 +23,8 @@ related:
   - "[[wiki/concepts/progressive-disclosure]]"
   - "[[wiki/entities/claude-code]]"
 created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T11:35:00Z
-source_count: 14
+timestamp: 2026-08-29T10:45:00Z
+source_count: 12
 ---
 
 # Agent harness
@@ -61,7 +59,6 @@ OpenClaw" is only possible because the knowledge and the data live outside it
 - In a working harness the agent is ~20 lines; the other packages — tools, permissions, sandbox, skills, memory, compaction, runtime — are the harness. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
 - The runner drives a *turn handler*, not a model: the loop is pluggable behind that seam. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
 - Mid-turn input is buffered and released at boundaries in three modes — steer, follow up, abort — because injecting it immediately corrupts a tool call. [[wiki/sources/article-the-coding-agent-loop]]
-- Approval is expressed as a *refusal to start*: the tool raises before doing any work, so a denial can never leave a half-written file. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing]]
 
 ## Relationships
 

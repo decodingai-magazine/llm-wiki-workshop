@@ -1,16 +1,16 @@
 ---
 type: overview
 title: ai-engineering — Overview
-description: What 53 notes and articles, one codebase and the questions asked of them add up to — connectivity as a layered choice, memory worth owning, and the orchestration that keeps both alive.
+description: What 52 notes and articles plus one codebase add up to — connectivity as a layered choice, memory worth owning, and the orchestration that keeps both alive.
 created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T11:50:00Z
-total_sources: 55
-total_pages: 109
+timestamp: 2026-08-29T10:45:00Z
+total_sources: 53
+total_pages: 101
 ---
 
 # ai-engineering — Overview
 
-> Fifty local notes, three articles and one codebase on how agents connect to the world, what they remember, and what it costs to keep that memory correct — plus what has been asked of them since.
+> Fifty local notes, two articles and one codebase on how agents connect to the world, what they remember, and what it costs to keep that memory correct.
 
 ## Themes
 
@@ -107,33 +107,16 @@ re-run. [[wiki/concepts/pipeline-parallelism]] is how the same pipelines get fas
 [[wiki/concepts/knowledge-freshness]], [[wiki/concepts/graphrag-ingestion]],
 [[wiki/concepts/pipeline-parallelism]], [[wiki/concepts/read-write-separation]].
 
-### Repos (2 pages, 1 repo)
+### Repos (1)
 - [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]] — a coding-agent harness where the wiki's claims are executable.
-- [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing]] — a question answered against the code, which then became evidence.
-
-### Interaction (5 questions · 1 note)
-- [[wiki/questions/index|Questions]] — every question asked of this wiki, one line each.
-- [[wiki/notes/append-only-log-vs-in-place-updates]] — the wiki's one live architectural disagreement, worked through.
-- [[wiki/open-questions]] — what it knows it cannot answer yet.
-
-### And what it learned from being asked
-
-Two questions produced [[wiki/notes/append-only-log-vs-in-place-updates]] — the
-second enriched it rather than forking it. One produced a **repo note** that became
-source-like and pushed [[wiki/concepts/agent-harness]],
-[[wiki/concepts/durable-execution]] and [[wiki/concepts/agentic-coding-loop]] up a
-source each. Two produced entries in [[wiki/open-questions]], and the next ingest
-answered one of them — [[wiki/sources/article-context-engineering-for-coding-agents]]
-turned [[wiki/concepts/context-rot]] from a qualitative worry into thresholds.
 
 ## Health
 
-- Source-like pages: 55 (50 notes · 3 articles · 1 repo doc · 1 repo note) · Entities: 10 · Concepts: 38
-- Interaction layer: 5 questions · 1 note · 2 open questions (1 apparently addressed, not resolved)
+- Source-like pages: 53 (50 notes · 2 articles · 1 repo) · Entities: 10 · Concepts: 38
 - Waiting at 1 mention: `agentic-invocation`, `continual-learning`, `rag-evaluation`,
   `reasoning-memory`, and the entities `neo4j`, `obsidian`.
-- Most-cited: `knowledge-graph` (22), `durable-execution` (16), `unified-memory` (15),
-  `agent-harness` (14), `hybrid-search` (13), `embeddings` (12).
+- Most-cited: `knowledge-graph` (22), `durable-execution` (15), `unified-memory` (14),
+  `hybrid-search` (13), `embeddings` (12), `append-only-log` (11).
 - Watch for false corroboration: [[wiki/sources/graphrag-presentation]],
   [[wiki/sources/high-level-graphrag-architecture-built-on-top-of-mcp-servers]],
   [[wiki/sources/scaling-graphrag-ingestion-pipelines-with-prefect]] and

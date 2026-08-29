@@ -8,7 +8,6 @@ sources:
   - "[[wiki/sources/agent-reasoning-memory-why-it-matters-and-how-to-use-it]]"
   - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
   - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
-  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
   - "[[wiki/sources/designing-an-agents-memory-in-a-nutshell]]"
   - "[[wiki/sources/explaining-the-architecture]]"
   - "[[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]"
@@ -19,8 +18,8 @@ related:
   - "[[wiki/concepts/knowledge-graph]]"
   - "[[wiki/concepts/context-layer]]"
 created: 2026-08-29T09:20:00Z
-timestamp: 2026-08-29T11:50:00Z
-source_count: 10
+timestamp: 2026-08-29T10:45:00Z
+source_count: 9
 ---
 
 # Agent memory
@@ -54,7 +53,6 @@ treats semantic memory as the vector-search layer
 - Whatever is written automatically must also be correctable: memory needs decay and pruning policies, not just storage. [[wiki/sources/agent-reasoning-memory-why-it-matters-and-how-to-use-it]]
 - Project memory splits by trust: a project-authored file is trusted and uncapped, a model-maintained one is capped because it grows without bound. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
 - Memory files are assembled root-most to cwd-most with provenance headers, so the most specific context wins. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
-- Wiping a session's window should run a memory write-back first, so what was learned survives the clear. [[wiki/sources/article-context-engineering-for-coding-agents]]
 
 ## Relationships
 

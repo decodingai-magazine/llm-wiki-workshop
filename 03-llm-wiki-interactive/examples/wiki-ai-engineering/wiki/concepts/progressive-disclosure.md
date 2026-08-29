@@ -5,7 +5,6 @@ description: Give the model an index first and the detail only on request — th
 aliases: [Progressive discovery, tool_search]
 sources:
   - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
-  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
   - "[[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]"
   - "[[wiki/sources/retrieval-strategies]]"
   - "[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]"
@@ -15,8 +14,8 @@ related:
   - "[[wiki/concepts/programmatic-tool-calling]]"
   - "[[wiki/concepts/hybrid-search]]"
 created: 2026-08-29T09:20:00Z
-timestamp: 2026-08-29T11:50:00Z
-source_count: 6
+timestamp: 2026-08-29T10:00:00Z
+source_count: 5
 ---
 
 # Progressive disclosure
@@ -50,7 +49,6 @@ payload.
 - The same rule covers server discovery, tool discovery and skill discovery: don't load it until it is needed. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
 - The same pattern serves retrieval: return a lightweight index over files on disk and let the agent open only what it needs. [[wiki/sources/retrieval-strategies]]
 - Deep search is the named tool for it — a wide traversal whose result is an index, not a dump. [[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]
-- Skills load in three tiers, with only a one-line catalog entry per skill resident — optionally capped at ~1% of the window. [[wiki/sources/article-context-engineering-for-coding-agents]]
 
 ## Relationships
 

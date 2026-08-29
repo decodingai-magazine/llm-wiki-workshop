@@ -254,7 +254,7 @@ This skill is written for any agent harness. It needs five capabilities:
 |---|---|
 | read a file | raw notes, wiki pages |
 | write a file | every page you create |
-| run a shell command | `cp`, `ls`, `mkdir`, the two scripts |
+| run a shell command | `cp`, `ls`, `mkdir`, the scripts |
 | ask the user | the wiki slug, which wiki to use |
 | spawn a subagent | every page written in this layer |
 
@@ -277,14 +277,13 @@ Read the file, pass its body as the prompt, collect one JSON receipt.
 
 ## Script reference
 
-Both scripts are PEP 723 single files — `uv` installs their dependencies on the
-first run. Paths below are relative to the layer directory.
+All five scripts are PEP 723 single files — `uv` installs their dependencies on
+the first run. You run them; the user never does. Paths below are relative to the layer directory.
 
 | Script | Call | Does |
 |---|---|---|
 | `scripts/count_mentions.py` | `uv run --script .agents/skills/03-llm-wiki-interactive/scripts/count_mentions.py --wiki-dir wiki-<slug>` | Frontmatter walk over source-like pages → `{slug: [pages]}` + the `qualifying` list at ≥2. JSON on stdout, table on stderr. |
 | `scripts/build_index_md.py` | `uv run --script .agents/skills/03-llm-wiki-interactive/scripts/build_index_md.py --wiki-dir wiki-<slug>` | Regenerates `wiki/index.md` and each `wiki/<subdir>/index.md` from frontmatter, then checks OKF conformance. Deterministic: same input, same bytes. |
-
 | `scripts/clone_repo.py` | `--repo <url> --wiki-dir wiki-<slug>` | Shallow-clones into `raw/repos/.github-<owner>-<repo>/`, or refreshes it. JSON receipt with `commit_sha` and `action`. |
 | `scripts/fetch_article.py` | `--url <url> --wiki-dir wiki-<slug>` | `curl` → body isolation → markdown at `raw/article-<slug>.md`. Warns when the body looks like a paywall. |
 | `scripts/fetch_youtube.py` | `--url <url> --wiki-dir wiki-<slug>` | Skeleton. Raises `NotImplementedError` — the workshop exercise in `SOURCES.md`. |

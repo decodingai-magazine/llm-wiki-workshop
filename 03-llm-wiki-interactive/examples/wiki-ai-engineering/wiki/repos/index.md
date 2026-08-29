@@ -5,4 +5,3 @@
 ## github-decodingai-magazine-building-a-coding-agent-from-scratch-course
 
 - [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE|building-a-coding-agent-from-scratch-course]] — An open-source course whose artifact is `decode`, a terminal coding agent where a ~20-line agent loop is wrapped in the harness — tools, permissions, sandbox, skills, memory, compaction and a durab...
-- [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing|How a tool call reaches the permission gate, and what happens while it waits]] — The route is a deliberate pause — a gated tool raises before doing anything, the run resolves to a deferred request, and the loop resumes it with an allow or a typed denial.

@@ -8,13 +8,10 @@ title: ai-engineering — Wiki
 # ai-engineering — Wiki
 
 - [[wiki/overview|Overview]]
-- [[wiki/open-questions|Open questions]]
 
 ## Browse
 
-- [[wiki/sources/index|Sources]] (53)
+- [[wiki/sources/index|Sources]] (52)
 - [[wiki/entities/index|Entities]] (10)
 - [[wiki/concepts/index|Concepts]] (38)
-- [[wiki/questions/index|Questions]] (5)
-- [[wiki/notes/index|Notes]] (1)
-- [[wiki/repos/index|Repos]] (2)
+- [[wiki/repos/index|Repos]] (1)

@@ -7,7 +7,6 @@ sources:
   - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
   - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
   - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
-  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
   - "[[wiki/sources/how-smooth-is-to-use-prefect-for-agentic-coding]]"
   - "[[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]"
   - "[[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]"
@@ -22,8 +21,8 @@ related:
   - "[[wiki/concepts/agentic-invocation]]"
   - "[[wiki/entities/claude-code]]"
 created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T11:50:00Z
-source_count: 12
+timestamp: 2026-08-29T10:45:00Z
+source_count: 11
 ---
 
 # Agent skills
@@ -61,7 +60,6 @@ reusable" across agents, with minor differences per file
 - The same file doubles as the runbook for agentic coding — how to serve, trigger and read a pipeline. [[wiki/sources/how-smooth-is-to-use-prefect-for-agentic-coding]]
 - A working implementation matches the convention exactly: `<name>/SKILL.md`, YAML frontmatter of `name` + `description`, instruction body — with project skills overriding built-ins by name. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
 - Malformed built-in skills fail loudly; malformed project skills are skipped with a warning, so a user's typo never breaks a session. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
-- The concrete use for skills is unloading the memory file: conventions move out, one-line references stay. [[wiki/sources/article-context-engineering-for-coding-agents]]
 
 ## Relationships
 

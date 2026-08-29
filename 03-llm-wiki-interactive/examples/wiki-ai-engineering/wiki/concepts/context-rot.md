@@ -6,7 +6,6 @@ aliases: [Lost in the middle, Context bloat]
 sources:
   - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
   - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
-  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
   - "[[wiki/sources/article-the-coding-agent-loop]]"
   - "[[wiki/sources/graphrag-presentation]]"
   - "[[wiki/sources/high-level-graphrag-architecture-built-on-top-of-mcp-servers]]"
@@ -15,8 +14,8 @@ related:
   - "[[wiki/concepts/data-fragmentation]]"
   - "[[wiki/concepts/agent-harness]]"
 created: 2026-08-29T10:00:00Z
-timestamp: 2026-08-29T11:50:00Z
-source_count: 6
+timestamp: 2026-08-29T10:45:00Z
+source_count: 5
 ---
 
 # Context rot
@@ -47,9 +46,6 @@ rot is why you must not.
 - Compaction is a harness responsibility with a menu: summarize, truncate, or clear. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]
 - A working implementation has two tiers — an in-memory microcompaction with no LLM, and a full summary — and the tail cut must never split a tool-call/result pair. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
 - Compaction is in-memory only: the session log keeps full fidelity, so shrinking the window does not lose the record. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
-- It bites well before the advertised ceiling: degradation reported around 180k input tokens on a model rated for 1M. [[wiki/sources/article-context-engineering-for-coding-agents]]
-- Compaction can be a threshold rather than a judgement call — full compaction at 80% of the window, microcompaction at 60%. [[wiki/sources/article-context-engineering-for-coding-agents]]
-- Tool schemas are a standing cost: popular servers measured at 7–9% of the window before any work begins. [[wiki/sources/article-context-engineering-for-coding-agents]]
 
 ## Relationships
 

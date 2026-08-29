@@ -15,7 +15,8 @@ Files 02/scripts/build_index_md.py and 03/scripts/build_index_md.py differ
 Files 02/scripts/count_mentions.py and 03/scripts/count_mentions.py differ
 ```
 
-A layer-02 wiki is a valid layer-03 wiki. The 03 demo starts by continuing one.
+A layer-02 wiki is a valid layer-03 wiki. The 03 demo starts from a copy of layer
+02's end state, committed under this layer's `examples/`.
 
 ---
 

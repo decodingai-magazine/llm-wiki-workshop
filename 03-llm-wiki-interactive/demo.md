@@ -1,23 +1,18 @@
 # Layer 03 — demo
 
-Run from this directory. A committed run of these steps lives in
-`examples/wiki-ai-engineering/`.
+Run from this directory (`cd 03-llm-wiki-interactive && claude`). Paths are
+relative to it. You only type prompts.
 
-**Start point** — continue from layer 02's end state:
-
-```bash
-cp -r ../02-llm-wiki-ingest/examples/wiki-ai-engineering .
-```
-
-That wiki has 53 source-like pages, 10 entities, 38 concepts and one repo. The
-repo clone is not in `examples/` (it is regenerable and huge) — step 4 needs it, so
-bring it back first:
+**Start point.** `examples/wiki-ai-engineering/` is layer 02's end state — 50
+notes, one repo, two articles: 53 source-like pages, 10 entities, 38 concepts —
+with nothing asked of it yet. Copy it:
 
 ```bash
-uv run --script .agents/skills/03-llm-wiki-interactive/scripts/clone_repo.py \
-  --repo https://github.com/decodingai-magazine/building-a-coding-agent-from-scratch-course \
-  --wiki-dir wiki-ai-engineering
+cp -r examples/wiki-ai-engineering .
 ```
+
+The repo clone is not part of it (clones are regenerable and never committed).
+The skill re-clones on its own the first time a question needs the code.
 
 ---
 
@@ -29,16 +24,9 @@ uv run --script .agents/skills/03-llm-wiki-interactive/scripts/clone_repo.py \
 
 **Verify**
 
-- [ ] The answer walks the ladder — index → concept pages → maybe a source page —
-      and cites ≥2 wiki pages with wikilinks.
-- [ ] It surfaces the wiki's own disagreement: nine sources argue for the log, one
-      reports abandoning it. A wiki that hides that is worse than no wiki.
-- [ ] `wiki/questions/<date>-append-only-log-vs-in-place-updates.md` exists, is
-      ≤25 lines, and contains **no** diagrams, code or per-claim citations.
-- [ ] `wiki/notes/<slug>.md` exists and holds the actual answer, every claim citing
-      a wiki page — never `raw/`.
-- [ ] No ingest-owned page changed. `git status` inside the wiki dir shows only
-      `questions/`, `notes/`, the regenerated indexes and `log.md`.
+- [ ] `wiki/questions/<date>-….md` (a slim pointer) and `wiki/notes/<slug>.md`
+      (the answer, every claim citing a wiki page — never `raw/`) both exist, and
+      no ingest-owned page changed.
 
 ## 2. The same question, asked differently
 
@@ -48,13 +36,10 @@ uv run --script .agents/skills/03-llm-wiki-interactive/scripts/clone_repo.py \
 
 **Verify**
 
-- [ ] **No second note.** The existing note was enriched in place: `created`
-      unchanged, `timestamp` bumped, `spawned_by_question` now has two entries.
-- [ ] A second question page was written, pointing at the same note.
-- [ ] `wiki/notes/index.md` still lists one note on the topic.
-
-This is the rule that keeps an interaction layer from turning into a chat log:
-**referencing over duplication.**
+- [ ] A second question page and **no second note** — the existing note was
+      enriched in place: `spawned_by_question` has two entries, `created` is
+      unchanged. Referencing over duplication is what keeps this from becoming a
+      chat log.
 
 ## 3. A question the wiki cannot answer
 
@@ -65,18 +50,8 @@ This is the rule that keeps an interaction layer from turning into a chat log:
 **Verify**
 
 - [ ] The answer says plainly that the wiki does not cover this, and says what it
-      *does* have (a mechanism — the log — but no policy).
-- [ ] `wiki/open-questions.md` was created with frontmatter and a dated entry
-      citing the question page.
-- [ ] A question page was still written. **No note** — there was no answer to save.
-
-Then flag one yourself:
-
-```
-/03-llm-wiki-interactive log this as open: what actually goes into a coding agent's context window each turn?
-```
-
-- [ ] Appended under the same date, marked as flagged by the user.
+      *does* have (a mechanism — the log — but no policy); `wiki/open-questions.md`
+      gained a dated entry, and no note was written.
 
 ## 4. A question that needs the code
 
@@ -84,54 +59,56 @@ Then flag one yourself:
 /03-llm-wiki-interactive in the coding agent repo, how does a tool call actually get routed to the permission gate, and what happens while it waits for the human?
 ```
 
+The skill reads `ARCHITECTURE.md` first, finds it covers the policy but not the
+routing, clones the repo, and spawns `repo_writer` in question mode.
+
 **Verify**
 
-- [ ] The skill reads `wiki/repos/<repo>/ARCHITECTURE.md` **first**, finds it
-      covers the policy but not the routing, and only then spawns `repo_writer`
-      with `mode: question`.
-- [ ] `wiki/repos/<repo>/<question-slug>.md` exists with `type: repo_note`, a
-      verbatim `question`, `commit_sha`, and `file:line` evidence whose permalinks
-      pin that SHA.
-- [ ] **The ingest tail ran.** `count_mentions.py` now counts the repo note as a
-      source-like page, and at least one concept page gained it under `sources:`.
-      Trace it: question → repo note → recount → updated concept page.
-- [ ] `overview.md` and the indexes were regenerated; `log.md` records the tail.
-- [ ] The question page's `answer_doc` points at the repo note, not at a note.
+- [ ] `wiki/repos/<repo>/<slug>.md` exists (`type: repo_note`, evidence as
+      `file:line` with permalinks pinned to the SHA) **and the ingest tail ran**:
+      at least one concept page now lists it under `sources:`. An answer became
+      evidence — through exactly the machinery an ingest uses.
 
-This is the layer's whole thesis in one step: **an answer became evidence**, and it
-got there through exactly the machinery an ingest uses.
-
-## 5. Ingest something that answers an open question
+## 5. A second question about the same code
 
 ```
-/03-llm-wiki-interactive ingest https://www.decodingai.com/p/context-engineering-for-coding-agents
+/03-llm-wiki-interactive in the coding agent repo, how does the agent spawn a subagent, and what does the parent actually get back when it finishes?
 ```
 
 **Verify**
 
-- [ ] Normal ingest: article fetched, source page written, tail run.
-- [ ] The report ends with a bullet naming the open question this source appears to
-      address — the one you flagged in step 3.
-- [ ] **`open-questions.md` was not edited.** Nothing auto-resolves; a human
-      decides whether the answer landed.
+- [ ] A second repo note beside the first — one page per question, both
+      source-like — and `wiki/repos/index.md` lists both under the repo. The
+      codebase is now answering questions the architecture page never anticipated.
 
-## 6. Read the trail
+## 6. Flag an open question
 
-```bash
-grep -E '^## [0-9]{4}-' wiki-ai-engineering/log.md
-cat wiki-ai-engineering/wiki/questions/index.md
+```
+/03-llm-wiki-interactive log this as open: what actually goes into a coding agent's context window each turn?
 ```
 
 **Verify**
 
-- [ ] The log reads as a history: ingests and queries interleaved, oldest first.
-- [ ] The questions index is one line per question — cheap to scan, and enough to
-      answer "have I asked this before?" without opening anything.
+- [ ] `open-questions.md` has a second entry, marked as flagged by you. Nothing
+      resolves it automatically: the next ingest whose sources appear to address
+      it says so in its report, and a human decides.
+
+## 7. Read the trail
+
+Open `wiki-ai-engineering/log.md` and `wiki/questions/index.md`, then the vault
+in Obsidian.
+
+**Verify**
+
+- [ ] The log reads as one history, oldest first, and the questions index is one
+      line per question — enough to answer "have I asked this before?" without
+      opening anything. In the graph, the notes and repo notes hang off the
+      concept pages they cite.
 
 ---
 
 ## If you want to start over
 
 ```bash
-rm -rf wiki-ai-engineering && cp -r ../02-llm-wiki-ingest/examples/wiki-ai-engineering .
+rm -rf wiki-ai-engineering && cp -r examples/wiki-ai-engineering .
 ```

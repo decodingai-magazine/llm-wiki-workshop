@@ -11,7 +11,8 @@
 - Rewrote overview.md (4 themes) and rebuilt all index.md files — 14 pages, no errors/warnings.
 - Waiting at 1 mention: david-soria-parra, notion, obsidian
 
-## 2026-08-29 ingest | re-run of the same 01-easy batch
+## 2026-08-29 query | MCP server vs. CLI
 
-- Ingested 0 notes from `../data_input_examples/notes/01-easy/`; skipped 5, all already present with unchanged content (how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs, the-future-of-mcp-vs-skills, the-right-way-of-building-agents-with-mcp-servers, the-future-of-mcp-why-the-future-of-agents-is-mcp-skills, why-mcp-is-not-dead)
-- No source pages written, no ingest tail run — nothing in `wiki/` changed.
+- question: "what do my notes say about when to use an MCP server vs. a CLI?"
+- pages used: 3 (agent-connectivity, cli, mcp)
+- gap noticed: none — why-mcp-is-not-dead's concrete project examples already resolve the tradeoff situationally.

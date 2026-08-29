@@ -5,8 +5,6 @@ description: "Edit, run, read, fix — and the tool-selection criterion that fol
 aliases: [Edit-run-read-fix, CLAUDE.md]
 sources:
   - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
-  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing]]"
-  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
   - "[[wiki/sources/article-the-coding-agent-loop]]"
   - "[[wiki/sources/how-smooth-is-to-use-prefect-for-agentic-coding]]"
   - "[[wiki/sources/how-smooth-was-my-experience-to-use-mongodb-and-build-from]]"
@@ -15,8 +13,8 @@ related:
   - "[[wiki/concepts/infrastructure-over-frameworks]]"
   - "[[wiki/entities/claude-code]]"
 created: 2026-08-29T10:00:00Z
-timestamp: 2026-08-29T11:35:00Z
-source_count: 6
+timestamp: 2026-08-29T10:45:00Z
+source_count: 4
 ---
 
 # Agentic coding loop
@@ -46,7 +44,6 @@ no UI, no log files.
 - The agent's contribution was implementation, not architecture — the design was decided first. [[wiki/sources/how-smooth-was-my-experience-to-use-mongodb-and-build-from]]
 - The loop's quality is bounded by feedback speed — a language server flagging a broken edit immediately is "the cheapest way to get feedback on code changes". [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]
 - Tool failures should return a retry to the model, not an error to the user: an ambiguous edit is a correctable mistake. [[wiki/sources/article-the-coding-agent-loop]]
-- A denial returns to the model as a typed result carrying the reason, so the loop adapts instead of retrying blindly. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-to-permission-gate-routing]]
 
 ## Relationships
 
