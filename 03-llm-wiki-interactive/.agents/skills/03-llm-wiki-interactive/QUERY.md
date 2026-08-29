@@ -66,19 +66,21 @@ say so in your reply, add it to `open-questions.md` (Q.7), and change nothing el
 1. **Read `wiki/repos/<repo>/ARCHITECTURE.md` first.** It exists so nobody has to
    read the clone. If it answers the question, you are on the general path (Q.5) —
    the note lands in `wiki/notes/` and links out to the repo page.
-2. Only if the answer needs code the architecture page does not cover, make sure
-   the clone is there — `raw/repos/.github-<owner>-<repo>/` is regenerable and
-   never committed, so a copied wiki arrives without it:
+2. Only if the answer needs code the architecture page does not cover, check that
+   the clone exists at the `clone_path` in `ARCHITECTURE.md`'s frontmatter. Clones
+   are regenerable and never committed, so a copied wiki arrives without one. **If
+   it is missing, clone it yourself — never ask the user to:**
 
    ```bash
    uv run --script .agents/skills/03-llm-wiki-interactive/scripts/clone_repo.py \
      --repo "<repo_url from ARCHITECTURE.md>" --wiki-dir wiki-<slug>
    ```
 
-   It clones if absent (`cloned`) and refreshes if present (`updated`); either
-   way its receipt carries the `commit_sha` you pass on. If that SHA differs from
-   the one in `ARCHITECTURE.md`, say so in the answer — the architecture page is
-   ingest-owned, so you do not rewrite it here; suggest re-ingesting the repo.
+   If it already exists, use it as is — do not run the script (it would refresh
+   the code under an ingest-owned page). Pass on the `commit_sha` from the receipt,
+   or from the clone (`git -C <clone_path> rev-parse HEAD`). If it differs from the
+   one in `ARCHITECTURE.md`, say so in the answer; you do not rewrite that page in
+   query mode — suggest re-ingesting the repo.
    Then spawn `agents/repo_writer.md` with `mode: question`, passing `clone_path`,
    `commit_sha`, `branch`, the verbatim `question`, the `architecture_path`, and
    the `question_page` wikilink. It writes

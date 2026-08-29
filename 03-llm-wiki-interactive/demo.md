@@ -11,8 +11,8 @@ with nothing asked of it yet. Copy it:
 cp -r examples/wiki-ai-engineering .
 ```
 
-The repo clone is not part of it (clones are regenerable and never committed).
-The skill re-clones on its own the first time a question needs the code.
+The repo clone is not part of it (`raw/repos/` is gitignored, ~100 MB). The skill
+clones it by itself the first time a question needs the code.
 
 ---
 

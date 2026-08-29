@@ -88,7 +88,7 @@ the same wiki, without the parallelism.
 | Step 1.4 | The tail spawns one `page_writer` per qualifying slug; the count now spans `wiki/repos/*/` too. |
 | Step 1.5 | The overview is written by `overview_writer`. |
 | Step 1.8 | The report breaks counts down by origin, including refreshed repos. |
-| Query path Q.3 | Code questions start at `ARCHITECTURE.md`. |
+| Query path Q.3, Q.4 | Code questions start at `ARCHITECTURE.md`; a missing clone is re-cloned by the skill before escalating into it. |
 | Harness notes | Fifth capability: spawn a subagent. |
 | **Agent reference** | New table. |
 | Script reference | Three adapter rows added. |

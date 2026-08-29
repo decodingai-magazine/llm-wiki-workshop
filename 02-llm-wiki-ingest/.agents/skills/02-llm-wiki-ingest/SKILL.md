@@ -236,7 +236,9 @@ Read-only. The only file query mode writes in this layer is `log.md`.
   the clone.
 - **Q.4 — Escalate only if you must.** If the wiki pages genuinely do not answer
   the question, read the specific `raw/` file a source page points to. Never bulk
-  read `raw/`. If the wiki simply does not know, **say so** — a wiki that
+  read `raw/`. For a repo page that means specific files under its `clone_path`;
+  clones are never committed, so if it is missing, clone it yourself with
+  `clone_repo.py` (same call as in 1.2) — never ask the user to. If the wiki simply does not know, **say so** — a wiki that
   hallucinates coverage is worse than an empty one.
 - **Q.5 — Answer** with `[[wikilinks]]` to every page you used, and end with a
   `Pages used:` list. Distinguish what the notes claim from what you inferred.
