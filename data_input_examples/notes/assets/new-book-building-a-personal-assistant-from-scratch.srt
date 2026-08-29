@@ -1,0 +1,683 @@
+1
+00:00:00,746.6666666666667 --> 00:00:04,980
+Ok, so this post I want to be like
+
+2
+00:00:06,376.66666666666697 --> 00:00:09,950
+dressed as an official
+
+3
+00:00:09,950 --> 00:00:13,520
+announcement of my new book
+
+4
+00:00:13,520 --> 00:00:17,840
+where I will build a personal assistant from scratch.
+
+5
+00:00:17,840 --> 00:00:21,440
+I don't know if this is the title of the book, but this is like
+
+6
+00:00:21,440 --> 00:00:25,240
+what you will do throughout the book.
+
+7
+00:00:25,240 --> 00:00:28,990
+And basically as I said it will be
+
+8
+00:00:28,990 --> 00:00:32,570
+an announcement of the book and
+
+9
+00:00:32,570 --> 00:00:36,260
+at this point I just want to say that I
+
+10
+00:00:36,260 --> 00:00:39,800
+will do it again with
+
+11
+00:00:39,800 --> 00:00:43,530
+Maxim. I don't want to say anything about the publisher
+
+12
+00:00:43,530 --> 00:00:47,330
+yet, so I want to keep it a little bit mysterious at this
+
+13
+00:00:47,330 --> 00:00:51,100
+point, just that it's a new book on building a personal
+
+14
+00:00:51,100 --> 00:00:54,730
+assistant from scratch together with Maxim
+
+15
+00:00:54,730 --> 00:00:58,710
+and then I want to like quickly explain
+
+16
+00:00:58,710 --> 00:01:03,410
+what I will build, because this is also a sponsor
+
+17
+00:01:03,410 --> 00:01:07,130
+post for mongodb, so I need to
+
+18
+00:01:07,616.6666666666715 --> 00:01:11,170
+like show at a very high level
+
+19
+00:01:11,170 --> 00:01:14,840
+everything that we'll build in the book with the help
+
+20
+00:01:14,840 --> 00:01:18,420
+of mongodb as our unified memory. So I already
+
+21
+00:01:18,420 --> 00:01:22,120
+have this diagram in place, so basically you can just walk around what's
+
+22
+00:01:22,120 --> 00:01:25,780
+going on in here. So everything starts with
+
+23
+00:01:25,780 --> 00:01:29,440
+the data pipeline where we just get this input to
+
+24
+00:01:29,440 --> 00:01:33,610
+different type of URIs from multiple sources
+
+25
+00:01:33,610 --> 00:01:37,630
+such as a Puginface, Substack, Medium,
+
+26
+00:01:37,630 --> 00:01:41,520
+LinkedIn, Custom Sides, basically
+
+27
+00:01:41,520 --> 00:01:45,490
+any type of URIs as input. We process them with
+
+28
+00:01:45,490 --> 00:01:49,670
+different type of specialized ETLs and normalize
+
+29
+00:01:49,670 --> 00:01:53,270
+them as a document, which will be stored
+
+30
+00:01:53,270 --> 00:01:57,060
+inside the data warehouse, which
+
+31
+00:01:57,060 --> 00:02:01,110
+is still a mongodb collection of
+
+32
+00:02:01,110 --> 00:02:05,030
+documents, tracking the metadata of everything,
+
+33
+00:02:05,030 --> 00:02:08,880
+of the source of the document basically.
+
+34
+00:02:08,880 --> 00:02:12,600
+And the next step is to process the document through the memory pipeline where
+
+35
+00:02:12,600 --> 00:02:16,830
+we have a graph extractor where we extract entities and relationships,
+
+36
+00:02:16,830 --> 00:02:20,550
+then we have this normalization step where we check the
+
+37
+00:02:20,550 --> 00:02:24,550
+current knowledge graph if that entity already
+
+38
+00:02:24,550 --> 00:02:28,290
+exists or not. We're using various methods, so it doesn't matter
+
+39
+00:02:28,290 --> 00:02:32,060
+at this point because we keep it high level, right? But we
+
+40
+00:02:32,666.666666666657 --> 00:02:36,250
+use like fuzzy search and semantic
+
+41
+00:02:36,786.666666666657 --> 00:02:40,910
+search techniques plus aliasing to
+
+42
+00:02:40,910 --> 00:02:44,670
+find if the entity already exists inside the memory, and
+
+43
+00:02:44,670 --> 00:02:48,330
+then we use an embedding model on top of the content
+
+44
+00:02:48,330 --> 00:02:51,850
+of the chunk or document that has
+
+45
+00:02:53,56.666666666656965 --> 00:02:56,640
+been processed to create the embedding.
+
+46
+00:02:56,640 --> 00:03:00,350
+And we will use Voyage AI for this particular
+
+47
+00:03:00,350 --> 00:03:04,040
+use case, which is Voyage AI by MongoDB.
+
+48
+00:03:04,040 --> 00:03:07,770
+So they come coupled together very nicely, so
+
+49
+00:03:07,770 --> 00:03:11,510
+they work together very nicely. And the final output
+
+50
+00:03:11,510 --> 00:03:15,090
+are these knowledge graph objects which will be stored into the
+
+51
+00:03:15,090 --> 00:03:19,580
+unified memory powered by
+
+52
+00:03:20,413.33333333334303 --> 00:03:24,000
+MongoDB. And this unified memory is made
+
+53
+00:03:24,000 --> 00:03:27,580
+out of short-term memory, long-term
+
+54
+00:03:27,580 --> 00:03:31,280
+memory, and reasoning memory,
+
+55
+00:03:31,946.666666666657 --> 00:03:35,670
+right? And everything is bundled
+
+56
+00:03:35,670 --> 00:03:39,720
+together via a knowledge graph.
+
+57
+00:03:39,720 --> 00:03:43,400
+The short-term memory contains like a past and current
+
+58
+00:03:43,400 --> 00:03:47,220
+conversations, messages. The long-term memory contains
+
+59
+00:03:47,220 --> 00:03:51,130
+basically the semantic and episodic memory, which is the actual
+
+60
+00:03:51,130 --> 00:03:55,210
+knowledge graph such as people that you know, preferences,
+
+61
+00:03:55,210 --> 00:03:58,930
+episodes, documents, and all of that is part of the long-term
+
+62
+00:03:58,930 --> 00:04:02,630
+memory. And the reasoning memory
+
+63
+00:04:02,630 --> 00:04:06,890
+contains like past traces where the agent
+
+64
+00:04:06,890 --> 00:04:11,190
+already explored specific scenarios
+
+65
+00:04:11,190 --> 00:04:14,730
+and it makes inside these traces
+
+66
+00:04:14,730 --> 00:04:18,660
+which one were correct and which one were
+
+67
+00:04:19,326.66666666665697 --> 00:04:22,980
+wrong. So when the agent tries, so when a user asks the agent
+
+68
+00:04:22,980 --> 00:04:26,670
+to do something similar, it already knows what
+
+69
+00:04:26,670 --> 00:04:31,230
+path is good and what path is wrong, similar to reinforcement
+
+70
+00:04:31,230 --> 00:04:36,130
+learning, like continual reinforcement learning,
+
+71
+00:04:36,130 --> 00:04:39,790
+right? Okay. And the next step,
+
+72
+00:04:39,790 --> 00:04:43,990
+on the other side, we have this point
+
+73
+00:04:43,990 --> 00:04:47,840
+four where we fine tune small language
+
+74
+00:04:47,840 --> 00:04:51,380
+models like this is what SLM stands for, small
+
+75
+00:04:51,380 --> 00:04:55,610
+language model. We fine tune them via SFD and
+
+76
+00:04:55,610 --> 00:04:59,520
+reinforcement learning which stands for supervised
+
+77
+00:04:59,520 --> 00:05:03,080
+fine tuning and reinforcement learning. So we fine
+
+78
+00:05:03,080 --> 00:05:06,910
+tune small specialized models for this graphic extraction
+
+79
+00:05:07,276.66666666668607 --> 00:05:11,860
+step, specialized on our data and use case and domain
+
+80
+00:05:11,860 --> 00:05:15,510
+implicitly, right? And we create,
+
+81
+00:05:15,510 --> 00:05:19,590
+we fine tune and host these models for this graphic
+
+82
+00:05:19,590 --> 00:05:23,440
+structure where we want to extract
+
+83
+00:05:23,440 --> 00:05:26,960
+entities and relationships based on our
+
+84
+00:05:26,960 --> 00:05:30,500
+ontology and not other ontology,
+
+85
+00:05:30,500 --> 00:05:34,400
+so our specific ontology. So we also show
+
+86
+00:05:34,400 --> 00:05:38,250
+this step basically how to fine tune small models
+
+87
+00:05:38,596.6666666666861 --> 00:05:42,200
+for particular elements of this
+
+88
+00:05:42,200 --> 00:05:45,810
+whole architecture which you can later on adapt
+
+89
+00:05:45,810 --> 00:05:49,530
+and fine tune on different elements such as if you have
+
+90
+00:05:49,530 --> 00:05:53,160
+something here in the data pipeline for cleaning or the embedding
+
+91
+00:05:53,160 --> 00:05:57,020
+model or some here in the tools or some small
+
+92
+00:05:57,020 --> 00:06:02,440
+models from the harness, that's the point.
+
+93
+00:06:02,440 --> 00:06:06,320
+Or for example here from the query when we
+
+94
+00:06:06,320 --> 00:06:10,020
+want to decode a natural language query into
+
+95
+00:06:10,020 --> 00:06:13,560
+something that's queryable inside MongoDB and basically you can use the same
+
+96
+00:06:13,560 --> 00:06:17,520
+techniques to do that as
+
+97
+00:06:17,946.6666666666861 --> 00:06:21,760
+well. And then we output the small language model
+
+98
+00:06:21,760 --> 00:06:25,800
+inside this graphic structure step to basically
+
+99
+00:06:25,800 --> 00:06:29,630
+will be part of the memory pipeline. And I realized that
+
+100
+00:06:29,630 --> 00:06:33,880
+I messed up the numbers here, so we have two fives.
+
+101
+00:06:33,880 --> 00:06:38,120
+I will correct this after this video, so
+
+102
+00:06:38,120 --> 00:06:41,800
+basically the numbers will not match what I'm showing
+
+103
+00:06:41,800 --> 00:06:45,640
+you here, I will correct that, but you can just follow
+
+104
+00:06:45,640 --> 00:06:49,280
+the new numbers afterwards because the concepts
+
+105
+00:06:49,280 --> 00:06:53,090
+will be the same. Okay so this is more on the data
+
+106
+00:06:53,090 --> 00:06:57,140
+pipeline, memory pipeline, fine tuning pipeline
+
+107
+00:06:57,140 --> 00:07:01,000
+side of things like the backend and next on the user facing
+
+108
+00:07:01,000 --> 00:07:04,700
+part of things we have this Tui, this harness and SAP
+
+109
+00:07:04,700 --> 00:07:08,430
+server. And the story begins at the Tui
+
+110
+00:07:08,430 --> 00:07:12,580
+which stands for terminal user interface
+
+111
+00:07:13,196.66666666668607 --> 00:07:16,960
+where basically a user interacts with the harness
+
+112
+00:07:16,960 --> 00:07:20,560
+through the CLI similar to cloud code and it asks
+
+113
+00:07:20,560 --> 00:07:24,530
+the harness which is more or less made
+
+114
+00:07:24,530 --> 00:07:28,100
+out of an LLM plus the tools such as
+
+115
+00:07:28,100 --> 00:07:31,820
+a bash tools, a grab tools, to do,
+
+116
+00:07:31,820 --> 00:07:35,700
+keeping track of a to do list tools
+
+117
+00:07:35,700 --> 00:07:39,400
+and things like that. Basically tools
+
+118
+00:07:39,400 --> 00:07:42,980
+that allow you, allows the harness to
+
+119
+00:07:42,980 --> 00:07:46,650
+interact with your computer and to generate code and
+
+120
+00:07:47,116.66666666668607 --> 00:07:51,200
+plan, more or less these are the core family of tools.
+
+121
+00:07:51,200 --> 00:07:54,900
+And then we also implement, so we will implement all of these from scratch starting from
+
+122
+00:07:54,900 --> 00:07:59,060
+the Tui to this LLM loop and also the skills with
+
+123
+00:07:59,060 --> 00:08:02,960
+progressive disclosure, so we will implement,
+
+124
+00:08:02,960 --> 00:08:07,240
+show how to implement skills from scratch with progressive disclosure.
+
+125
+00:08:07,240 --> 00:08:11,200
+So all of this is implemented from scratch, not using cloud
+
+126
+00:08:11,200 --> 00:08:14,780
+code or also using cloud code plus how to implement
+
+127
+00:08:14,780 --> 00:08:18,480
+all of this from scratch. And also we'll
+
+128
+00:08:18,480 --> 00:08:22,310
+show how to hook this as an MCP client, the harness
+
+129
+00:08:22,310 --> 00:08:26,190
+is an MCP client to the MCP server like the
+
+130
+00:08:26,190 --> 00:08:29,850
+continual learning memory MCP server which
+
+131
+00:08:29,850 --> 00:08:34,140
+will have these tools to query the memory,
+
+132
+00:08:34,696.6666666666861 --> 00:08:38,720
+right, like do simple queries using the
+
+133
+00:08:39,156.66666666668607 --> 00:08:43,250
+graph, vector and text search and do normal
+
+134
+00:08:43,250 --> 00:08:47,140
+more compact queries or do deep research
+
+135
+00:08:47,140 --> 00:08:51,040
+queries for more in-depth traversals
+
+136
+00:08:51,040 --> 00:08:54,660
+and knowledge work and also ingest any type
+
+137
+00:08:54,660 --> 00:08:58,520
+of URI similar to here from the data pipeline
+
+138
+00:08:58,570 --> 00:09:02,130
+on demand directly from the harness or also
+
+139
+00:09:02,130 --> 00:09:06,620
+ingest the query conversation basically to learn
+
+140
+00:09:06,620 --> 00:09:10,300
+from the conversation between you
+
+141
+00:09:10,300 --> 00:09:14,150
+the user and the agent. Okay,
+
+142
+00:09:14,150 --> 00:09:17,680
+so this is basically point nine and
+
+143
+00:09:17,680 --> 00:09:21,470
+point ten and the last step will be this
+
+144
+00:09:21,470 --> 00:09:25,010
+AI this layer
+
+145
+00:09:26,626.6666666666279 --> 00:09:31,050
+which is actually
+
+146
+00:09:31,050 --> 00:09:35,040
+observability
+
+147
+00:09:35,436.66666666662786 --> 00:09:39,880
+which is like monitoring plus evals.
+
+148
+00:09:39,880 --> 00:09:43,530
+I will fix this afterwards to look nice but the idea is that we will also have this
+
+149
+00:09:43,530 --> 00:09:47,770
+observability layer where we will do monitoring
+
+150
+00:09:48,506.66666666662786 --> 00:09:52,280
+for the MCP server and the harness.
+
+151
+00:09:52,280 --> 00:09:55,920
+I still have to think this through in more detail but the idea is
+
+152
+00:09:55,920 --> 00:10:00,040
+that we will have monitoring and evals to actually
+
+153
+00:10:00,040 --> 00:10:04,320
+see that our harness, our special
+
+154
+00:10:04,320 --> 00:10:07,850
+eye harness actually works well as
+
+155
+00:10:07,850 --> 00:10:11,530
+a harness per se but also couples with MCP
+
+156
+00:10:11,530 --> 00:10:15,240
+server for continual memory and that also
+
+157
+00:10:15,240 --> 00:10:19,820
+works on specialized domains such as keeping conversation
+
+158
+00:10:19,820 --> 00:10:23,870
+or generating articles or writing code or whatever
+
+159
+00:10:23,870 --> 00:10:27,520
+domains that we want to specialize in.
+
+160
+00:10:27,520 --> 00:10:31,160
+So yeah, this is like a walkthrough of what we
+
+161
+00:10:31,160 --> 00:10:34,730
+will build and all of this will be built from
+
+162
+00:10:34,730 --> 00:10:38,240
+scratch just using like MongoDB for the database like the data
+
+163
+00:10:38,240 --> 00:10:42,480
+warehouse and the unified memory and prefact-fasting
+
+164
+00:10:42,480 --> 00:10:46,900
+MCP as the MCP server and Voyage AI as the embedding
+
+165
+00:10:46,900 --> 00:10:50,700
+model but focus this post for MongoDB
+
+166
+00:10:50,700 --> 00:10:54,350
+because this is a sponsor post for MongoDB
+
+167
+00:10:54,350 --> 00:10:58,360
+and only MongoDB and Voyage AI are their products.
+
+168
+00:10:58,360 --> 00:11:02,560
+Otherwise keep everything else just a tooth-free,
+
+169
+00:11:02,560 --> 00:11:06,120
+just conceptually walk over all of this.
+
+170
+00:11:06,120 --> 00:11:11,900
+[end of transcript] [ Silence
+
+171
+00:11:12,360 --> 00:11:12,360
+]

@@ -1,0 +1,1011 @@
+1
+00:00:00,680 --> 00:00:05,520
+and so on.
+
+2
+00:00:05,886.666666666667 --> 00:00:12,200
+So let me continue.
+
+3
+00:00:12,200 --> 00:00:15,780
+On the RS feed thing, basically it's an
+
+4
+00:00:15,780 --> 00:00:19,520
+RS feed that constantly changes, right?
+
+5
+00:00:19,520 --> 00:00:23,180
+So depending on how people publish the application,
+
+6
+00:00:23,180 --> 00:00:26,870
+for example, if I pull from that RS feed today, I get the
+
+7
+00:00:26,870 --> 00:00:30,380
+latest five articles, but in one week, the latest five
+
+8
+00:00:30,380 --> 00:00:34,240
+articles are different, right? Because they're
+
+9
+00:00:34,240 --> 00:00:38,300
+always the latest. So like this, you can pull information
+
+10
+00:00:38,300 --> 00:00:42,590
+from all kinds of sources, very easily. But anyway,
+
+11
+00:00:42,590 --> 00:00:46,450
+this is the input, basically a bunch of URLs,
+
+12
+00:00:46,450 --> 00:00:50,370
+static or moving, depending on the type
+
+13
+00:00:50,370 --> 00:00:53,970
+of thread. And then on the architectural side,
+
+14
+00:00:53,970 --> 00:00:58,620
+this is what happens. So we have first an orchestrator
+
+15
+00:00:58,620 --> 00:01:02,300
+that gets as input all these URLs. And
+
+16
+00:01:02,300 --> 00:01:06,220
+depending on the platform, like Substack,
+
+17
+00:01:06,220 --> 00:01:09,730
+YouTube, GitHub or custom URLs, it kind
+
+18
+00:01:09,730 --> 00:01:13,790
+of flattens them out over here and
+
+19
+00:01:13,790 --> 00:01:17,590
+groups them depending on the URL. And
+
+20
+00:01:17,590 --> 00:01:21,460
+it creates multiple shards. Basically
+
+21
+00:01:21,460 --> 00:01:25,440
+it creates a big list of URLs and splits it into
+
+22
+00:01:25,440 --> 00:01:29,560
+multiple pieces, which are known as shards.
+
+23
+00:01:29,560 --> 00:01:33,460
+And then each piece, each shard is delegated
+
+24
+00:01:33,460 --> 00:01:37,280
+to a new worker, right? But how that is done
+
+25
+00:01:37,280 --> 00:01:41,150
+is that you take that shard and this process is known
+
+26
+00:01:41,150 --> 00:01:44,970
+as fan out, where basically you put
+
+27
+00:01:44,970 --> 00:01:48,500
+each piece on a new worker. And because
+
+28
+00:01:48,500 --> 00:01:52,190
+maybe you don't have enough capacity between delegating
+
+29
+00:01:52,190 --> 00:01:56,060
+that work, that piece of work, which in our
+
+30
+00:01:56,060 --> 00:01:59,720
+use case is a slice of URLs, before
+
+31
+00:01:59,720 --> 00:02:03,570
+actually starting to process it,
+
+32
+00:02:03,570 --> 00:02:07,420
+you put it in a queue, right? So basically you take
+
+33
+00:02:07,420 --> 00:02:11,430
+this big, this huge chunk of URLs, which
+
+34
+00:02:11,430 --> 00:02:15,520
+can be in the order of millions, right?
+
+35
+00:02:15,520 --> 00:02:19,390
+You chunk it up, you split it into multiple pieces
+
+36
+00:02:19,390 --> 00:02:23,180
+where each piece is processed on a single worker.
+
+37
+00:02:23,180 --> 00:02:26,900
+But instead of directly starting to process
+
+38
+00:02:26,900 --> 00:02:30,530
+it, you put each piece as a future job to be
+
+39
+00:02:30,530 --> 00:02:34,590
+done in a queue. And then you have a limited
+
+40
+00:02:34,590 --> 00:02:38,120
+number of workers that take each piece from
+
+41
+00:02:38,120 --> 00:02:42,040
+this queue and start to process it, right?
+
+42
+00:02:42,040 --> 00:02:45,990
+And for example, you can have three workers
+
+43
+00:02:45,990 --> 00:02:50,440
+and you can have 100 slices to be processed
+
+44
+00:02:50,440 --> 00:02:54,310
+or you can have 10 workers and 1000 slices. So
+
+45
+00:02:54,310 --> 00:02:58,060
+basically they're not one-on-one, but like this,
+
+46
+00:02:58,060 --> 00:03:01,740
+you can have like huge spikes in your ingestion
+
+47
+00:03:01,740 --> 00:03:05,290
+and through this queue, you can handle all
+
+48
+00:03:05,836.666666666657 --> 00:03:09,460
+the spikes independent on how many workers you have.
+
+49
+00:03:09,460 --> 00:03:13,060
+The only limitation is the speed on how you
+
+50
+00:03:13,060 --> 00:03:16,770
+process them. And if you want to go faster, you just add another
+
+51
+00:03:16,770 --> 00:03:20,930
+worker into this pool and you process them faster. So basically
+
+52
+00:03:20,930 --> 00:03:24,670
+this is how you take your initial input and delegate it into
+
+53
+00:03:24,670 --> 00:03:28,200
+multiple processes, which are known as the workers.
+
+54
+00:03:28,200 --> 00:03:32,070
+And each worker will basically run in this use case, this data,
+
+55
+00:03:32,070 --> 00:03:35,850
+this pipeline, which is pretty common
+
+56
+00:03:35,850 --> 00:03:39,390
+to agentic memory stuff,
+
+57
+00:03:40,426.66666666665697 --> 00:03:44,580
+right? And what this does is that it takes this.
+
+58
+00:03:44,580 --> 00:03:48,400
+So the same data pipeline runs on each worker,
+
+59
+00:03:48,400 --> 00:03:52,360
+but with different URLs, but each worker gets
+
+60
+00:03:52,360 --> 00:03:55,930
+basically a bunch, a list of URLs that needs
+
+61
+00:03:55,930 --> 00:03:59,680
+to process. And what it does, it further flattens them
+
+62
+00:03:59,680 --> 00:04:03,310
+out because for example, it can get as a single input,
+
+63
+00:04:03,686.666666666657 --> 00:04:07,480
+a single URLs or RS feeds where an RS feed
+
+64
+00:04:07,480 --> 00:04:11,310
+can have on it, it's on its own a list
+
+65
+00:04:11,310 --> 00:04:15,140
+of URLs. So basically it just flattens everything
+
+66
+00:04:15,140 --> 00:04:18,840
+into a single list where every list points to a direct
+
+67
+00:04:18,840 --> 00:04:22,570
+article, let's say. Then using,
+
+68
+00:04:22,570 --> 00:04:26,990
+then what we need to do is basically to scrape
+
+69
+00:04:26,990 --> 00:04:30,680
+all that information from the internet.
+
+70
+00:04:30,680 --> 00:04:34,460
+And to do that, because you at this point,
+
+71
+00:04:35,26.66666666668607 --> 00:04:38,610
+right? You also have at this point a
+
+72
+00:04:38,610 --> 00:04:42,130
+list of URLs. And here your limitation is basically IO
+
+73
+00:04:42,130 --> 00:04:47,180
+operations on the internet, right? You need to basically
+
+74
+00:04:47,180 --> 00:04:51,660
+crawl the internet to do network operations.
+
+75
+00:04:51,660 --> 00:04:55,470
+And because of that, you can very easily paralyze
+
+76
+00:04:55,976.6666666666861 --> 00:04:59,660
+this operation through batch async IO, right?
+
+77
+00:04:59,660 --> 00:05:04,400
+You extract through a threading parallelism,
+
+78
+00:05:04,400 --> 00:05:07,930
+which is very good for IO operations to
+
+79
+00:05:07,930 --> 00:05:12,000
+like in parallel scrape a batch of links
+
+80
+00:05:12,000 --> 00:05:15,940
+from this window of initial URLs that
+
+81
+00:05:15,940 --> 00:05:20,120
+you need to process. For example,
+
+82
+00:05:20,120 --> 00:05:23,880
+let's say that on this worker, we need to process
+
+83
+00:05:23,880 --> 00:05:27,740
+1000 links, right over here, then we flatten them
+
+84
+00:05:27,740 --> 00:05:32,030
+out if necessary, and then we don't necessarily
+
+85
+00:05:32,030 --> 00:05:36,010
+want to start processing all 1000 at a single
+
+86
+00:05:36,010 --> 00:05:39,540
+time. But let's say that we batch them in batches
+
+87
+00:05:39,926.6666666666861 --> 00:05:43,440
+of 100, and then those 100 we can process
+
+88
+00:05:43,440 --> 00:05:47,090
+in parallel at a time. And this is basically the
+
+89
+00:05:47,090 --> 00:05:50,970
+difference. So we have initially one million documents,
+
+90
+00:05:50,970 --> 00:05:54,760
+we split them into multiple workers. Let's say each
+
+91
+00:05:54,760 --> 00:05:58,840
+worker gets 1000 URLs, and then further
+
+92
+00:05:58,840 --> 00:06:02,660
+in each worker, we can further split them into
+
+93
+00:06:03,236.66666666668607 --> 00:06:06,930
+batches and process them like, let's say 100
+
+94
+00:06:06,930 --> 00:06:11,200
+by 100. And then we can do through
+
+95
+00:06:11,200 --> 00:06:15,070
+async IO or process in parallel each
+
+96
+00:06:15,070 --> 00:06:18,890
+batch. That's basically what happens over here. And then
+
+97
+00:06:18,890 --> 00:06:22,480
+we can also like transform them like, I don't know, clean, for example, the
+
+98
+00:06:22,480 --> 00:06:26,640
+retrieve HTML if necessary, and then using a similar strategy,
+
+99
+00:06:26,640 --> 00:06:30,280
+we load everything as documents into our memory,
+
+100
+00:06:30,280 --> 00:06:33,930
+which is as well IO bounded operations,
+
+101
+00:06:33,930 --> 00:06:37,560
+because we need to take that document and just put
+
+102
+00:06:37,560 --> 00:06:41,960
+it in our database. So basically here the data
+
+103
+00:06:41,960 --> 00:06:46,170
+pipeline is constrained only by IO operations, network
+
+104
+00:06:46,170 --> 00:06:49,870
+operations, and disk operations when it comes to the
+
+105
+00:06:49,870 --> 00:06:53,460
+database. So basically now we have documents into the
+
+106
+00:06:53,460 --> 00:06:57,370
+unified agent memory. And now our goal is actually to take these documents
+
+107
+00:06:57,370 --> 00:07:01,020
+and transform them into knowledge graph objects, which is it
+
+108
+00:07:01,020 --> 00:07:05,100
+has a similar scanning strategy, but with different problems
+
+109
+00:07:05,100 --> 00:07:08,660
+because we need to use LLMs to process deformation and
+
+110
+00:07:08,660 --> 00:07:12,230
+embedding models to embed it. So let's
+
+111
+00:07:12,230 --> 00:07:16,170
+see how we do that. Okay,
+
+112
+00:07:16,170 --> 00:07:19,710
+so basically now as input into this memory
+
+113
+00:07:19,710 --> 00:07:23,560
+work pool, we get documents basically.
+
+114
+00:07:23,560 --> 00:07:27,370
+Let's say we have the same million, one million
+
+115
+00:07:27,370 --> 00:07:31,100
+documents that we need to process. Let's stick
+
+116
+00:07:31,100 --> 00:07:34,630
+to this number, right? So at the beginning from
+
+117
+00:07:34,630 --> 00:07:38,740
+architectural point of view, we do the same thing.
+
+118
+00:07:38,740 --> 00:07:42,770
+We have an orchestrator which just shards
+
+119
+00:07:42,770 --> 00:07:46,980
+all these, which shards these one million
+
+120
+00:07:46,980 --> 00:07:51,850
+documents into slice of let's say 1000
+
+121
+00:07:51,850 --> 00:07:55,400
+documents and fans all of this to the workers where
+
+122
+00:07:55,400 --> 00:07:58,970
+first it puts each slice, each shard
+
+123
+00:07:58,970 --> 00:08:02,580
+into the queue to be processed. And
+
+124
+00:08:02,580 --> 00:08:06,430
+then we have a pool of workers that take that
+
+125
+00:08:06,430 --> 00:08:10,070
+slice to actually process it. But now we have the
+
+126
+00:08:10,070 --> 00:08:13,980
+memory pipeline inside those workers that actually process
+
+127
+00:08:13,980 --> 00:08:17,610
+this information. And before going into the memory
+
+128
+00:08:17,610 --> 00:08:21,680
+pipeline, I want to highlight that all these orchestrations,
+
+129
+00:08:21,680 --> 00:08:25,650
+sharding, queuing, worker, all this
+
+130
+00:08:25,650 --> 00:08:29,300
+logic is done via prefact, right?
+
+131
+00:08:29,300 --> 00:08:32,940
+So prefact is the orchestrator tool that allows us to
+
+132
+00:08:32,940 --> 00:08:36,540
+also do the data pipelines, which weren't there
+
+133
+00:08:36,540 --> 00:08:40,210
+very good at, but they're also very good to
+
+134
+00:08:40,210 --> 00:08:43,820
+actually do like rag ingestion or memory pipelines,
+
+135
+00:08:43,820 --> 00:08:47,440
+basically to do rag or for agent memory or for AI
+
+136
+00:08:47,440 --> 00:08:50,980
+stuff where we need to move data around,
+
+137
+00:08:50,980 --> 00:08:54,970
+process it and load it into various storage
+
+138
+00:08:54,970 --> 00:08:59,130
+units. It's basically the same problem as data engineering,
+
+139
+00:08:59,130 --> 00:09:03,800
+but with a bit more complexity of it. Okay.
+
+140
+00:09:03,800 --> 00:09:07,350
+So now let's see what happens inside the memory
+
+141
+00:09:07,350 --> 00:09:11,430
+pipeline. So as I said, we have documents as input,
+
+142
+00:09:11,430 --> 00:09:15,000
+but here within a memory pipeline, we have only
+
+143
+00:09:15,000 --> 00:09:19,640
+a slice of the initial documents that we need to process,
+
+144
+00:09:19,640 --> 00:09:23,600
+right? And we go through the standard steps,
+
+145
+00:09:23,600 --> 00:09:27,840
+like we first chunk the content of the
+
+146
+00:09:27,840 --> 00:09:31,570
+documents and then we further flatten all the
+
+147
+00:09:31,570 --> 00:09:35,290
+chunks, right? Basically we have, let's say 1000 documents
+
+148
+00:09:35,290 --> 00:09:39,510
+and after we chunk them, we can have like 10,000
+
+149
+00:09:40,396.66666666662786 --> 00:09:44,250
+chunks, right? So now the numbers of units that
+
+150
+00:09:44,250 --> 00:09:47,870
+we need to process grows depending on how long
+
+151
+00:09:47,870 --> 00:09:51,790
+each document is, but let's say we have 10,000
+
+152
+00:09:51,790 --> 00:09:55,940
+chunks here and that's why we further need to flatten them
+
+153
+00:09:55,940 --> 00:10:00,160
+because it's a lot easier
+
+154
+00:10:00,706.6666666666279 --> 00:10:04,390
+to process a flat list. And now
+
+155
+00:10:04,390 --> 00:10:08,310
+the problem is that we don't have only a pure IO
+
+156
+00:10:08,310 --> 00:10:11,990
+problem, right? We need to actually, what we need
+
+157
+00:10:11,990 --> 00:10:15,510
+here is to extract knowledge graph triplets out
+
+158
+00:10:15,510 --> 00:10:19,110
+of these chunks. Basically we need to extract those
+
+159
+00:10:19,110 --> 00:10:23,080
+entity relationship, entity triplets for the content
+
+160
+00:10:23,080 --> 00:10:26,670
+of all those chunks. So basically we need an LLM to
+
+161
+00:10:26,670 --> 00:10:30,710
+process this information. And a very common thing
+
+162
+00:10:30,710 --> 00:10:34,350
+to do is here is to actually, well,
+
+163
+00:10:34,350 --> 00:10:38,310
+use an API such as Gemini or Claude or whatever
+
+164
+00:10:38,310 --> 00:10:42,040
+to basically have access to this LLM or
+
+165
+00:10:42,386.66666666662786 --> 00:10:46,460
+take an open source LLM such as one from Liquid
+
+166
+00:10:46,460 --> 00:10:50,340
+or QAN and host it on the VLLM server where
+
+167
+00:10:50,340 --> 00:10:54,290
+we have GPUs, right? These are
+
+168
+00:10:54,290 --> 00:10:58,140
+two common options. But
+
+169
+00:10:58,140 --> 00:11:01,700
+how we hook the LLM to the memory pipeline is
+
+170
+00:11:01,700 --> 00:11:05,460
+actually quite similar regardless of
+
+171
+00:11:05,460 --> 00:11:09,370
+how we host the LLM. And what we do is we
+
+172
+00:11:09,370 --> 00:11:13,800
+want to use batch operations, right? As I said,
+
+173
+00:11:13,800 --> 00:11:17,310
+similar to the IO use case, we want to batch, for example,
+
+174
+00:11:17,310 --> 00:11:20,830
+from these 10,000 units of
+
+175
+00:11:20,830 --> 00:11:24,710
+chunks, we take 100 of them and we send all those
+
+176
+00:11:24,710 --> 00:11:29,240
+100 to the LLM service to process at once.
+
+177
+00:11:29,240 --> 00:11:33,120
+And in reality is also an IO problem.
+
+178
+00:11:33,120 --> 00:11:36,700
+So because the actual work is done on the LLM
+
+179
+00:11:36,700 --> 00:11:40,840
+server that has GPUs, that that's where the actual computation
+
+180
+00:11:40,840 --> 00:11:44,670
+is done. Here in the memory pipeline, it can stay light and it just delegates
+
+181
+00:11:44,670 --> 00:11:48,840
+that information to another server. Okay.
+
+182
+00:11:48,840 --> 00:11:52,380
+Then we can do some, we have to do
+
+183
+00:11:52,380 --> 00:11:56,190
+the normalization step where we
+
+184
+00:11:56,190 --> 00:11:59,980
+do like, we do canonical name resolution and entity
+
+185
+00:11:59,980 --> 00:12:04,620
+deduplication and that type of things. And here usually
+
+186
+00:12:04,620 --> 00:12:08,390
+this is again very, uh, I, disk IO
+
+187
+00:12:08,390 --> 00:12:12,000
+bounded because here we need to query
+
+188
+00:12:12,000 --> 00:12:15,720
+the database to actually find similar or
+
+189
+00:12:15,720 --> 00:12:19,350
+similar entities. Right. So basically here we
+
+190
+00:12:19,350 --> 00:12:23,370
+depend on the database. So it's again,
+
+191
+00:12:23,370 --> 00:12:27,280
+a disk IO bounded. So again, we
+
+192
+00:12:27,280 --> 00:12:30,840
+can very easily paralyze it like that. And
+
+193
+00:12:30,840 --> 00:12:34,930
+another step is when we need to take the
+
+194
+00:12:34,930 --> 00:12:38,560
+content of each entity and embed it.
+
+195
+00:12:38,560 --> 00:12:42,310
+And this can be done in a similar fashion to how we, we did it with
+
+196
+00:12:42,310 --> 00:12:46,100
+the LLM, but because it's still a deep learning
+
+197
+00:12:46,100 --> 00:12:50,080
+model, but we can also take another spin here as an example
+
+198
+00:12:50,080 --> 00:12:53,720
+where we can host actually the embedding on the worker
+
+199
+00:12:53,720 --> 00:12:57,540
+itself. Right. Because the embedding models are lighter
+
+200
+00:12:57,540 --> 00:13:01,250
+and which means that we can actually run them on the CPU on the worker
+
+201
+00:13:01,250 --> 00:13:04,810
+itself. So we stay local, which is faster
+
+202
+00:13:04,810 --> 00:13:08,480
+because now we don't have like network IO
+
+203
+00:13:08,480 --> 00:13:12,010
+limitations at all because we are on the same
+
+204
+00:13:12,010 --> 00:13:15,680
+machine and we can just run again batch
+
+205
+00:13:15,680 --> 00:13:19,310
+operations directly on that worker. And
+
+206
+00:13:19,310 --> 00:13:23,290
+now as outputs, we have those knowledge
+
+207
+00:13:23,290 --> 00:13:27,020
+graph objects, which we load in the
+
+208
+00:13:27,020 --> 00:13:30,800
+database, which probably it's again,
+
+209
+00:13:30,800 --> 00:13:34,970
+we have this loading step, which we again
+
+210
+00:13:34,970 --> 00:13:39,420
+can batch and it's a disk and network
+
+211
+00:13:39,420 --> 00:13:43,190
+IO bounded. So yeah, basically
+
+212
+00:13:43,190 --> 00:13:48,460
+just to repeat, we have two levels of parallel
+
+213
+00:13:48,460 --> 00:13:52,180
+list here that are very important,
+
+214
+00:13:52,546.6666666666279 --> 00:13:56,170
+right? We have the, for example, for the, for the memory work
+
+215
+00:13:56,170 --> 00:13:59,810
+pool, we have this list of documents, 1 million documents
+
+216
+00:13:59,810 --> 00:14:03,560
+that we need to process. First what we do, we take that list
+
+217
+00:14:03,560 --> 00:14:07,240
+and shard it into slices and delegate that to workers
+
+218
+00:14:07,240 --> 00:14:11,310
+and each worker is basically a separate process or a separate
+
+219
+00:14:11,310 --> 00:14:15,110
+machine altogether. And each worker gets
+
+220
+00:14:15,110 --> 00:14:20,290
+like a slice, let's say 1 million, 1,000
+
+221
+00:14:20,290 --> 00:14:24,440
+documents and further processes it and it processes
+
+222
+00:14:24,440 --> 00:14:28,320
+it in parallel again by batching.
+
+223
+00:14:28,320 --> 00:14:32,600
+And that batching usually is IO bounded,
+
+224
+00:14:33,306.66666666662786 --> 00:14:37,000
+right? Which means you can very easily run
+
+225
+00:14:37,000 --> 00:14:40,540
+in parallel multiple operations
+
+226
+00:14:40,540 --> 00:14:44,160
+and like this, you can further as much as possible,
+
+227
+00:14:44,160 --> 00:14:48,330
+you can process in parallel all the elements
+
+228
+00:14:48,330 --> 00:14:52,180
+that are sent to particular worker. But because
+
+229
+00:14:52,180 --> 00:14:55,840
+in reality that's not really feasible, you batch it
+
+230
+00:14:55,840 --> 00:14:59,430
+again into multiple slices and you process that
+
+231
+00:14:59,430 --> 00:15:03,120
+in parallel. So we have two levels of slicing, the initial
+
+232
+00:15:03,120 --> 00:15:06,860
+level of slicing where we take it and split it into workers
+
+233
+00:15:06,860 --> 00:15:10,500
+and the second level of slicing where we split it
+
+234
+00:15:10,500 --> 00:15:14,350
+into batches. And using this architecture, depending
+
+235
+00:15:14,350 --> 00:15:17,970
+on your workload, you can even go crazier and here we
+
+236
+00:15:17,970 --> 00:15:21,490
+have like the, when we split the elements in
+
+237
+00:15:21,490 --> 00:15:26,270
+multiple workers, that's like pipeline parallelism
+
+238
+00:15:26,270 --> 00:15:30,210
+and when we further split it and parallelize it within
+
+239
+00:15:30,210 --> 00:15:36,960
+the pipeline, that's task parallelizing.
+
+240
+00:15:36,960 --> 00:15:40,670
+And at the task parallelizing level, we can
+
+241
+00:15:40,670 --> 00:15:44,200
+even go crazier and use like a desk or rate
+
+242
+00:15:44,200 --> 00:15:48,820
+cluster and actually instead of processing
+
+243
+00:15:48,820 --> 00:15:52,780
+it through VLM servers on the worker or
+
+244
+00:15:52,780 --> 00:15:56,520
+for example if we have like very hardcore
+
+245
+00:15:56,520 --> 00:16:00,160
+embedding type of things to do and we don't want to
+
+246
+00:16:00,180 --> 00:16:04,580
+run an embedding model on a VLM server, we can
+
+247
+00:16:04,580 --> 00:16:08,230
+further take all of that and run it on the rate cluster
+
+248
+00:16:08,230 --> 00:16:12,320
+or desk cluster to actually parallelize it even further
+
+249
+00:16:12,320 --> 00:16:16,390
+and run the whole batch at once in parallel
+
+250
+00:16:16,746.6666666666279 --> 00:16:20,640
+for real on another cluster of GPUs.
+
+251
+00:16:20,640 --> 00:16:24,480
+So you can get creative here as long as you properly
+
+252
+00:16:24,480 --> 00:16:28,360
+divide these elements into the architecture.
+
+253
+00:16:28,850 --> 00:16:32,360
+[ Silence ]

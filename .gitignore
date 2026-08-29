@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- LLM wiki workshop -------------------------------------------------------
+# Live workshop runs. The committed reference runs live under <layer>/examples/.
+/0*-llm-wiki-*/wiki-*/
+# Repo clones are regenerable and huge.
+**/raw/repos/
+# macOS
+.DS_Store

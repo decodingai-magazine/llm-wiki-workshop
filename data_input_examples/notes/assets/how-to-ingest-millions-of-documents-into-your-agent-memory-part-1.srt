@@ -1,0 +1,175 @@
+1
+00:00:04,700 --> 00:00:08,740
+Okay, so I want to walk you through how
+
+2
+00:00:09,156.66666666666606 --> 00:00:12,700
+to ingest millions of documents into
+
+3
+00:00:12,700 --> 00:00:17,480
+your agent memory.
+
+4
+00:00:17,480 --> 00:00:21,220
+So yeah, basically, we just walk you through over the diagrams, so it will also be easier
+
+5
+00:00:21,220 --> 00:00:25,170
+to write a piece on this. So
+
+6
+00:00:25,170 --> 00:00:29,320
+for context, the goal of this
+
+7
+00:00:29,320 --> 00:00:33,420
+is like how to do the system
+
+8
+00:00:34,243.33333333333576 --> 00:00:39,880
+design on how to scale the ingestion
+
+9
+00:00:39,880 --> 00:00:43,610
+logic of the data pipeline
+
+10
+00:00:43,610 --> 00:00:47,630
+and memory pipeline. How to scale the ingestion
+
+11
+00:00:47,630 --> 00:00:51,420
+logic to ingest millions of documents into your
+
+12
+00:00:51,420 --> 00:00:55,120
+agent memory. So this will
+
+13
+00:00:55,120 --> 00:00:59,040
+be more of an architectural discussion, and it's
+
+14
+00:00:59,040 --> 00:01:02,690
+mostly related to how can you parallelize these
+
+15
+00:01:02,690 --> 00:01:06,300
+two pipelines, the data pipeline and memory pipeline, the pipelines
+
+16
+00:01:06,300 --> 00:01:09,840
+themselves, and also like elements within the
+
+17
+00:01:09,840 --> 00:01:13,350
+pipeline. For example, all this LM extraction,
+
+18
+00:01:13,350 --> 00:01:17,370
+embedding, and things like this, right? So you
+
+19
+00:01:17,370 --> 00:01:20,900
+have like two scaling dimensions.
+
+20
+00:01:20,900 --> 00:01:24,620
+The pipeline itself and the elements
+
+21
+00:01:24,620 --> 00:01:28,230
+within the pipeline. And now I'll walk you
+
+22
+00:01:28,230 --> 00:01:32,040
+through step by step to actually understand. So we have
+
+23
+00:01:32,040 --> 00:01:36,340
+three elements here, three big elements, the data pipeline,
+
+24
+00:01:36,340 --> 00:01:40,240
+the memory pipeline, and the unified agent memory.
+
+25
+00:01:40,240 --> 00:01:44,120
+And in this particular use case, because we are scoped towards the personal assistant
+
+26
+00:01:44,120 --> 00:01:47,770
+scenario that I'm doing for the book, we will do this
+
+27
+00:01:47,770 --> 00:01:51,560
+unified agent memory via Nolibre graphs, knowledge
+
+28
+00:01:51,560 --> 00:01:55,100
+graphs, and semantic search, knowledge graphs and
+
+29
+00:01:55,100 --> 00:01:58,650
+semantic search and text search
+
+30
+00:01:58,650 --> 00:02:02,360
+basically. And now, yeah, let's go step by step.
+
+31
+00:02:02,360 --> 00:02:06,190
+So we have this data work pool, which basically
+
+32
+00:02:06,190 --> 00:02:09,840
+get as inputs very roughly speaking for this
+
+33
+00:02:09,840 --> 00:02:13,570
+example, web URLs. But these
+
+34
+00:02:13,570 --> 00:02:17,600
+web URLs can be like articles, sub stack URLs, YouTube
+
+35
+00:02:17,946.666666666657 --> 00:02:22,000
+URLs, or blog URLs, or any other type of sites, right?
+
+36
+00:02:22,000 --> 00:02:25,550
+Can work basically with any type of URLs and also
+
+37
+00:02:25,550 --> 00:02:29,450
+RS feeds. This is important because
+
+38
+00:02:29,450 --> 00:02:33,290
+when you give an URL feed to as input
+
+39
+00:02:33,290 --> 00:02:36,910
+is just one URL, like one article or one
+
+40
+00:02:36,910 --> 00:02:40,520
+video or whatever. But when you give an RS feed,
+
+41
+00:02:40,520 --> 00:02:44,360
+it gives you like the latest 10 videos from
+
+42
+00:02:44,360 --> 00:02:47,990
+a YouTube channel or latest 10 articles from
+
+43
+00:02:47,990 --> 00:02:51,620
+sub stack publication and so on and so forth. And
+
+44
+00:02:51,620 --> 00:02:55,280
+also this feed is like, is changing, right?
