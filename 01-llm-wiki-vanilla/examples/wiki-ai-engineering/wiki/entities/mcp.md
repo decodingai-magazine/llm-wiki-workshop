@@ -1,64 +1,47 @@
 ---
 type: entity
-title: MCP (Model Context Protocol)
-description: The open protocol for connecting agents to tools, data and UI, treated across these notes as one layer of a connectivity stack rather than as the whole of it.
-aliases: [Model Context Protocol, MTP]
+title: Model Context Protocol (MCP)
+description: An open protocol from Anthropic that lets AI agents connect to tools, data sources, and business logic through a standardized client-server architecture.
+aliases: ["MCP", "Model Context Protocol"]
 sources:
-  - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
   - "[[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]"
-  - "[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]"
   - "[[wiki/sources/the-future-of-mcp-vs-skills]]"
   - "[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]"
   - "[[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]"
   - "[[wiki/sources/why-mcp-is-not-dead]]"
 related:
-  - "[[wiki/concepts/connectivity-stack]]"
-  - "[[wiki/concepts/context-layer]]"
-  - "[[wiki/concepts/governance]]"
-  - "[[wiki/concepts/mcp-primitives]]"
-  - "[[wiki/concepts/mcp-server-design]]"
-  - "[[wiki/entities/anthropic]]"
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T09:20:00Z
-source_count: 7
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/cli]]"
+  - "[[wiki/concepts/agent-connectivity]]"
+  - "[[wiki/concepts/orchestration]]"
+  - "[[wiki/entities/fastmcp]]"
+created: 2026-08-29T15:32:43Z
+timestamp: 2026-08-29T15:32:43Z
+source_count: 5
 ---
 
-# MCP (Model Context Protocol)
+# Model Context Protocol (MCP)
 
-> An open client–server protocol that lets an agent reach tools, data and — increasingly — user interfaces, defined by a small set of primitives and nothing else.
+> An open client-server protocol for connecting AI agents to tools, data, and business logic — not, itself, a skills or orchestration mechanism.
 
 ## Definition
 
-MCP is a JSON-RPC client–server protocol: an MCP host (Claude Code, an IDE, a
-desktop app) runs clients that connect to servers, and the servers expose tools,
-resources and prompts. The specification is deliberately small, and the notes
-agree on the consequence: anything that is not one of the primitives — skills
-above all — is a **packaging convention on top of the protocol**, not part of it.
-[[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
+MCP defines a small set of protocol primitives — Tools (AI-invoked functions), Resources (passive data), Prompts (user-invoked templates), plus Sampling, Elicitation, and experimental Tasks — exchanged between an MCP client (inside a host application) and one or more MCP servers over JSON-RPC. "Skills" are explicitly not one of these primitives: the word appears nowhere in the raw spec, and any skill-like behavior is implemented as a prompt, a resource, or a composite tool. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
 
-Where the sources differ is scope. The talk notes frame MCP as one layer of a
-larger connectivity stack, useful when you need rich semantics, platform
-independence or enterprise controls [[wiki/sources/the-future-of-mcp-vs-skills]].
-The rebuttal note treats that same positioning as the reason MCP survives the
-"MCP is dead" discourse at all: it is the layer where distribution and governance
-are tractable [[wiki/sources/why-mcp-is-not-dead]].
+The protocol has grown from "a little spec document" 18 months ago to 110M monthly downloads — about twice React's adoption speed — with adoption spanning OpenAI's agents SDK, Google ADK, LangChain, and large enterprise deployments. [[wiki/sources/the-future-of-mcp-vs-skills]]
 
 ## Key claims
 
-- MCP reached 110M monthly downloads in 18 months, roughly twice as fast as React, with adoption across the OpenAI agents SDK, Google ADK and LangChain. [[wiki/sources/the-future-of-mcp-vs-skills]]
-- The protocol's primitives are tools, resources, prompts, sampling, elicitation and (experimentally) tasks — there is no skills primitive. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
-- Tool code always executes on the server, which is what makes server-side composition possible at all. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
-- The near-term roadmap is a stateless transport, better async tasks for agent-to-agent work, v2 SDKs, cross-app access and well-known-URL server discovery. [[wiki/sources/the-future-of-mcp-vs-skills]]
-- In the four-layer application model, MCP is the connective tissue between presentation, harness and the servers holding business logic. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
-- Composing prebuilt servers (web search, image generation, Drive) and re-exposing the union is the default integration move. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
-- "The protocol moves bytes; the harness decides what to do with them" — several problems blamed on MCP, context bloat above all, are client-side. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
-- A server can own zero business logic and still be the entire integration surface: the MCP layer is a delivery mechanism, not a logic layer. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
+- Claude Code auto-detects and agentically calls MCP Tools, but MCP Resources and Prompts require explicit user invocation even though they're discoverable. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
+- MCP's value is centralized, governed distribution of business logic: data stays in the owner's storage, and many clients/agents can reach it at once with security and monitoring in one place — a property ungoverned per-machine CLIs and skill files can't match at business scale. [[wiki/sources/why-mcp-is-not-dead]]
+- A modern MCP server ships Tools, Resources, Prompts, skills-as-resources, MCP Apps (server-shipped UI a client can render), and Tasks/Elicitation. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
+- A custom MCP server can compose prebuilt MCP servers (web search, image generation, Google Drive) into one combined tool/prompt surface reachable by any MCP client. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
+- The protocol roadmap includes a stateless transport for easier scaling, async agent-to-agent task primitives, SDK v2 for TypeScript/Python, cross-app auth, and automatic server discovery. [[wiki/sources/the-future-of-mcp-vs-skills]]
 
 ## Relationships
 
-- **[[wiki/concepts/mcp-primitives]]**: the six things the protocol actually defines; everything else is convention.
-- **[[wiki/concepts/connectivity-stack]]**: MCP is one of three connectivity mechanisms, not the default for all of them.
-- **[[wiki/concepts/governance]]**: the property that keeps MCP relevant where CLIs and skill files do not scale.
-- **[[wiki/entities/anthropic]]**: authored the protocol and ships most of its early extensions.
+- **[[wiki/concepts/skills]]**: skills are not an MCP primitive but are commonly packaged as MCP resources or shipped through MCP servers. [[wiki/concepts/skills]]
+- **[[wiki/concepts/agent-connectivity]]**: MCP is one of three complementary connectivity layers (with skills and CLI), not a universal replacement for the other two. [[wiki/concepts/agent-connectivity]]
+- **[[wiki/entities/fastmcp]]**: the de facto default Python SDK for building MCP servers. [[wiki/entities/fastmcp]]
 
-> Synthesis: Across five sources MCP is never argued for on capability grounds — every case for it is really a case about distribution, semantics or governance, which is a useful test to apply before reaching for a server.
+> Synthesis: Across every source in this wiki, MCP is consistently defined by what it is *not* — not a skills mechanism, not a universal connectivity answer, not something to bolt onto every REST API — which turns out to be a sharper definition than a purely positive one would give.

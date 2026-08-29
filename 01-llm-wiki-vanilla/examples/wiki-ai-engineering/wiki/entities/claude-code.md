@@ -1,60 +1,43 @@
 ---
 type: entity
 title: Claude Code
-description: Anthropic's coding agent, used across these notes both as the reference harness for skills and as the prebuilt orchestrator you get to skip building.
-aliases: []
+description: Anthropic's terminal-based coding agent and MCP client, which also natively runs skills placed in `.claude/skills/`.
+aliases: ["Claude Code"]
 sources:
-  - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
   - "[[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]"
-  - "[[wiki/sources/owning-your-context-layer]]"
-  - "[[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]"
-  - "[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]"
   - "[[wiki/sources/the-future-of-mcp-vs-skills]]"
+  - "[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]"
   - "[[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]"
   - "[[wiki/sources/why-mcp-is-not-dead]]"
 related:
-  - "[[wiki/concepts/agent-harness]]"
-  - "[[wiki/concepts/agent-skills]]"
-  - "[[wiki/concepts/agentic-invocation]]"
-  - "[[wiki/concepts/context-layer]]"
-  - "[[wiki/entities/anthropic]]"
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T09:20:00Z
-source_count: 8
+  - "[[wiki/entities/mcp]]"
+  - "[[wiki/concepts/skills]]"
+created: 2026-08-29T15:32:43Z
+timestamp: 2026-08-29T15:32:43Z
+source_count: 5
 ---
 
 # Claude Code
 
-> A terminal coding agent that doubles, in these notes, as the reference implementation for how a harness treats skills, MCP tools, resources and prompts.
+> Anthropic's coding agent, cited across this wiki both as a reference MCP client and as the reference implementation of native skills.
 
 ## Definition
 
-Claude Code appears in three distinct roles across the sources: as the **client**
-whose invocation rules define what "agentic" means in practice
-[[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]; as a
-**prebuilt orchestrator** you can plug into your own MCP server instead of
-writing planning logic yourself
-[[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]; and as one of
-several interchangeable **harnesses of choice**, alongside OpenCode and OpenClaw
-[[wiki/sources/why-mcp-is-not-dead]].
+Claude Code is treated in this wiki both as an MCP client/host — one that connects to MCP servers like any other — and as the reference implementation of Claude Code's own native skills system (`.claude/skills/`), which sits outside the MCP protocol entirely. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
+
+It also appears repeatedly as the default, pre-built orchestrator teams reach for instead of writing a custom one, and as an example of the thin "presentation" layer (a TUI) in broader agent-architecture framings. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]], [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
 
 ## Key claims
 
-- Claude Code auto-detects and agentically invokes MCP tools and native `.claude/skills/`; MCP resources and prompts are listable but never invoked on the model's own initiative. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
-- Skills placed in `.claude/skills/` are picked up automatically and invoked through the skill tool when judged relevant. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
-- Using Claude Code as the orchestrator removes the client-side planning question entirely — it is only when you want your own planning logic that server-vs-client placement matters. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
-- Progressive tool discovery showed a large context reduction in a Claude Code before/after comparison. [[wiki/sources/the-future-of-mcp-vs-skills]]
-- Local file work is handed to Claude Code directly (or an Obsidian CLI) rather than being routed through a server. [[wiki/sources/why-mcp-is-not-dead]]
-- Skills and hooks are Claude Code-specific: the same MCP server runs in OpenCode or Cursor, but only Claude Code gets the tool-selection decision tree and lifecycle hooks. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- A `Stop` hook can end every session by extracting people, tasks, episodes and preferences into memory, so the graph grows with each conversation. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- One line in `CLAUDE.md` ("use `mongosh`") replaced an entire database MCP server, because the harness already has shell access. [[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]
-- Switching from Claude Code to Codex or Gemini CLI should cost five minutes if the memory is portable — the harness is not the thing you own. [[wiki/sources/owning-your-context-layer]]
-- Same model plus same servers plus a different harness produces wildly different product behaviour. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
+- Claude Code treats MCP Tools and native `.claude/skills/` skills as agentically callable, but treats MCP Resources and Prompts as passive/user-invoked only. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
+- A progressive tool-discovery pattern (deferring tool definitions until the model needs them, instead of loading everything into context) showed a demonstrated massive reduction in context usage in a Claude Code before/after comparison. [[wiki/sources/the-future-of-mcp-vs-skills]]
+- Claude Code can act as a pre-built MCP client/orchestrator, letting a team skip writing custom planning/execution logic when Claude Code's built-in orchestration is sufficient for the use case. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
+- Claude Code is used as a concrete example of the "thin renderer" presentation layer (a TUI) in a four-layer agent architecture (presentation, harness/runtime, connectivity, MCP servers). [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
+- Claude Code is a common harness of choice for personal MCP-backed setups, and can manage local files directly (or via the Obsidian CLI) without needing an MCP server for that job. [[wiki/sources/why-mcp-is-not-dead]]
 
 ## Relationships
 
-- **[[wiki/concepts/agent-harness]]**: Claude Code is the concrete instance the notes reason about when they say "harness".
-- **[[wiki/concepts/agent-skills]]**: `.claude/skills/` is the native, agentically-invoked home for user-owned procedures.
-- **[[wiki/concepts/agentic-invocation]]**: its four-surface matrix is where the auto-detected / agentic distinction comes from.
+- **[[wiki/entities/mcp]]**: one MCP client/host among several, and the wiki's recurring default orchestrator. [[wiki/entities/mcp]]
+- **[[wiki/concepts/skills]]**: its native `.claude/skills/` directory is the reference implementation of the skills convention this wiki traces across multiple agent harnesses. [[wiki/concepts/skills]]
 
-> Synthesis: Claude Code functions in this wiki as the measuring stick — several architectural claims are really claims about what one specific harness will and will not call on its own.
+> Synthesis: The one entity every source in this wiki treats as a shared reference point — used to illustrate MCP-primitive handling, progressive discovery, orchestrator choice, and personal-scale harness decisions alike.

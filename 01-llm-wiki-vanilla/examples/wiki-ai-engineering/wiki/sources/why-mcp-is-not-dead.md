@@ -1,28 +1,26 @@
 ---
 type: source
-title: Why MCP is Not Dead
-description: An outline for a rebuttal post arguing that "MCP is dead" only holds for personal setups, and that distribution, governance and security are what keep servers necessary at business scale.
+title: "Why MCP is Not Dead"
+description: "MCP is not obsolete — it is the wrong tool for ungoverned personal setups but the right one for centrally-distributed, governed business logic at scale."
 origin: local
-original_path: data_input_examples/notes/01-easy/Why MCP is Not Dead.md
+original_path: "data_input_examples/notes/01-easy/Why MCP is Not Dead.md"
 source_url: null
 authors: []
 published_date: null
 raw_file: raw/why-mcp-is-not-dead.md
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T09:00:00Z
+created: 2026-08-29T15:32:43Z
+timestamp: 2026-08-29T15:32:43Z
 entities:
   - "[[wiki/entities/mcp]]"
   - "[[wiki/entities/claude-code]]"
   - "[[wiki/entities/prefect]]"
-  - "[[wiki/entities/mongodb]]"
   - "[[wiki/entities/obsidian]]"
+  - "[[wiki/entities/notion]]"
 concepts:
-  - "[[wiki/concepts/governance]]"
-  - "[[wiki/concepts/cli-tools]]"
-  - "[[wiki/concepts/agent-skills]]"
-  - "[[wiki/concepts/connectivity-stack]]"
-  - "[[wiki/concepts/unified-memory]]"
-  - "[[wiki/concepts/agent-harness]]"
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/cli]]"
+  - "[[wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/agent-connectivity]]"
 ---
 
 # Why MCP is Not Dead
@@ -31,47 +29,27 @@ concepts:
 
 ## Summary
 
-A post outline — hook, argument, examples, conclusion — pushing back on the
-"MCP is dead" discourse. The author accepts the premise's evidence and rejects
-its scope: people reaching that conclusion are reasoning from **personal**
-setups, where a CLI to the database, an `llms.txt` sitemap and a few skill files
-genuinely are enough. The claim breaks the moment the same logic has to serve
-thousands or millions of customers, because the deployment story becomes "install
-this CLI on everyone's machine and set up a bunch of markdown files on all of
-them," which the author expects to be laughed out of the room.
+A rebuttal note (drafted as a hook/outline for a post, inspired by a "MCP is dead" LinkedIn post from Prefect) to the claim that MCP is obsolete. The argument is that people declaring MCP dead are judging it from personal setups — where a CLI, an llms.txt sitemap, or skills glue things together just fine — and generalizing that to the professional world, where deploying business logic to thousands of customers with governance and security in mind requires a centralized distribution point that CLIs and per-machine markdown files were never built to provide.
 
-From there the argument is about distribution, not capability. A server is the
-mechanism we already have for shipping business logic from one central place, and
-it is the only one of the three where governance, monitoring and security are
-tractable: "we had CLIs for so long and we haven't found a good way to govern
-them when distributing them to users." MCP inherits that property — your data
-stays in your storage, you distribute access to many clients at once, and you
-govern the logic on your server rather than on a million machines.
-
-The examples are the author's own dual setup, and they are deliberately
-two-sided: the personal-assistant memory is exposed as MCP tools because the
-business logic for writing and searching it is specific and the infrastructure is
-in the cloud — "doing this through a CLI would have been a nightmare" — while
-during development the same author reaches for the MongoDB and Prefect CLIs, and
-lets Claude Code work on local Obsidian files directly. Siloed SaaS (Notion,
-Readwise) is reachable only through their MCP servers.
+The second half grounds this in the author's own projects: a personal-assistant/unified-memory system where the specific business logic around a GraphRAG memory store justifies MCP tools over plain skills or a CLI, versus a digital twin where siloed third-party services (Notion, Readwise) are only securely reachable via their own MCP servers, while local file management stays on Obsidian and its CLI.
 
 ## Key claims
 
-- "MCP is dead" generalizes from personal setups, where CLIs, sitemaps and skills genuinely suffice, to business deployment, where they do not. [[raw/why-mcp-is-not-dead|cite]]
-- At business scale the blocker is distribution and governance, not capability: you need one central place to ship and monitor business logic. [[raw/why-mcp-is-not-dead|cite]]
-- CLIs have existed for decades without a good governance story for distributing them to end users. [[raw/why-mcp-is-not-dead|cite]]
-- An MCP server keeps the data in your storage while distributing access to many clients and harnesses at once. [[raw/why-mcp-is-not-dead|cite]]
-- The author's own split is the argument in miniature: MCP for hosted, business-specific memory logic; CLIs for local development against MongoDB, Prefect and Obsidian files. [[raw/why-mcp-is-not-dead|cite]]
+- People who conclude "MCP is dead" are usually judging it against personal setups, where a CLI to their database, links to an llms.txt sitemap, or skills to glue things together already work fine for them alone. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+- That personal-scale reasoning breaks down at business scale: telling thousands of customers to install a CLI and a pile of markdown files on every machine is not viable, and it offers no real way to govern or secure that distributed logic. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+- MCP servers solve exactly the centralized-distribution problem: your data stays in your own storage, you distribute it to many clients/agents at once, and you can govern and monitor the business logic from one place, including via skills and prompts shipped through the server. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+- In the author's personal-assistant project, a GraphRAG-based unified memory with highly specific business logic over cloud-hosted infrastructure justifies exposing that logic as MCP tools — plain skills would have sufficed only for simpler file-based setups, and a CLI would have been unworkable. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+- In the author's digital-twin project, siloed services like Notion and Readwise are only securely reachable through their own MCP servers, while local Obsidian files are managed directly by Claude Code or the Obsidian CLI. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+- The conclusion is not "always use MCP" but "use MCP when it makes sense," alongside Claude Code skills and CLIs rather than instead of them. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
 
 ## Notable quotes
 
-> "MCP is NOT dead. You were just using it wrong."
-> — [[raw/why-mcp-is-not-dead|location]]
+> "MCP is NOT dead." You were just using it wrong.
+> — [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/claude-code]], [[wiki/entities/prefect]], [[wiki/entities/mongodb]], [[wiki/entities/obsidian]]
-- **Concepts**: [[wiki/concepts/governance]], [[wiki/concepts/cli-tools]], [[wiki/concepts/agent-skills]], [[wiki/concepts/connectivity-stack]], [[wiki/concepts/unified-memory]], [[wiki/concepts/agent-harness]]
+- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/claude-code]], [[wiki/entities/prefect]], [[wiki/entities/obsidian]], [[wiki/entities/notion]]
+- **Concepts**: [[wiki/concepts/skills]], [[wiki/concepts/cli]], [[wiki/concepts/agent-memory]], [[wiki/concepts/agent-connectivity]]
 
-> Synthesis: This note supplies the wiki's strongest "when NOT to use MCP" evidence while arguing the opposite case, which makes it the natural counterweight to the notes that reach for a CLI first.
+> Synthesis: The wiki's clearest statement of *when* to reach for MCP versus [[wiki/concepts/skills]] or [[wiki/concepts/cli]] — a personal-vs-business framing that complements rather than repeats the layered-architecture framing in [[wiki/sources/the-future-of-mcp-vs-skills]].

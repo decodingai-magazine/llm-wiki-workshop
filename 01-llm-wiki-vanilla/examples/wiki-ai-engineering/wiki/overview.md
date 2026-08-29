@@ -1,94 +1,41 @@
 ---
 type: overview
 title: ai-engineering — Overview
-description: What ten notes on MCP, skills, CLIs and agent memory add up to — connectivity as a layered choice, and a context layer worth owning underneath it.
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T09:20:00Z
-total_sources: 10
-total_pages: 35
+description: A wiki tracing why MCP, Skills, and CLIs are treated as three complementary agent-connectivity layers rather than competing standards.
+created: 2026-08-29T15:32:43Z
+timestamp: 2026-08-29T15:32:43Z
+total_sources: 5
+total_pages: 14
 ---
 
 # ai-engineering — Overview
 
-> Ten notes on how agents connect to the world and what they remember: two conference write-ups, one protocol reading, three architecture walkthroughs, one database evaluation and three post drafts.
-
 ## Themes
 
-### Connectivity is a stack, not a choice
+**Skills aren't MCP, but they need somewhere to live.** Every source that discusses skills is careful to note they're not a protocol primitive — the raw MCP spec never mentions the word — yet the same sources treat skills as real and worth naming, usually packaged as a prompt, a resource, or a composite tool. [[wiki/concepts/skills]] traces that tension, and [[wiki/entities/mcp]] is the protocol it keeps getting checked against. Best made by [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]], which goes spec-literal on the question, and [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]], which treats skills as a first-class architectural layer regardless.
 
-The wiki's organizing argument. [[wiki/concepts/connectivity-stack]] holds that
-[[wiki/concepts/agent-skills]], [[wiki/concepts/cli-tools]] and
-[[wiki/entities/mcp]] each answer a different question — knowledge, local
-capability, semantics and reach — and that single-mechanism agents underperform.
-Stated in [[wiki/sources/the-future-of-mcp-vs-skills]], turned into a layered
-system in [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]],
-and stress-tested from the CLI side by
-[[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]], which
-replaces a whole server with one line of instruction.
+**The connectivity stack: skills, CLI, and MCP together.** "Connectivity is not one thing" is the wiki's recurring headline claim: the strongest agents are argued to combine reusable skill knowledge, sandboxed CLI execution, and governed MCP distribution rather than picking one. [[wiki/concepts/agent-connectivity]] is this thesis, with [[wiki/concepts/cli]] as its local-execution counterpart to skills and MCP. Best made by [[wiki/sources/the-future-of-mcp-vs-skills]] (the full conference-talk transcript) and [[wiki/sources/why-mcp-is-not-dead]] (the same idea applied to two of the author's own real projects).
 
-### What the protocol defines, and what the harness owes it
+**Where should orchestration logic actually live?** A recurring, unresolved architectural question: should the multi-step planning that composes tool calls run server-side, as one guaranteed-order composite tool, or client-side, more flexibly but with more round-trips? [[wiki/concepts/orchestration]] holds both positions without picking a winner. Best made by [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]], which poses the question directly from a real build, and [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]], which lays out the server-side-vs-client-side tradeoffs.
 
-[[wiki/concepts/mcp-primitives]] is the corrective to the discourse: six things,
-sorted by who decides when they run. [[wiki/concepts/agent-skills]] are not among
-them, which is why [[wiki/concepts/skills-over-mcp]] ships without invocation
-semantics. The complement is [[wiki/concepts/agent-harness]] — the layer that owes
-the ecosystem [[wiki/concepts/progressive-disclosure]] and
-[[wiki/concepts/programmatic-tool-calling]], both of which the protocol already
-supports and most clients have not built.
-
-### Memory is the part worth owning
-
-[[wiki/concepts/context-layer]] is the wiki's answer to *why bother*: models and
-harnesses commoditize, so the moat is the memory you can carry between them
-[[wiki/sources/owning-your-context-layer]]. Its implementation runs through
-[[wiki/concepts/unified-memory]], [[wiki/concepts/knowledge-graph]],
-[[wiki/concepts/hybrid-search]] and [[wiki/concepts/agent-memory]], built end to
-end in [[wiki/sources/agentic-graphrag-via-mcp-servers]] and priced out on
-[[wiki/entities/mongodb]] in [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]].
-
-### The case for a server is a case about people
-
-[[wiki/concepts/governance]] is where [[wiki/sources/why-mcp-is-not-dead]] and the
-conference notes independently land: servers win on distributing and controlling
-business logic, not on capability. [[wiki/concepts/mcp-server-design]] is the
-craft that follows — task-shaped tools, thin delegates, a budgeted output — and
-[[wiki/concepts/durable-execution]] is what the runtime owes an agent that now
-runs for minutes rather than seconds.
+**MCP earns its place for governed, centralized business logic.** Where skills and CLIs are personal-scale defaults, MCP's case is made specifically at business scale: centralizing and securing logic (like a knowledge-graph-backed [[wiki/concepts/agent-memory]] store) that needs to be distributed to many clients under one governance point. [[wiki/entities/prefect]] and [[wiki/entities/fastmcp]] are the tooling this pattern is built on in practice. Best made by [[wiki/sources/why-mcp-is-not-dead]] and [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]].
 
 ## Index
 
-### Entities (7)
-- [[wiki/entities/mcp]] — the protocol itself, treated as one layer rather than the whole stack.
-- [[wiki/entities/claude-code]] — the reference harness whose invocation rules define "agentic" here.
-- [[wiki/entities/fastmcp]] — the Python framework that became the default, and the skills provider under test.
-- [[wiki/entities/mongodb]] — the single store behind the memory layer, with its limits stated.
-- [[wiki/entities/prefect]] — workflow orchestration, argued into the runtime layer.
-- [[wiki/entities/anthropic]] — author of the protocol and of its roadmap.
-- [[wiki/entities/david-soria-parra]] — MCP co-creator; the origin of the connectivity framing.
+### Entities (4)
+- [[wiki/entities/mcp]] — the open Anthropic protocol for connecting agents to tools, data, and business logic.
+- [[wiki/entities/claude-code]] — Anthropic's coding agent, used as both a reference MCP client and a native-skills harness.
+- [[wiki/entities/fastmcp]] — the de facto default Python SDK for MCP servers, maintained by Prefect.
+- [[wiki/entities/prefect]] — the company behind FastMCP and a pipeline orchestrator for agent memory builds.
 
-### Concepts (18)
-- [[wiki/concepts/connectivity-stack]] — skills, CLIs and MCP, each for the job it fits.
-- [[wiki/concepts/agent-skills]] — procedural knowledge as a folder and a `SKILL.md`.
-- [[wiki/concepts/cli-tools]] — the local, sandboxed, pre-trained option.
-- [[wiki/concepts/mcp-primitives]] — the six things the spec defines, sorted by who invokes them.
-- [[wiki/concepts/skills-over-mcp]] — shipping skills from the server, and why it is inert today.
-- [[wiki/concepts/mcp-apps]] — server-shipped UI, portable across clients.
-- [[wiki/concepts/mcp-server-design]] — design for an agent, not for your REST API.
-- [[wiki/concepts/server-side-orchestration]] — composite tools versus a client-side planner.
-- [[wiki/concepts/programmatic-tool-calling]] — let the model write the composition, in a sandbox.
-- [[wiki/concepts/progressive-disclosure]] — an index first, the detail on request.
-- [[wiki/concepts/agent-harness]] — the swappable brain: loop, memory, permissions.
-- [[wiki/concepts/durable-execution]] — retries, checkpoints and approvals for long-running agents.
-- [[wiki/concepts/governance]] — distribution and control, the axis servers win on.
-- [[wiki/concepts/context-layer]] — the memory that makes an agent yours, and portable.
-- [[wiki/concepts/unified-memory]] — one store, a small tool surface, any harness.
-- [[wiki/concepts/knowledge-graph]] — entities and relationships extracted from documents.
-- [[wiki/concepts/hybrid-search]] — vector plus text, fused by rank.
-- [[wiki/concepts/agent-memory]] — operational, semantic, episodic, preference.
+### Concepts (5)
+- [[wiki/concepts/skills]] — reusable capability packaging (`SKILL.md`) that sits outside the MCP protocol.
+- [[wiki/concepts/cli]] — command-line tools as the local-execution connectivity layer.
+- [[wiki/concepts/agent-connectivity]] — the thesis that skills, CLI, and MCP should be combined, not chosen between.
+- [[wiki/concepts/orchestration]] — the open question of server-side vs. client-side agent planning logic.
+- [[wiki/concepts/agent-memory]] — knowledge-graph-backed unified memory exposed to agents via MCP tools.
 
 ## Health
 
-- Sources: 10 · Entities: 7 · Concepts: 18
-- Waiting at 1 mention (materialize on the next source that touches them):
-  `agentic-invocation`, `append-only-log`, and the entity `obsidian`.
-- Most-cited pages: `agent-skills` (7), `mcp-server-design` (6), `claude-code` (8).
+- Sources: 5 · Entities: 4 · Concepts: 5
+- Slugs at 1 mention (waiting for a second): david-soria-parra, notion, obsidian
