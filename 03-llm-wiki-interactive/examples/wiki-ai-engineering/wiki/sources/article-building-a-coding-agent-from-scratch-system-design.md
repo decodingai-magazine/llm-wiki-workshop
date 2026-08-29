@@ -1,73 +1,68 @@
 ---
 type: source
-title: Building a Coding Agent From Scratch
-description: The system design of a coding-agent harness — one headless core with six modules around the loop, two interfaces over one message bus, and an evals layer on top.
+title: "Building a Coding Agent From Scratch"
+description: "System-design overview of Decode, an open-source teaching harness that argues the harness — not the model — is what makes a coding agent good."
 origin: article
 original_path: https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design
 source_url: https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design
 authors: ["Paul Iusztin"]
 published_date: "2026-07-22T11:04:24+00:00"
 raw_file: raw/article-building-a-coding-agent-from-scratch-system-design.md
-created: 2026-08-29T10:45:00Z
-timestamp: 2026-08-29T10:45:00Z
+created: 2026-08-29T17:03:46Z
+timestamp: 2026-08-29T17:03:46Z
 entities:
   - "[[wiki/entities/claude-code]]"
   - "[[wiki/entities/modal]]"
+  - "[[wiki/entities/kitaru]]"
+  - "[[wiki/entities/pydantic-ai]]"
+  - "[[wiki/entities/opik]]"
+  - "[[wiki/entities/terminal-bench]]"
 concepts:
   - "[[wiki/concepts/agent-harness]]"
-  - "[[wiki/concepts/context-rot]]"
-  - "[[wiki/concepts/provider-abstraction]]"
-  - "[[wiki/concepts/inference-economics]]"
-  - "[[wiki/concepts/durable-execution]]"
   - "[[wiki/concepts/agent-memory]]"
-  - "[[wiki/concepts/agent-skills]]"
-  - "[[wiki/concepts/observability]]"
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/progressive-disclosure]]"
+  - "[[wiki/concepts/steering-queue]]"
+  - "[[wiki/concepts/context-compaction]]"
+  - "[[wiki/concepts/permission-gate]]"
+  - "[[wiki/concepts/sandboxing]]"
 ---
 
 # Building a Coding Agent From Scratch
 
-> [[raw/article-building-a-coding-agent-from-scratch-system-design|Raw]] · article · [Original](https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design)
+> [[raw/article-building-a-coding-agent-from-scratch-system-design|Raw]] · article
 
 ## Summary
 
-The opening lesson of a course whose thesis is stated as a benchmark result: in
-LangChain's Terminal-Bench experiment, changing only the harness — same model
-throughout — moved a coding agent from roughly 30th place into the top 5. "The
-model isn't what makes a coding agent good. The harness is."
+This is lesson 1 of an 8-lesson open-source course in which the author builds **Decode**, a teaching-replica coding agent, from a bare tool-calling loop into a remote swarm. The lesson's whole argument rests on one cited result: LangChain's Terminal-Bench experiment, where changing only the harness — same model throughout — moved a coding agent from roughly 30th place into the top 5. From that the author draws a sharp boundary: the "agent" is a ~20-line Pydantic AI tool-calling loop (model, tools, an `output_type` that ends a turn as either a final answer or paused tool calls); everything else — LLM providers, sandbox, permissions, memory, skills, an LSP server, plus context compaction — is the "harness," and the harness is the only layer actually worth engineering.
 
-The design is drawn as one headless core with interfaces attached. At the centre
-is the agent loop every harness shares: the model picks a tool call, the tool
-returns an observation, the loop feeds it back, and everything reads from and
-writes to the context window. Around it sit six modules — **LLM providers**, an
-**LSP server** for immediate feedback on edits, **memory**, **skills**,
-**sandbox** and **permissions** — plus compaction, because "the context window of
-the LLM is a budget" and every observation spends from it.
+The piece then walks the system end to end: a headless harness core (no UI of its own) wired to two interfaces — a TUI for one live local session, and a remote mode where ZenML's Kitaru runtime orchestrates many headless harnesses in parallel on Modal, with durable, replayable, step-recorded execution. It closes with an observability/evals layer (via Opik) that separates three distinct questions — does it work, does it still work, does it keep working — into three mechanisms: custom benchmarks, regression suites, and production tracing.
 
-Two interfaces connect to that core: an interactive TUI wired to one live session,
-and a remote mode where a durable runtime runs N headless harnesses in parallel.
-Both speak through the same event stream. On top of everything is an observability
-and evals layer that records every model and tool call, so "a bad prompt tweak
-[becomes] a failing regression score before your users feel it".
-
-The end-to-end trace is the clearest part: type a request → the steering queue and
-priority gate put it in the context window → the loop sends the window and the
-tool schemas to the model → the model answers with an action → permissions decides
-→ the tool runs in the sandbox → the observation goes back into the window → repeat
-until the model stops calling tools, with events streaming to the terminal.
+The framing throughout is explicitly "clean architecture": the loop never knows which model or which interface is driving it, dependencies are injected via a single `AgentDeps` object, and the same headless core is meant to be reachable from a TUI, a message bus, or a remote scheduler without change.
 
 ## Key claims
 
-- Changing only the harness moved a coding agent from ~30th to the top 5 on the same benchmark. [[raw/article-building-a-coding-agent-from-scratch-system-design#Lesson 1: Building a Coding Agent From Scratch|cite]]
-- The harness is "the only layer you can actually engineer" — the argument for building one rather than configuring one. [[raw/article-building-a-coding-agent-from-scratch-system-design#Lesson 1: Building a Coding Agent From Scratch|cite]]
-- The headless core has no interface of its own; the TUI and the remote runtime are clients of the same module. [[raw/article-building-a-coding-agent-from-scratch-system-design#The High-Level System Design|cite]]
-- Multiple providers exist to prove the harness is independent of the model — self-hosted, gateway, and a hosted free tier. [[raw/article-building-a-coding-agent-from-scratch-system-design#The High-Level System Design|cite]]
-- An LSP server is "the cheapest way to get feedback on code changes" — it catches broken syntax before anything runs. [[raw/article-building-a-coding-agent-from-scratch-system-design#The High-Level System Design|cite]]
-- The context window is a budget and every observation spends from it, so compaction (summarize, truncate, clear) is a harness responsibility. [[raw/article-building-a-coding-agent-from-scratch-system-design#The High-Level System Design|cite]]
-- The tighter the feedback loops, the faster the agent converges on working code. [[raw/article-building-a-coding-agent-from-scratch-system-design#The High-Level System Design|cite]]
+- Changing only the harness (same model) moved a coding agent from ~30th place to the top 5 on Terminal-Bench in LangChain's test — the article's founding evidence that the harness, not the model, determines coding-agent quality. [[raw/article-building-a-coding-agent-from-scratch-system-design#Lesson 1: Building a Coding Agent From Scratch|cite]]
+- The "agent" itself is scoped narrowly: a ~20-line Pydantic AI `Agent` whose `output_type` ends every turn as either a final string answer or `DeferredToolRequests` (tool calls suspended for human approval); everything built on top across the 8 lessons is called "the coding harness." [[raw/article-building-a-coding-agent-from-scratch-system-design#The Headless Harness & The Agent Loop|cite]]
+- The headless harness is composed of six modules plus a non-module behavior: LLM Providers (Modal, OpenRouter, Gemini, swappable via config), Sandbox (Docker locally, Modal Sandboxes remotely), Permissions (ask/allow/deny per tool call, modeled on Claude Code's default/edit/auto modes), Memory (plain `AGENTS.md` + `MEMORY.md` files, deliberately no memory database or codebase index), Skills (workflows loaded only on invocation), an LSP server (ty, by Astral) for syntax/semantic feedback before code even runs, and Compaction (`[summary, *tail]`) to keep the context window small. [[raw/article-building-a-coding-agent-from-scratch-system-design#The Six Modules + Compaction|cite]]
+- Mid-task input is handled by a steering queue plus priority gate: new input is buffered the instant it arrives and injected only at a safe boundary — before the next model call, never mid-tool-call — because injecting immediately would corrupt an in-flight tool call and dropping it would make the agent unsteerable. [[raw/article-building-a-coding-agent-from-scratch-system-design#The steering queue|cite]]
+- In remote mode, Kitaru (ZenML's agent runtime) runs N headless harnesses in parallel on Modal, records each run's progress step by step so a dying sandbox resumes instead of restarting, freezes at human-input questions with no compute burned while waiting, and lets a finished run be replayed with one variable changed (model, prompt) against the original as baseline. [[raw/article-building-a-coding-agent-from-scratch-system-design#The Remote Mode|cite]]
+- The evals/observability layer answers three separate questions with three separate mechanisms: custom internal benchmarks ("does it work?"), regression suites run against a baseline on every new feature ("does it still work?"), and Opik-traced production sessions with live scoring on sampled traces ("does it keep working?"). [[raw/article-building-a-coding-agent-from-scratch-system-design#The Observability and AI Evals Layer|cite]]
+
+## Notable quotes
+
+> "The model isn't what makes a coding agent good. The harness is."
+> — [[raw/article-building-a-coding-agent-from-scratch-system-design#Lesson 1: Building a Coding Agent From Scratch|location]]
+
+> "These ~20 lines are the entire tool-calling LLM agent. The thing people call "the agent" ends here. Everything we build on top of it across 8 lessons is the coding harness."
+> — [[raw/article-building-a-coding-agent-from-scratch-system-design#The Headless Harness & The Agent Loop|location]]
+
+> "Just-in-time reads beat a stale heavy index."
+> — [[raw/article-building-a-coding-agent-from-scratch-system-design#The Six Modules + Compaction|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/modal]]
-- **Concepts**: [[wiki/concepts/agent-harness]], [[wiki/concepts/context-rot]], [[wiki/concepts/provider-abstraction]], [[wiki/concepts/inference-economics]], [[wiki/concepts/durable-execution]], [[wiki/concepts/agent-memory]], [[wiki/concepts/agent-skills]], [[wiki/concepts/observability]]
+- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/modal]], [[wiki/entities/kitaru]], [[wiki/entities/pydantic-ai]], [[wiki/entities/opik]], [[wiki/entities/terminal-bench]]
+- **Concepts**: [[wiki/concepts/agent-harness]], [[wiki/concepts/agent-memory]], [[wiki/concepts/skills]], [[wiki/concepts/progressive-disclosure]], [[wiki/concepts/steering-queue]], [[wiki/concepts/context-compaction]], [[wiki/concepts/permission-gate]], [[wiki/concepts/sandboxing]]
 
-> Synthesis: The prose companion to [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]] — same system, one written to explain and one written to run, which makes them the best pair in the wiki for checking whether a description survives contact with its implementation.
+> Synthesis: This is a course-opening system-design overview, not an implementation record — it names and motivates every module (steering queue, sandbox, permissions, compaction) without yet showing the code, and the article itself points to five follow-on lessons that presumably ground these claims; treat this page as the map the rest of the series will fill in.

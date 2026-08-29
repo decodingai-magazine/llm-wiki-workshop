@@ -1,27 +1,24 @@
 ---
 type: source
 title: The Right Way of Building Agents With MCP Servers
-description: A walkthrough of a GraphRAG-backed personal-assistant architecture that ends in an open architectural question — should the custom orchestrator live on the MCP server or in the client?
+description: "A first-person walkthrough of an MCP-based agent architecture (ingest, memory, tools and prompts) that ends on an open design question -- whether the custom orchestrator belongs inside the MCP server or on the MCP client."
 origin: local
-original_path: data_input_examples/notes/01-easy/The Right Way of Building Agents With MCP Servers.md
+original_path: data_input_examples/notes/02-medium/The Right Way of Building Agents With MCP Servers.md
 source_url: null
 authors: []
 published_date: null
 raw_file: raw/the-right-way-of-building-agents-with-mcp-servers.md
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T09:00:00Z
+created: 2026-08-29T16:09:27Z
+timestamp: 2026-08-29T16:09:27Z
 entities:
-  - "[[wiki/entities/mcp]]"
   - "[[wiki/entities/fastmcp]]"
   - "[[wiki/entities/prefect]]"
   - "[[wiki/entities/claude-code]]"
 concepts:
-  - "[[wiki/concepts/mcp-primitives]]"
-  - "[[wiki/concepts/server-side-orchestration]]"
-  - "[[wiki/concepts/mcp-server-design]]"
-  - "[[wiki/concepts/unified-memory]]"
+  - "[[wiki/concepts/mcp]]"
   - "[[wiki/concepts/knowledge-graph]]"
   - "[[wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/orchestrator-placement]]"
 ---
 
 # The Right Way of Building Agents With MCP Servers
@@ -30,49 +27,93 @@ concepts:
 
 ## Summary
 
-A spoken-through design walkthrough, recorded as a question to put to an
-audience rather than as a settled answer. The author first lays out the
-architecture he considers the go-to version: a **data pipeline** that ingests a
-dataset or a URI (article, video, image), normalizes everything to documents and
-stores them; a **memory pipeline** that turns documents into knowledge-graph
-objects via an extractor, embeds a summary of each document, attaches metadata
-(source, author, dates) and writes the result into memory; and a retrieval
-surface exposing exactly two core tools — knowledge-graph search and
-knowledge-graph write.
+This is a talked-through draft (addressed to "Curtis," apparently for a book) of an
+architecture for agents built around MCP servers, framed explicitly as an open
+question rather than a settled answer. The author first walks through what he calls
+his "go-to" baseline: a data pipeline that ingests a dataset or URI and normalizes it
+into documents, feeding a memory pipeline that extracts a knowledge graph
+(entities/relationships), computes embeddings over document summaries, and attaches
+metadata (source, author, dates). That memory is exposed through an MCP server as a
+small set of tools (knowledge-graph search, knowledge-graph write) and "prompts" —
+predefined procedures such as "update episodic memory," "write technical article,"
+and "write social media post" — that tell an orchestrator how to combine the tools.
 
-Around those tools sit **prompts as predefined procedures**: an "update episodic
-memory" prompt that tells the orchestrator how to spot and store what the user
-did, a semantic-memory equivalent for preferences and style, and
-"write technical article" / "write social media post" procedures that say how to
-combine memory search with web search and image generation. The server composes
-with off-the-shelf MCP servers (web search, image generation, Google Drive) and
-re-exposes the union.
+The note then works through composition: the custom MCP server is combined with
+prebuilt MCP servers (web search, image generation, Google Drive search) into one set
+of composed tools and prompts, which an MCP client then drives — either a custom
+orchestrator built on FastMCP, or a pre-built orchestrator like Claude Code. The
+tooling stack pins Prefect to every pipeline (data, memory, retrieval) and FastMCP to
+both the server and the client-side connection.
 
-Then the actual question. Two options: **(1)** keep tools and prompts private
-inside the server and expose only a custom orchestrator as a single tool, so any
-client — including Claude Code — drives the whole packaged solution; or **(2)**
-expose the tools and prompts and build the custom orchestrator on the client
-side, where the planning logic can live in your own app, a FastAPI service, or
-even a React frontend. The author has implemented both and says the choice is not
-programmatic but architectural, because it propagates through the entire
-application.
+The actual point of the note, though, is a single unresolved architectural question:
+should a custom orchestrator be packaged *inside* the MCP server (exposed as one tool
+that any client, including Claude Code, can call), or built on the MCP client side
+against the raw exposed tools and prompts? The author says he has implemented both
+and cannot yet choose between them, and treats the choice as consequential because it
+determines where the client itself can live (a Python/FastAPI backend, a TypeScript
+frontend, or Claude Code directly).
+
+```mermaid
+flowchart LR
+    subgraph Ingestion
+        A[Ingest URI/dataset] --> B[Normalize to document]
+        B --> C[(Data warehouse)]
+    end
+    subgraph Memory
+        C --> D[Knowledge graph extractor]
+        C --> E[Embedding model]
+        D & E --> F[(Memory)]
+    end
+    F --> G[MCP server: tools + prompts]
+    G --> H[Composed with prebuilt MCP servers<br/>web search, image gen, Drive]
+    H -->|Option 1| I[Orchestrator packaged<br/>inside MCP server]
+    H -->|Option 2| J[Orchestrator built on<br/>MCP client]
+    I --> K[MCP client: Claude Code or custom]
+    J --> K
+```
 
 ## Key claims
 
-- The memory pipeline is the same shape regardless of the orchestrator question: documents → knowledge-graph extraction → embeddings over the document summary → metadata → memory. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
-- Two tools are enough for the memory surface: knowledge-graph search and knowledge-graph write; everything else is a procedure over them. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
-- Prompts are used here as *predefined procedures* that tell the orchestrator which tools to combine, and in what order, for a named task. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
-- Composing prebuilt MCP servers (web search, image generation, Drive) and re-exposing the union is the default integration move — build only what does not exist. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
-- Where the custom orchestrator lives — server-side as one packaged tool, or client-side with your own planning logic — is an open decision the author deliberately does not settle. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+- The data pipeline ingests a dataset or URI and normalizes it into a document saved
+  to a data warehouse; the memory pipeline then turns those documents into knowledge-graph
+  objects (entities/relationships) plus summary embeddings and metadata (source,
+  author, dates), and saves the result to memory. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+- The MCP server exposes memory access as tools (knowledge-graph search,
+  knowledge-graph write) and as "prompts" — predefined procedures like "update
+  episodic memory," "write technical article," and "write social media post" — that
+  tell the orchestrator which tools to combine and how. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+- Episodic memory (what a specific user did at a moment, e.g. "celebrated New Year's
+  Eve in the mountains in December 2025") is distinguished from semantic memory
+  (general preferences, e.g. writing or style preferences). [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+- The custom MCP server is composed with prebuilt MCP servers (web search, image
+  generation, Google Drive search) so the agent can reach functionality the author
+  does not want to implement himself. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+- Two architectural options are laid out for where a custom orchestrator should live:
+  packaged inside the MCP server and exposed as a single tool (so any client,
+  including a pre-built one like Claude Code, can call it), or built on the MCP
+  client side against the raw exposed tools and prompts — the author states he has
+  implemented both and cannot yet choose which is architecturally better. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+- On tooling, Prefect orchestrates the data, memory, and retrieval pipelines, and
+  FastMCP implements both the MCP server and the client-side connection to it. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
 
 ## Notable quotes
 
-> "Programmatically, both work — I implemented both. But from the architectural system design point of view, which solution is better? I cannot really choose, and I think it's a very important architectural decision that propagates through the entire application."
+> "The real question here is: where should we put this custom orchestrator? Should we
+> put it on the MCP server side, or should we put it on the client side?"
+> — [[raw/the-right-way-of-building-agents-with-mcp-servers|location]]
+
+> "Programmatically, both work—I implemented both. But from the architectural system
+> design point of view, which solution is better? I cannot really choose, and I think
+> it's a very important architectural decision that propagates through the entire
+> application."
 > — [[raw/the-right-way-of-building-agents-with-mcp-servers|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/fastmcp]], [[wiki/entities/prefect]], [[wiki/entities/claude-code]]
-- **Concepts**: [[wiki/concepts/mcp-primitives]], [[wiki/concepts/server-side-orchestration]], [[wiki/concepts/mcp-server-design]], [[wiki/concepts/unified-memory]], [[wiki/concepts/knowledge-graph]], [[wiki/concepts/agent-memory]]
+- **Entities**: [[wiki/entities/fastmcp]], [[wiki/entities/prefect]], [[wiki/entities/claude-code]]
+- **Concepts**: [[wiki/concepts/mcp]], [[wiki/concepts/knowledge-graph]], [[wiki/concepts/agent-memory]], [[wiki/concepts/orchestrator-placement]]
 
-> Synthesis: The one source in the wiki that leaves its central question open — useful precisely because the other notes assert the answer (composite tools, server-side) without having to build the client.
+> Synthesis: This is a working draft, not a conclusion — the author explicitly frames
+> the server-side-vs-client-side orchestrator placement as an open question he wants
+> feedback on, so it should be read as a design problem statement rather than a
+> recommended pattern.

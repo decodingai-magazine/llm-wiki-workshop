@@ -1,79 +1,49 @@
 ---
 type: entity
 title: MongoDB
-description: The database this wiki's memory layer runs on — documents, vectors, graph traversal and an event log in one cluster, with its limits stated as clearly as its strengths.
-aliases: [MongoDB Atlas, mongosh, mongot]
+description: A document database used across these sources as a single store for operational data, vector search, and knowledge-graph traversal — pitched as an alternative to polyglot persistence for AI agent memory, and accessed directly via its own CLI rather than a bespoke MCP server.
+aliases: []
 sources:
   - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
-  - "[[wiki/sources/building-graphrag-from-scratch-infrastructure-over]]"
-  - "[[wiki/sources/deep-dive-on-how-to-scale-your-graphrag-ingestion-pipeline]]"
-  - "[[wiki/sources/different-levels-of-hosting-your-embedding-models]]"
-  - "[[wiki/sources/e2e-personal-assistant-architecture-using-mongodb-as-a]]"
-  - "[[wiki/sources/graphrag-presentation]]"
-  - "[[wiki/sources/high-level-graphrag-architecture-built-on-top-of-mcp-servers]]"
-  - "[[wiki/sources/how-smooth-was-my-experience-to-use-mongodb-and-build-from]]"
-  - "[[wiki/sources/how-to-structure-your-collections-as-immutable-logs-instead]]"
-  - "[[wiki/sources/ingesting-knowledge-graph-objects-for-graphrag-with-mongodb]]"
-  - "[[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]"
-  - "[[wiki/sources/modeling-knowledge-graph-collections-append-only-log-vs-one]]"
   - "[[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]"
-  - "[[wiki/sources/mongodb-notes-on-scaling-from-the-meeting]]"
-  - "[[wiki/sources/questions-around-embeddings-with-mongodb-voyage-ai]]"
-  - "[[wiki/sources/retrieval-strategies]]"
-  - "[[wiki/sources/rrf-fusion-hybrid-search-without-reranker]]"
-  - "[[wiki/sources/running-multiple-graphrag-ingestion-pipelines-in-parallel]]"
-  - "[[wiki/sources/scaling-graphrag-ingestion-pipelines-with-prefect]]"
-  - "[[wiki/sources/scaling-mongodb-brain-dump]]"
   - "[[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]"
-  - "[[wiki/sources/walkthrough-throw-the-ingestion-and-retrieval-logic]]"
-  - "[[wiki/sources/what-to-focus-on]]"
-  - "[[wiki/sources/why-mcp-is-not-dead]]"
 related:
-  - "[[wiki/concepts/unified-memory]]"
   - "[[wiki/concepts/knowledge-graph]]"
-  - "[[wiki/concepts/hybrid-search]]"
-  - "[[wiki/concepts/append-only-log]]"
-  - "[[wiki/concepts/database-scaling]]"
-  - "[[wiki/concepts/cli-tools]]"
-created: 2026-08-29T09:20:00Z
-timestamp: 2026-08-29T10:00:00Z
-source_count: 24
+  - "[[wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/vector-search]]"
+  - "[[wiki/concepts/event-sourcing]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/entities/mongosh]]"
+created: 2026-08-29T16:13:51Z
+timestamp: 2026-08-29T16:13:51Z
+source_count: 3
 ---
 
 # MongoDB
 
-> The single store behind the memory layer — chosen for consolidation rather than for winning any one benchmark.
+> Multiple framings — see Definition
 
 ## Definition
 
-MongoDB appears in this wiki as the answer to "where does the unified memory
-live", and the case is explicitly about avoiding polyglot persistence: document
-storage, aggregation, text search, native vector search and recursive traversal in
-one place [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]. The builds put
-nodes and edges in a single collection discriminated by a `kind` field, with
-composite `"type:name"` ids, because traversal requires one collection to walk
-[[wiki/sources/agentic-graphrag-via-mcp-servers]].
+Across these sources, MongoDB is not defined once so much as used three different ways. One source treats it as the concrete backing store inside a working GraphRAG server: a `documents` collection for ETL output and a single `knowledge_graph` collection holding both nodes and edges, discriminated by a `kind` field and addressed by composite string IDs, so `$graphLookup` can do multi-hop traversal without joining across collections. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
 
-It also appears from the opposite direction — as the thing a coding agent should
-reach through its CLI rather than through a server
-[[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]].
+A second source makes a more general, vendor-style architecture case: MongoDB Atlas can host four distinct AI-agent memory layers — operational, semantic/vector, graph, and event-sourced — in one cluster, each mapped to a specific mechanism (dynamic BSON + atomic operators; `$vectorSearch`; `$graphLookup`; an append-only event collection), avoiding the "synchronization tax" of stitching together separate polyglot stores. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]] A third source treats MongoDB purely as an external database a coding agent should reach through its own `mongosh` CLI, not through a purpose-built MCP server. [[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]
 
 ## Key claims
 
-- Five jobs in one system: document storage, aggregation and materialization, text search, vector search, graph traversal. [[wiki/sources/building-graphrag-from-scratch-infrastructure-over]]
-- Vector search runs locally on Community Edition through the search process — no cloud account, but a replica set is mandatory even single-node. [[wiki/sources/how-smooth-was-my-experience-to-use-mongodb-and-build-from]]
-- The aggregation framework is what does the real work: grouping, property merging, union and atomic replacement handle deduplication with no application code. [[wiki/sources/building-graphrag-from-scratch-infrastructure-over]]
-- `$out` replaces a collection atomically and drops every index, forcing a rebuild plus a wait for search-index sync. [[wiki/sources/how-smooth-was-my-experience-to-use-mongodb-and-build-from]], [[wiki/sources/modeling-knowledge-graph-collections-append-only-log-vs-one]]
-- Traversal cost is predictable and shallow-friendly: sub-10ms at one hop, ~25–100ms at two, up to a second at three. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
-- Quantization is what makes vectors affordable — 4x reduction at Int8, 32x at 1-bit with rescoring. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
-- The data process and the search process compete for RAM on one machine; dedicated search nodes are the fix and they double the node count. [[wiki/sources/scaling-mongodb-brain-dump]]
-- Change streams over an append-only event collection give reactivity and a replayable history. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
-- Development access goes through `mongosh`, and an agent given only that CLI independently debugged indexes, seeded data and verified pipeline output. [[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]
+- Knowledge-graph nodes and edges can live together in one MongoDB collection, discriminated by a `kind` field and addressed by composite string IDs (e.g. `person:paul iusztin`), so `$graphLookup` performs multi-hop traversal without joining across collections. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
+- `$graphLookup` is sub-second (~25ms–1s) for the 2–3 hop traversals typical of GraphRAG context, and only native graph databases like Neo4j pull ahead at 5+ hop depths — consistent with a separate report of a knowledge-graph build that relies on `$graphLookup` for exactly this kind of traversal. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]], [[wiki/sources/agentic-graphrag-via-mcp-servers]]
+- MongoDB Atlas can host operational (dynamic BSON + atomic operators), semantic (`$vectorSearch` with HNSW ANN), graph (`$graphLookup`), and event-sourced (an append-only `kg_events` collection replayed through aggregation-pipeline views) memory layers in one cluster. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
+- MongoDB 8.0 adds scalar (Int8, 4x smaller) and binary (1-bit, 32x smaller, rescored against full-fidelity vectors) vector quantization, and benchmarks 36% faster reads, 32% faster mixed workloads, and 50x faster resharding than 7.0. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
+- Polyglot persistence (dedicated vector stores like Milvus/Pinecone, graph databases like Neo4j/Memgraph) is recommended over a single MongoDB cluster once vector scale exceeds 100M–1B with ultra-low-latency needs, or graph queries require 5+ hop traversal/pathfinding. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
+- For coding-agent workflows, a single `CLAUDE.md` line instructing the agent to use `mongosh` directly is argued to beat a custom MCP server: the agent used `mongosh` unprompted to validate infrastructure, debug an aggregation `$out` stage that was silently dropping indexes, and inspect composite node IDs and edge structure after graph materialization. [[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]
 
 ## Relationships
 
-- **[[wiki/concepts/unified-memory]]**: MongoDB is the concrete "one store" this wiki keeps arguing for.
-- **[[wiki/concepts/database-scaling]]**: where the argument meets its RAM bill.
-- **[[wiki/concepts/append-only-log]]**: the pattern its aggregation framework makes cheap.
+- **[[wiki/concepts/knowledge-graph]]**: hosts the graph as a single collection (nodes+edges, `kind`-discriminated, composite IDs) queried via `$graphLookup`. [[wiki/sources/agentic-graphrag-via-mcp-servers]], [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
+- **[[wiki/concepts/agent-memory]]**: pitched as a single-cluster substitute for polyglot persistence across an agent's operational, semantic, graph, and event-sourced memory. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
+- **[[wiki/concepts/vector-search]]**: `$vectorSearch` with HNSW ANN and 8.0-era quantization is the cited mechanism for semantic memory. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
+- **[[wiki/concepts/mcp]]**: two sources take opposite integration stances toward the same database — one builds a FastMCP server backed by MongoDB, the other argues a coding agent should skip MCP entirely and use `mongosh` directly. [[wiki/sources/agentic-graphrag-via-mcp-servers]], [[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]
+- **[[wiki/entities/mongosh]]**: the CLI recommended for direct, MCP-free coding-agent access to MongoDB. [[wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres]]
 
-> Synthesis: Nearly half the wiki's sources touch MongoDB, but several are vendor-facing briefs — the claims that survive that discount are the operational ones, and they are the ones with numbers attached.
+> Synthesis: mongodb-for-an-ai-agent-unified-memory and agentic-graphrag-via-mcp-servers independently converge on `$graphLookup` as a workable substitute for a dedicated graph database at shallow (2–3 hop) depth — real corroboration between two distinct sources. But agentic-graphrag-via-mcp-servers and stop-using-mcp-servers-to-access-your-mongodb-postgres both describe a build with composite node IDs and graph materialization, and read as the same underlying project seen from two angles (architecture report vs. workflow anecdote) — their agreement is one voice, not two.

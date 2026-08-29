@@ -1,69 +1,66 @@
 ---
 type: concept
-title: Agent harness
-description: The runtime layer that owns the LLM–tool loop, memory, permissions and orchestration — and the layer users now swap the way they once swapped editors.
-aliases: [Harness, Runtime]
+title: Agent Harness
+description: "The layer wrapping a model's raw inference loop — tools, permissions, sandboxing, context assembly, memory and orchestration — that determines what an agent actually does and is."
+aliases: []
 sources:
+  - "[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]"
   - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
-  - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
   - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
   - "[[wiki/sources/article-the-coding-agent-loop]]"
-  - "[[wiki/sources/choosing-an-inference-architecture-for-your-agents]]"
-  - "[[wiki/sources/how-you-pay-for-llm-inference]]"
-  - "[[wiki/sources/owning-your-context-layer]]"
-  - "[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]"
-  - "[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]"
-  - "[[wiki/sources/why-durable-workflow-tools-are-more-important-than-ai]]"
-  - "[[wiki/sources/why-mcp-is-not-dead]]"
-  - "[[wiki/sources/you-don-t-need-a-browser-anymore]]"
+  - "[[wiki/sources/article-run-coding-agents-safely]]"
+  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
 related:
-  - "[[wiki/concepts/connectivity-stack]]"
-  - "[[wiki/concepts/context-layer]]"
-  - "[[wiki/concepts/durable-execution]]"
+  - "[[wiki/concepts/agent-loop]]"
+  - "[[wiki/concepts/permission-gate]]"
+  - "[[wiki/concepts/sandboxing]]"
+  - "[[wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/context-compaction]]"
+  - "[[wiki/concepts/subagents]]"
   - "[[wiki/concepts/progressive-disclosure]]"
-  - "[[wiki/entities/claude-code]]"
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T10:45:00Z
-source_count: 12
+  - "[[wiki/concepts/progressive-tool-discovery]]"
+  - "[[wiki/concepts/programmatic-tool-calling]]"
+  - "[[wiki/concepts/steering-queue]]"
+  - "[[wiki/concepts/lsp-server]]"
+  - "[[wiki/concepts/durable-execution]]"
+  - "[[wiki/concepts/mcp]]"
+created: 2026-08-29T16:47:46Z
+timestamp: 2026-08-29T17:10:34Z
+source_count: 6
 ---
 
-# Agent harness
+# Agent Harness
 
-> The brain between a thin renderer and the servers: where the LLM–tool loop, memory, permissions and orchestration live.
+> The engineering around the model call — not the call itself — is what makes an agent good, and what makes two agents on the same model behave differently.
 
 ## Definition
 
-In the four-layer model the harness plus runtime sits under the presentation
-layer and above connectivity, and it owns everything stateful about the agent —
-the loop, memory, permissions, orchestration
-[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]. The
-second source adds the property that matters commercially: the harness is
-**interchangeable**. "Choose your harness of choice: Claude Code, OpenCode,
-OpenClaw" is only possible because the knowledge and the data live outside it
-[[wiki/sources/why-mcp-is-not-dead]].
+Three framings converge on the same claim, at three zoom levels. David Soria Parra's talk notes frame it top-down, as one of four layers of a future AI app — presentation, **harness**, connectivity, MCP servers — and argue it's where "agent character" lives: same model, same servers, different harness, different product. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]] The `decode` codebase frames it bottom-up, from inside one agent process: ~20 lines of pydantic-ai is "the agent," and "everything else — the harness — is what makes a coding agent good." [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]] The course that builds `decode`, narrated across four Substack lessons, states the identical scoping before any code exists and repeats it as each lesson's opening claim: "The model isn't what makes a coding agent good. The harness is." [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]
+
+> Synthesis: the repo and the four lesson articles share one author and one founding citation (LangChain's Terminal-Bench result — swapping only the harness under a fixed model moved it from ~30th place to the top 5). [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]], [[wiki/sources/article-the-coding-agent-loop]], [[wiki/sources/article-run-coding-agents-safely]], [[wiki/sources/article-context-engineering-for-coding-agents]], [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]] That number appears in five of this page's six sources but is one data point cited five times, not five independent tests — DSP's talk is the only source here that reaches the "harness is where behavior lives" conclusion from a genuinely separate line of evidence (MCP/connectivity architecture, not Terminal-Bench).
 
 ## Key claims
 
-- The harness owns the LLM↔tool loop, memory, permissions and orchestration. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
-- Agents are becoming long-running systems rather than single inference calls, which pulls durable execution, retries, checkpoints, approvals and observability into the runtime. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
-- Harnesses are swappable, and keeping data in your own storage behind a server is what keeps them swappable. [[wiki/sources/why-mcp-is-not-dead]]
-- Presentation is a thin renderer over this layer — TUI, IDE extension, web or desktop — not a place for logic. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
-- Beyond the loop, the harness owns context management and compaction, the permission model, memory and audit. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
-- Progressive discovery and code mode are harness responsibilities that the protocol already supports — most harnesses simply have not built them. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
-- Harness-specific features (skills, hooks) are progressive enhancements layered over a portable MCP server, and must degrade gracefully. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- The commoditization claim in reverse: if harnesses are interchangeable, the thing worth investing in is the memory they plug into. [[wiki/sources/owning-your-context-layer]]
-- A harness-specific layer (skills, hooks) sits on top of a portable protocol layer and must degrade gracefully where it is unsupported. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- Inference belongs behind a provider interface: the harness should only know how to request the next completion. [[wiki/sources/how-you-pay-for-llm-inference]]
-- Changing only the harness, with the same model, moved a coding agent from ~30th place to the top 5 on a public benchmark. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]
-- "The harness is the only layer you can actually engineer" — the model and the benchmark are given; everything between them is design. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]
-- In a working harness the agent is ~20 lines; the other packages — tools, permissions, sandbox, skills, memory, compaction, runtime — are the harness. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
-- The runner drives a *turn handler*, not a model: the loop is pluggable behind that seam. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
-- Mid-turn input is buffered and released at boundaries in three modes — steer, follow up, abort — because injecting it immediately corrupts a tool call. [[wiki/sources/article-the-coding-agent-loop]]
+- Concretely, `decode` is a ~12.2k-line harness around a ~20-line agent object: tools, a permission gate, a three-mode sandbox seam, memory, skills, compaction, subagent fan-out and a durable runtime all sit outside the core loop, with infrastructure "imported, not abstracted" — a seam appears only once a second concrete implementation exists. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
+- The course names the harness as six modules plus one non-module behavior: LLM providers, sandbox, permissions, memory, skills, an LSP server, and compaction — with a steering queue handling mid-task input. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]] The tool count grew across the course's own lessons (9 tools at Lesson 2, including `web_fetch`/`ask_user`) toward the repo's final 15 — a build-log snapshot, not a disagreement. [[wiki/sources/article-the-coding-agent-loop]], [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
+- Safety is explicitly folded into "how good" a harness is, not treated separately: sandboxing routes only the read/write/edit/bash tools through a `CommandExecutor` seam, and the case for it is real incidents — July 2026's OpenAI-agents-hack-Hugging-Face and Anthropic's disclosure that across 141,006 isolated eval runs, Claude models reached production infrastructure at 3 organizations. Sandboxing is called "non-negotiable" for always-on assistants and unmonitored remote jobs even though the author runs his own daily-driver CLI unsandboxed. [[wiki/sources/article-run-coding-agents-safely]]
+- Context engineering is the harness's other half: `AGENTS.md` (hand-written, root-most-file-wins, ~300-line target) plus an auto-extracted `MEMORY.md` (LLM-written, capped at 200 lines/25,000 bytes) mirror Claude Code's memory model; skills load through 3 tiers of progressive disclosure because upfront tool schemas alone can cost 7–9% of the context window; an LSP server (`ty`) feeds both an on-demand tool and a passive per-edit diagnostics channel; and compaction runs a cheapest-first cascade (microcompaction at ~60%, full LLM-summarized compaction at ~80%) that in one measured run cut usage from ~57% to ~8% of a 262k-token window. [[wiki/sources/article-context-engineering-for-coding-agents]]
+- In remote mode, the same headless harness is what Kitaru orchestrates: N harnesses run in parallel on Modal, step-recorded and replayable with one variable (model, prompt) swapped against the original run as baseline — the harness's process boundary, not the agent loop, is what makes that possible. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]], [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
+- The two harness upgrades argued to matter most for the near future are progressive tool discovery (`tool_search`) and programmatic tool calling ("code mode"), both responses to connectivity outgrowing the context window; MCP moves bytes, but the harness decides what happens with them. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
 
 ## Relationships
 
-- **[[wiki/entities/claude-code]]**: the harness the notes actually run.
-- **[[wiki/concepts/durable-execution]]**: the property that turns a loop into a runtime.
-- **[[wiki/concepts/connectivity-stack]]**: what the harness reaches through.
+- **[[wiki/concepts/agent-loop]]**: the loop is the thin part the harness wraps — ~20 lines of construction versus ~12k lines of harness in `decode`, and the harness owns the boundary protocol (steering vs. follow-up queues) the loop yields into. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]], [[wiki/sources/article-the-coding-agent-loop]]
+- **[[wiki/concepts/sandboxing]]**: the harness subsystem that isolates the four computer-use tools; sandboxing exists because the harness, not the model, is judged responsible for safety incidents, not just capability. [[wiki/sources/article-run-coding-agents-safely]]
+- **[[wiki/concepts/agent-memory]]**, **[[wiki/concepts/skills]]**, **[[wiki/concepts/lsp-server]]**, **[[wiki/concepts/context-compaction]]**: the four context-engineering components the harness assembles into and prunes out of the prompt every turn. [[wiki/sources/article-context-engineering-for-coding-agents]]
+- **[[wiki/concepts/steering-queue]]**: the harness-owned mechanism (two queues, two boundaries) that lets mid-turn human input reach a running agent without corrupting an in-flight tool call. [[wiki/sources/article-the-coding-agent-loop]], [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]
+- **[[wiki/concepts/durable-execution]]**: the harness property Kitaru adds for remote mode — checkpointed, replayable runs — that a purely local harness doesn't need. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]
+- **[[wiki/concepts/progressive-tool-discovery]]**, **[[wiki/concepts/programmatic-tool-calling]]**, **[[wiki/concepts/progressive-disclosure]]**: harness-side patterns for keeping tool/skill surface area from consuming the context window as connectivity grows. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]], [[wiki/sources/article-context-engineering-for-coding-agents]]
+- **[[wiki/concepts/mcp]]**: MCP moves bytes between connectivity and servers, but the harness decides what to do with them — a distinct concern from the protocol itself. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
 
-> Synthesis: "Harness" is doing quiet strategic work in these notes — it names the layer you should be able to replace on a Tuesday, which is why both sources insist the memory lives somewhere else.
+## Tensions
+
+The apparent 9-vs-15 tool count and the "no LSP mentioned" gap in earlier lesson articles versus the final repo aren't disagreements about what a harness is — they're different points in one course's build log, since the lesson articles narrate `decode` as it existed lesson-by-lesson and the repo page reads the final commit. Treat lesson-article claims about `decode`'s internals as historically accurate for that lesson's state, and the repo page as authoritative for the current one.
+
+> Synthesis: the wiki now has one genuinely independent voice (DSP, arguing from MCP/connectivity architecture) and one heavily self-citing voice (the `decode` course, repeating its own Terminal-Bench evidence across a repo and four lessons) converging on the same conclusion by different roads — which makes the conclusion more credible than any single repetition of the ~30th-to-top-5 statistic would.

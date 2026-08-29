@@ -1,64 +1,47 @@
 ---
 type: entity
 title: FastMCP
-description: The Python MCP framework that became the practical default for building servers, and whose skills provider is the concrete implementation the notes evaluate.
-aliases: [Fast MCP]
+description: A Python SDK for building MCP servers and clients, built by Prefect, used across these sources as a thin delivery layer that adds no business logic of its own.
+aliases: []
 sources:
   - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
-  - "[[wiki/sources/explaining-the-architecture]]"
   - "[[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]"
-  - "[[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]"
   - "[[wiki/sources/owning-your-context-layer]]"
-  - "[[wiki/sources/retrieval-strategies]]"
-  - "[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]"
-  - "[[wiki/sources/the-future-of-mcp-vs-skills]]"
   - "[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]"
   - "[[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]"
-  - "[[wiki/sources/you-don-t-need-a-browser-anymore]]"
 related:
-  - "[[wiki/concepts/skills-over-mcp]]"
-  - "[[wiki/concepts/mcp-primitives]]"
-  - "[[wiki/concepts/server-side-orchestration]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/agent-skills]]"
+  - "[[wiki/concepts/orchestrator-placement]]"
   - "[[wiki/entities/prefect]]"
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T10:00:00Z
-source_count: 11
+  - "[[wiki/entities/claude-code]]"
+created: 2026-08-29T16:14:02Z
+timestamp: 2026-08-29T16:14:02Z
+source_count: 5
 ---
 
 # FastMCP
 
-> A Python framework for MCP servers and clients, widely treated as the default over the official SDK — including by the person who wrote the official SDK.
+> A Python SDK for building MCP servers and clients — built by Prefect and used, across every source that touches it, as a thin delivery layer rather than a place logic lives.
 
 ## Definition
 
-FastMCP provides the decorator API (`@mcp.tool`, `@mcp.prompt`, `@mcp.resource`)
-that the notes use whenever they show server code, plus the client utilities used
-to build a custom orchestrator against a composed set of servers
-[[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]. It also ships
-the `SkillsDirectoryProvider`, which exposes skill directories as MCP resources —
-the mechanism at the centre of the skills-over-MCP question
-[[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]].
+FastMCP is the Python SDK these sources reach for to build both MCP servers and MCP clients. It is built by Prefect and described as having become "the practical default" for building MCP servers in Python [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]. Its role is consistently framed as delivery, not logic: tools built on it are meant to stay thin wrappers around business logic that lives elsewhere — "the MCP layer is a delivery mechanism, not a logic layer" [[wiki/sources/agentic-graphrag-via-mcp-servers]] — and it is used symmetrically, implementing both the server and the client-side connection to it in the same stack [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]].
+
+One source complicates the "pure delivery layer" framing: FastMCP also ships a `SkillsDirectoryProvider` that packages a skills folder as MCP *resources* (`skill://name/SKILL.md`, `_manifest`, supporting files). By FastMCP's own description this is "a packaging decision, not an architectural one" — but because Claude Code only agentically invokes MCP Tools and its own `.claude/skills/`, never MCP resources, a skill shipped this way ends up discoverable by any MCP client yet not autonomously callable by Claude Code [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]].
 
 ## Key claims
 
-- FastMCP's own framing is that a skill is "a prompt, a resource, or a bundle of both" — packaging, not architecture. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
-- `SkillsDirectoryProvider` publishes each skill as `skill://name/SKILL.md` plus a synthetic `_manifest`, making skills discoverable to any MCP client. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
-- Because resources are not agentically consumed, skills shipped this way are listable but never invoked on the model's initiative — the "dead zone". [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
-- The maintainer of the official Python SDK says of FastMCP: "It's just way probably better than Python distribution" — and the v2 SDK is being rewritten with its lessons. [[wiki/sources/the-future-of-mcp-vs-skills]]
-- In Python, FastMCP "has effectively become the practical default" for shipping tools, resources, prompts, skills and MCP Apps. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
-- Both sides of the orchestrator question are implemented with FastMCP — the server, and the client utility the custom orchestrator uses. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
-- The lifespan pattern initializes expensive resources — database client, LLM, embedding model, indexes — once at startup and hands every tool handler the same context. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- Tool schemas are generated from the function signature and docstring, which makes the docstring the model-facing contract. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- Deploying a server has collapsed to connecting a repo and naming the entry point plus the uv environment, with auth and continuous deployment included. [[wiki/sources/owning-your-context-layer]]
-- The v2 SDKs are being written to incorporate FastMCP-level ergonomics. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
-- Type hints are the schema and docstrings are the description, so a six-tool server fits in one module with nothing to keep in sync. [[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]
-- The lifespan hook initializes expensive clients once and injects them into every tool call. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- It turns a tool into a rendered UI with one flag, owning the sandbox, CSP and lifecycle itself. [[wiki/sources/you-don-t-need-a-browser-anymore]]
-- Deployment collapsed to connecting a repo and naming an entry point, with auth and continuous deployment included. [[wiki/sources/owning-your-context-layer]]
+- FastMCP tools are recommended to stay thin delegates — extract lifespan context, call an existing business-logic function, return — so the same code path runs whether it's triggered by a live MCP call or a batch job. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
+- FastMCP's `SkillsDirectoryProvider` exposes a skills folder as MCP resources rather than as a new protocol primitive; since Claude Code doesn't agentically consume MCP resources, skills packaged this way fall into a "dead zone" — neither a developer-owned tool/prompt nor a user-owned `.claude/skills` entry. [[wiki/sources/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs]]
+- FastMCP was used to build and deploy a personal memory MCP server, with Prefect Horizon Cloud handling deployment, auth and redeploy-on-push once GitHub, the MCP entry point and the UV environment were specified. [[wiki/sources/owning-your-context-layer]]
+- Built by Prefect, FastMCP has become the practical default Python SDK for building MCP servers; David Soria Parra (Anthropic, MCP co-creator) is quoted preferring it over Anthropic's own official SDK — "It's just way better than our Python SDK that we shipped." [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
+- FastMCP implements both the MCP server and the client-side connection to it in an agent stack that also uses Prefect to orchestrate the data, memory and retrieval pipelines. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
 
 ## Relationships
 
-- **[[wiki/concepts/skills-over-mcp]]**: FastMCP is the only concrete implementation the notes examine, and the source of the pattern's known limitation.
-- **[[wiki/entities/prefect]]**: FastMCP is maintained by the same company, which is why the two appear together in the runtime layer.
+- **Prefect**: the two are consistently paired — Prefect orchestrates pipelines (data, memory, retrieval) and FastMCP serves the result over MCP, including through Prefect's own Horizon Cloud for deployment. [[wiki/entities/prefect]]
+- **MCP**: FastMCP is not the protocol itself but the dominant Python implementation of it, used for both server and client sides. [[wiki/concepts/mcp]]
+- **Claude Code**: consumes FastMCP-built servers as any MCP harness would — it auto-invokes the Tools FastMCP exposes, but not the resources FastMCP uses to package skills. [[wiki/entities/claude-code]]
 
-> Synthesis: FastMCP is where the abstract protocol questions become testable — every claim about skills-over-MCP in this wiki is ultimately a claim about what its provider does.
+> Synthesis: Four of the five sources are the same practitioner's own build write-ups — a personal knowledge-graph/memory server and a book project with Maxime Labonne — that consistently pair FastMCP with Prefect; that pairing is one voice repeated, not independent corroboration. The one distinct voice is Anthropic's own MCP co-creator, David Soria Parra, endorsing FastMCP over Anthropic's official SDK.

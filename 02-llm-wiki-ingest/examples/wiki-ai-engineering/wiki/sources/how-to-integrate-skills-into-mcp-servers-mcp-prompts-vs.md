@@ -1,25 +1,21 @@
 ---
 type: source
 title: "How to integrate Skills into MCP servers: MCP Prompts vs. Skills"
-description: Working notes establishing that skills are not an MCP primitive, and that FastMCP's skills provider leaves them in a dead zone where clients can list them but never invoke them agentically.
+description: "Argues that MCP has no native Skills primitive — FastMCP packages skills as prompts, resources or tools, and Claude Code only auto-invokes MCP tools and its own .claude/skills, never MCP resources or prompts."
 origin: local
-original_path: data_input_examples/notes/01-easy/How to integrate Skills into MCP servers MCP Prompts vs. Skills.md
+original_path: data_input_examples/notes/02-medium/How to integrate Skills into MCP servers MCP Prompts vs. Skills.md
 source_url: null
 authors: []
 published_date: null
 raw_file: raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs.md
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T09:00:00Z
+created: 2026-08-29T16:08:31Z
+timestamp: 2026-08-29T16:08:31Z
 entities:
-  - "[[wiki/entities/mcp]]"
   - "[[wiki/entities/claude-code]]"
   - "[[wiki/entities/fastmcp]]"
 concepts:
-  - "[[wiki/concepts/mcp-primitives]]"
-  - "[[wiki/concepts/agent-skills]]"
-  - "[[wiki/concepts/skills-over-mcp]]"
-  - "[[wiki/concepts/server-side-orchestration]]"
-  - "[[wiki/concepts/agentic-invocation]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/skills]]"
 ---
 
 # How to integrate Skills into MCP servers: MCP Prompts vs. Skills
@@ -28,44 +24,68 @@ concepts:
 
 ## Summary
 
-A working note that starts from a practical question — how do you ship skills
-with an MCP server? — and answers it by reading the protocol. The finding is
-negative and load-bearing: **"skills" do not exist anywhere in the MCP
-specification** (revision 2025-11-25). The protocol defines tools, resources,
-prompts, sampling, elicitation and (experimentally) tasks; a skill is a packaging
-convention layered on top of those, not a primitive of its own.
-
-The note then splits the question by *who invokes what*. Of the four surfaces a
-Claude Code user can expose, only two are picked up by the model on its own: MCP
-tools, and native `.claude/skills/`. MCP resources and prompts are listable but
-inert — they must be named by the user. FastMCP's `SkillsDirectoryProvider`
-publishes each skill directory as a resource (`skill://name/SKILL.md`), which
-makes skills *discoverable* by any MCP client but not *callable* by the loop.
-
-That produces the note's central complaint: skills-as-resources land in a dead
-zone — too developer-owned to be a user skill, too passive to be a tool. The
-recommendation follows the ownership split: developer knowledge about how to
-drive a server belongs in tool descriptions and prompts; user workflows belong in
-`.claude/skills/`; and composite tools, not prompts, are the right home for
-deterministic multi-step pipelines, because tool code always runs server-side and
-the model cannot skip or reorder the steps.
+The note works through a recurring confusion when building an MCP server: "Skills"
+feel like they should be a fourth MCP primitive alongside Tools, Resources and
+Prompts, but the protocol has no such thing. It first maps how Claude Code treats
+each primitive — only MCP Tools and its own `.claude/skills/` directory are
+auto-detected *and* invoked agentically; MCP Resources and MCP Prompts are both
+listable but require the user (or an explicit read call) to trigger them. It then
+shows that FastMCP's `SkillsDirectoryProvider` is not a new protocol concept but a
+packaging convention that exposes a skill folder as MCP resources
+(`skill://name/SKILL.md`, `_manifest`, and supporting files) — which lands skills
+in a gap where they are discoverable by any MCP client but not autonomously
+callable by Claude Code. The second half is a pasted-in architecture guide (framed
+around the author's own "AI Twin" MCP server) that works through where tool code
+actually executes, contrasts server-side orchestration (one composite `@mcp.tool`
+running several steps in a single request) against client-side, prompt-guided
+orchestration (multiple round-trips where the AI decides the next call), and lands
+on a concrete recommendation: for deterministic pipelines, build composite tools;
+reserve MCP prompts for workflows the user explicitly triggers or the AI should be
+free to reorder.
 
 ## Key claims
 
-- "Skills" appear in no MCP protocol message, schema type, capability declaration or method definition — the primitives are tools, resources, prompts, sampling, elicitation and tasks. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Are NOT Part of the MCP Protocol|cite]]
-- Only MCP **tools** and native `.claude/skills/` are auto-detected *and* used agentically; resources and prompts are listable but must be triggered explicitly by the user. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#MCP Primitives vs Claude Code Native Skills|cite]]
-- Every major coding agent converged on the same folder-plus-`SKILL.md` convention (Claude Code, Copilot, Gemini CLI, Cline, Codex) while handling it natively rather than through MCP. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills as a Cross-Agent Ecosystem Convention|cite]]
-- Tool code always executes on the server, so a composite tool costs one round-trip with a guaranteed execution order, where client-side orchestration costs a round-trip plus an inference step per stage. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Tool Execution Architecture|cite]]
-- For deterministic pipelines, composite tools beat prompts: "Don't rely on AI to orchestrate deterministic pipelines." [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Key Takeaways|cite]]
+- Claude Code only auto-invokes MCP Tools and its native `.claude/skills/`
+  directory agentically; MCP Resources and MCP Prompts are both auto-detected/
+  listable but never triggered without an explicit reference or user action.
+  [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Summary Table|cite]]
+- "Skills" do not exist in the raw MCP protocol (revision 2025-11-25) — the word
+  appears in no protocol message, schema type, capability declaration or method
+  definition. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Are NOT Part of the MCP Protocol|cite]]
+- FastMCP packages skills as MCP resources via `SkillsDirectoryProvider`; by
+  FastMCP's own description this is "a packaging decision, not an architectural
+  one," so a skill exposed this way is discoverable by any MCP client but not
+  agentically callable by Claude Code. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|cite]]
+- Because MCP resources aren't consumed agentically, skills shipped through
+  `SkillsDirectoryProvider` fall into a "dead zone" — neither developer-owned
+  instructions (which belong in tool descriptions or prompts) nor user-owned
+  skills (which belong in `.claude/skills/`). [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skill Ownership: Developer vs User|cite]]
+- Five coding agents (Claude Code, GitHub Copilot, Gemini CLI, Cline, Codex) have
+  independently converged on a folder-plus-`SKILL.md` convention, but each handles
+  it as a native, agent-specific mechanism rather than through MCP.
+  [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills as a Cross-Agent Ecosystem Convention|cite]]
+- For deterministic pipelines, the note recommends server-side orchestration —
+  one composite MCP tool calling helper functions in a single request, which
+  guarantees execution order and can't be skipped or reordered by the model —
+  over client-side, prompt-guided orchestration, which costs multiple round-trips
+  and lets the AI reorder or drop steps.
+  [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Server-Side Orchestration (Recommended for Deterministic Pipelines)|cite]]
 
 ## Notable quotes
 
-> "A skill is not a separate concept. It's a prompt, a resource, or a bundle of both. Calling them 'skills' is a packaging decision, not an architectural one."
-> — FastMCP docs, quoted at [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|location]]
+> "A skill is not a separate concept. It's a prompt, a resource, or a bundle of
+> both. Calling them 'skills' is a packaging decision, not an architectural one."
+> — [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|location]]
+
+> "There is no `/skills/list` or `/skills/execute` in the MCP protocol."
+> — [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Don't Exist in MCP|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/claude-code]], [[wiki/entities/fastmcp]]
-- **Concepts**: [[wiki/concepts/mcp-primitives]], [[wiki/concepts/agent-skills]], [[wiki/concepts/skills-over-mcp]], [[wiki/concepts/server-side-orchestration]], [[wiki/concepts/agentic-invocation]]
+- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/fastmcp]]
+- **Concepts**: [[wiki/concepts/mcp]], [[wiki/concepts/skills]]
 
-> Synthesis: This is the only note in the wiki that reads the protocol rather than the discourse, which makes it the reference for what MCP actually specifies — and its "dead zone" finding is the concrete failure mode behind the more optimistic "skills over MCP" pitch elsewhere.
+> Synthesis: The note's second half (the "AI Twin" guide) restates the same
+> Tools/Resources/Prompts distinction from its first half in more tutorial form —
+> same conclusion, more code — so treat them as one argument rather than two
+> independent sources of evidence.

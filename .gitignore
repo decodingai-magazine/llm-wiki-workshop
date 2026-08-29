@@ -230,5 +230,3 @@ __marimo__/
 /0*-llm-wiki-*/wiki-*/
 # Repo clones are regenerable and huge.
 **/raw/repos/
-# So are the attachment copies an ingest makes — the fixture is the source of truth.
-**/raw/assets/

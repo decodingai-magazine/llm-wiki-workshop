@@ -1,25 +1,23 @@
 ---
 type: source
-title: Owning Your Context Layer
-description: A post arguing that models and harnesses are commoditized, so the only remaining moat is a memory you own and can carry between harnesses through an MCP server.
+title: "Owning Your Context Layer"
+description: "A LinkedIn post arguing that once models and harnesses are commoditized, the only durable moat is a portable context layer (your memory) served through an MCP server."
 origin: local
-original_path: data_input_examples/notes/02-medium/Owning Your Context Layer.md
+original_path: "data_input_examples/notes/02-medium/Owning Your Context Layer.md"
 source_url: null
 authors: []
 published_date: null
 raw_file: raw/owning-your-context-layer.md
-created: 2026-08-29T09:20:00Z
-timestamp: 2026-08-29T09:20:00Z
+created: 2026-08-29T16:08:55Z
+timestamp: 2026-08-29T16:08:55Z
 entities:
-  - "[[wiki/entities/claude-code]]"
+  - "[[wiki/entities/maxime-labonne]]"
   - "[[wiki/entities/fastmcp]]"
-  - "[[wiki/entities/prefect]]"
+  - "[[wiki/entities/prefect-horizon]]"
 concepts:
   - "[[wiki/concepts/context-layer]]"
+  - "[[wiki/concepts/mcp]]"
   - "[[wiki/concepts/unified-memory]]"
-  - "[[wiki/concepts/agent-harness]]"
-  - "[[wiki/concepts/knowledge-graph]]"
-  - "[[wiki/concepts/mcp-server-design]]"
 ---
 
 # Owning Your Context Layer
@@ -28,52 +26,37 @@ concepts:
 
 ## Summary
 
-A post draft with the full spoken notes attached, and the wiki's clearest
-statement of *why* any of this architecture matters. The argument proceeds by
-elimination: people look for freedom first in open-source models, then in
-open-source harnesses, and both are the wrong layer — "neither the model nor the
-harness is the thing you care about. They're just tools." What you care about is
-your research, notes, conversations, tasks, preferences and domain knowledge.
+The post's thesis: as both LLMs and harnesses (Claude Code, Codex, Gemini CLI, open-source alternatives) become commoditized, neither is what actually matters — they're interchangeable tools. What matters, and what should be owned, is the "context layer": research, notes, conversations, tasks, preferences and domain knowledge. True independence is being able to switch harness or model within minutes and have the new system instantly pick up who you are and what you're working on, because the memory moved with you rather than staying locked inside one product. [[raw/owning-your-context-layer#full-notes|cite]]
 
-From there the test is operational: if you switch from Claude Code to Codex to
-Gemini CLI, ideally nothing changes, and within five minutes the new system knows
-who you are and what you are working on — because the memory moved with you. That
-is the definition of independence the post offers, and it inverts the usual
-lock-in conversation: being deeply invested in one open-source harness is *more*
-expensive to leave than using a proprietary one with a portable memory.
+![[raw/assets/the-context-layer.png]]
 
-The implementation follows the same two-part shape as the rest of the wiki: a
-unified memory built with the simplest tools that work (filesystem, BM25,
-semantic search, knowledge graphs, added in that order as the use case demands),
-and an MCP server as the interface that wraps the business logic for querying and
-updating it, exposing tools, resources, prompts, skills and an MCP App to
-visualize the memory. The note also reports how cheap deployment has become —
-connect a GitHub repo, name the entry point and the uv environment, and get
-serverless deployment with authentication and continuous updates.
+The author describes the architecture he and Maxime Labonne are converging on for their upcoming book: (1) a **unified memory**, built from the simplest primitive that does the job — filesystems, BM25, semantic search, or a knowledge graph, added only as the use case demands — and (2) an **MCP server** sitting on top of that memory as its interface, exposing tools, resources, prompts, skills and MCP apps so the same memory plugs into any harness. Their own build layers a knowledge graph with a generic ontology on top of semantic search + BM25 to get higher-signal retrieval, while noting semantic search + BM25 alone is a valid lighter-weight choice. [[raw/owning-your-context-layer#full-notes|cite]]
 
-The closing framing is deliberately strong: whoever owns the context layer owns
-your digital identity.
+A practical/sponsored aside covers deploying that MCP server: connecting GitHub, pointing at the MCP entry point and the UV environment, and Prefect Horizon Cloud handled deployment, auth and redeploy-on-push from there — described as far simpler than expected. [[raw/owning-your-context-layer#sponsor-notes|cite]]
 
 ## Key claims
 
-- Models and harnesses are commoditized; the context layer is the remaining moat. [[raw/owning-your-context-layer#Post|cite]]
-- Freedom is not open weights or an open harness — those are infrastructure, not the thing you care about. [[raw/owning-your-context-layer#Full notes|cite]]
-- The portability test: switch harness and within five minutes the new system knows who you are, because your memory came with you. [[raw/owning-your-context-layer#Post|cite]]
-- Build the memory with the simplest tool that works — filesystem, BM25, semantic search, knowledge graph — and add complexity only when the use case demands it. [[raw/owning-your-context-layer#Post|cite]]
-- Skills and CLIs are useful but out of scope for a context layer: an MCP server sits on top of tools and carries the resources, prompts and domain knowledge for driving the memory. [[raw/owning-your-context-layer#Full notes|cite]]
-- Ownership buys two things: portability across platforms, and data privacy — the memory does not sit on a model provider's servers. [[raw/owning-your-context-layer#Full notes|cite]]
+- Models and harnesses are both becoming commoditized; the only moat left is the context layer — your own data and memory. [[raw/owning-your-context-layer#post|cite]]
+- Genuine independence means a harness switch (Claude Code ↔ Codex ↔ Gemini CLI ↔ others) costs nothing if the context layer is decoupled and travels with you. [[raw/owning-your-context-layer#full-notes|cite]]
+- The architecture the author and Maxime Labonne are converging on for their book has two parts: a unified memory (start with the simplest tool — filesystem, BM25, semantic search, or knowledge graph — and add complexity only as needed) plus an MCP server that exposes that memory as tools/resources/prompts/skills/apps to any harness. [[raw/owning-your-context-layer#post|cite]]
+- Their own memory implementation combines a knowledge graph, semantic search and BM25 under a generic ontology to extract high-signal information while keeping track of documents and chunks. [[raw/owning-your-context-layer#full-notes|cite]]
+- The author deployed the book's memory MCP server with FastMCP and Prefect Horizon Cloud; connecting GitHub plus specifying the MCP entry point and UV environment was enough to get automatic deployments, authentication and continuous updates on every push. [[raw/owning-your-context-layer#sponsor-notes|cite]]
+- Owning the context layer also buys data privacy, since the data stays with its owner instead of living on OpenAI, Anthropic or Google infrastructure. [[raw/owning-your-context-layer#full-notes|cite]]
 
 ## Notable quotes
 
 > "Models are becoming commoditized. Harnesses are becoming commoditized. The only moat that remains is your context layer."
-> — [[raw/owning-your-context-layer#Post|location]]
+> — [[raw/owning-your-context-layer#post|location]]
 
-> "Whoever owns this context layer owns your digital identity."
-> — [[raw/owning-your-context-layer#Full notes|location]]
+> "Your context layer should stay with you because that's where your digital identity lives."
+> — [[raw/owning-your-context-layer#post|location]]
+
+> "If you own the context layer and design it properly, you can switch from Claude Code to Codex to Pear to Gemini CLI without issue."
+> — [[raw/owning-your-context-layer#full-notes|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/fastmcp]], [[wiki/entities/prefect]]
-- **Concepts**: [[wiki/concepts/context-layer]], [[wiki/concepts/unified-memory]], [[wiki/concepts/agent-harness]], [[wiki/concepts/knowledge-graph]], [[wiki/concepts/mcp-server-design]]
+- **Entities**: [[wiki/entities/maxime-labonne]], [[wiki/entities/fastmcp]], [[wiki/entities/prefect-horizon]]
+- **Concepts**: [[wiki/concepts/context-layer]], [[wiki/concepts/mcp]], [[wiki/concepts/unified-memory]]
 
-> Synthesis: This note supplies the motive the technical sources leave implicit — every "expose it over MCP" decision elsewhere in the wiki is downstream of wanting the memory to outlive the harness.
+> Synthesis: A personal/promotional LinkedIn post (with an embedded sponsor plug for FastMCP and Prefect Horizon Cloud) rather than a technical deep-dive — its lasting claim is architectural (memory decoupled from harness, served over MCP), and its tool endorsements should be read as the author's own workflow, not independently vetted.

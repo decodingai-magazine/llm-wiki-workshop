@@ -1,75 +1,38 @@
 ---
 type: entity
 title: Prefect
-description: The workflow orchestrator behind every pipeline in this wiki, argued into the agent runtime itself, and the vendor behind the MCP framework the servers are built with.
-aliases: [Prefect Cloud, Horizon]
+description: A workflow-orchestration company that both orchestrates agent data/memory pipelines directly and, through its FastMCP project, builds the de facto default Python SDK for MCP servers.
+aliases: []
 sources:
-  - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
-  - "[[wiki/sources/building-graphrag-from-scratch-infrastructure-over]]"
-  - "[[wiki/sources/deep-dive-on-how-to-scale-your-graphrag-ingestion-pipeline]]"
-  - "[[wiki/sources/explaining-the-architecture]]"
-  - "[[wiki/sources/four-prefect-task-runners-four-different-problems]]"
-  - "[[wiki/sources/how-smooth-is-to-use-prefect-for-agentic-coding]]"
-  - "[[wiki/sources/how-smooth-was-my-experience-to-use-mongodb-and-build-from]]"
-  - "[[wiki/sources/how-to-ingest-1-000-000-documents-into-your-agent-memory]]"
-  - "[[wiki/sources/ingesting-1-000-000-documents-is-an-orchestration-problem]]"
-  - "[[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]"
-  - "[[wiki/sources/normalization-entity-resolution]]"
-  - "[[wiki/sources/owning-your-context-layer]]"
-  - "[[wiki/sources/retrieval-strategies]]"
-  - "[[wiki/sources/running-multiple-graphrag-ingestion-pipelines-in-parallel]]"
-  - "[[wiki/sources/scaling-graphrag-ingestion-pipelines-with-prefect]]"
   - "[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]"
   - "[[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]"
-  - "[[wiki/sources/what-to-focus-on]]"
-  - "[[wiki/sources/why-durable-workflow-tools-are-more-important-than-ai]]"
-  - "[[wiki/sources/why-mcp-is-not-dead]]"
 related:
-  - "[[wiki/concepts/durable-execution]]"
-  - "[[wiki/concepts/pipeline-parallelism]]"
-  - "[[wiki/concepts/agentic-coding-loop]]"
-  - "[[wiki/concepts/read-write-separation]]"
   - "[[wiki/entities/fastmcp]]"
-created: 2026-08-29T09:00:00Z
-timestamp: 2026-08-29T10:00:00Z
-source_count: 20
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/agent-architecture]]"
+  - "[[wiki/concepts/orchestrator-placement]]"
+created: 2026-08-29T16:14:14Z
+timestamp: 2026-08-29T16:14:14Z
+source_count: 2
 ---
 
 # Prefect
 
-> Decorators on ordinary Python that add retries, caching, scheduling and observability — and, in these notes, part of the agent runtime rather than infrastructure beside it.
+> A workflow-orchestration company, credited as both a pipeline-orchestration tool and the maker of FastMCP.
 
 ## Definition
 
-Prefect orchestrates every pipeline described in this wiki: data ingestion, memory
-extraction, materialization and indexing
-[[wiki/sources/agentic-graphrag-via-mcp-servers]]. Its architectural claim is that
-long-running agents need durable execution, retries, checkpoints, human approvals
-and observability, which makes a workflow engine part of the runtime layer
-[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]].
-
-Its structural claim is separation: a server that coordinates and never executes,
-work pools that are queues in a database, and workers that poll and run — so
-scaling changes a deployment target, not pipeline code
-[[wiki/sources/deep-dive-on-how-to-scale-your-graphrag-ingestion-pipeline]].
+Prefect shows up in the wiki in two roles that neither source ties together explicitly. One source names it as the company behind FastMCP, cited as evidence the MCP ecosystem is maturing quickly. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]] The other names it as the workflow-orchestration tool actually running an agent's data, memory, and retrieval pipelines. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]] Both are consistent with Prefect being a workflow-orchestration company that also ships FastMCP, but no source states that link directly — it is inferred from the two mentions together.
 
 ## Key claims
 
-- Tasks should be thin wrappers around pure functions, so business logic stays testable and runnable without the orchestrator. [[wiki/sources/building-graphrag-from-scratch-infrastructure-over]]
-- The staged scaling path — `serve()`, Docker work pool, Kubernetes or push pool — changes one line and no flow code. [[wiki/sources/deep-dive-on-how-to-scale-your-graphrag-ingestion-pipeline]]
-- Four independent concurrency controls exist, and only the global one protects a shared API across machines. [[wiki/sources/deep-dive-on-how-to-scale-your-graphrag-ingestion-pipeline]]
-- Queue priority drains as a waterfall rather than round-robin — not what most people expect. [[wiki/sources/deep-dive-on-how-to-scale-your-graphrag-ingestion-pipeline]]
-- It survives agentic coding because the worker *is* a Python process: restarting after a code change takes about two seconds. [[wiki/sources/how-smooth-is-to-use-prefect-for-agentic-coding]]
-- For most API-driven pipelines no task runner is needed at all — `asyncio.gather()` with a semaphore is the right tool. [[wiki/sources/four-prefect-task-runners-four-different-problems]]
-- It is used asymmetrically on purpose: write paths are orchestrated, read paths deliberately are not. [[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]
-- The honest limits: it adds infrastructure, knows nothing about prompts or models, buffers streaming, and is overkill for single-shot calls. [[wiki/sources/why-durable-workflow-tools-are-more-important-than-ai]]
-- The same vendor builds the MCP framework these servers use, which is why the two layers share idioms and deploy together. [[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]], [[wiki/sources/owning-your-context-layer]]
-- In day-to-day development, the same author reaches for its CLI rather than an MCP server. [[wiki/sources/why-mcp-is-not-dead]]
+- Prefect built FastMCP, which has become the practical default Python SDK for building MCP servers — preferred even by MCP co-creator David Soria Parra over Anthropic's own official SDK. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
+- Prefect is used to orchestrate the data pipeline, memory pipeline, and retrieval pipeline in an MCP-based agent architecture. [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
+- Workflow tools like Prefect are framed as belonging inside the agent runtime itself, since agents are becoming long-running systems that need durable execution, retries, checkpoints, human approvals and observability — properties workflow engines already provide. [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]
 
 ## Relationships
 
-- **[[wiki/concepts/durable-execution]]**: the property Prefect is brought in to provide.
-- **[[wiki/concepts/pipeline-parallelism]]**: work pools and task runners are its two axes.
-- **[[wiki/entities/fastmcp]]**: same vendor; the two split the execution substrate and the protocol surface.
+- **FastMCP**: Prefect built it; FastMCP is the SDK used for both the MCP server and MCP client side in an agent architecture. [[wiki/entities/fastmcp]]
+- **MCP**: Prefect's orchestration role is cited as one reason agent runtimes are converging toward workflow-engine properties. [[wiki/concepts/agent-architecture]]
 
-> Synthesis: Twenty sources mention it and several are sponsored, so the discount applies — but the load-bearing claims here are structural (server/pool/worker, four concurrency layers, thin tasks) and those are checkable against the docs rather than against the author.
+> Synthesis: The two source pages corroborate Prefect's presence in this space from independent angles (ecosystem commentary vs. a hands-on architecture walkthrough) but describe two different roles — pipeline orchestrator and FastMCP's maker — that together, not separately, make the case for Prefect sitting at the runtime layer.

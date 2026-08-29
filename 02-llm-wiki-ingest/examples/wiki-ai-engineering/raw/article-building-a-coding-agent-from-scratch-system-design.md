@@ -5,7 +5,7 @@ authors: ["Paul Iusztin"]
 published_date: "2026-07-22T11:04:24+00:00"
 source_url: https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design
 origin: article
-fetched: 2026-08-29T13:08:28Z
+fetched: 2026-08-29T17:00:54Z
 ---
 
 # Building a Coding Agent From Scratch

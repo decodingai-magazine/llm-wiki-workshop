@@ -5,7 +5,7 @@ authors: ["Paul Iusztin"]
 published_date: "2026-07-28T13:54:35+00:00"
 source_url: https://www.decodingai.com/p/the-coding-agent-loop
 origin: article
-fetched: 2026-08-29T13:08:29Z
+fetched: 2026-08-29T17:01:00Z
 ---
 
 # The Bare-Bones Coding Agent Loop

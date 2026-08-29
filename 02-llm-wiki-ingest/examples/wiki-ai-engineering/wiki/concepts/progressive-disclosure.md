@@ -1,58 +1,52 @@
 ---
 type: concept
-title: Progressive disclosure
-description: Give the model an index first and the detail only on request — the pattern that keeps tool schemas and retrieval results out of the context window until they are needed.
-aliases: [Progressive discovery, tool_search]
+title: Progressive Disclosure
+description: A design pattern for revealing content or capability only when it is needed, rather than loading everything upfront — applied here at two different grains, within one agent's context and across harness environments.
+aliases: []
 sources:
+  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
   - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
-  - "[[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]"
-  - "[[wiki/sources/retrieval-strategies]]"
-  - "[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]"
-  - "[[wiki/sources/the-future-of-mcp-vs-skills]]"
+  - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
+  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
 related:
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/mcp]]"
   - "[[wiki/concepts/agent-harness]]"
-  - "[[wiki/concepts/programmatic-tool-calling]]"
-  - "[[wiki/concepts/hybrid-search]]"
-created: 2026-08-29T09:20:00Z
-timestamp: 2026-08-29T10:00:00Z
-source_count: 5
+  - "[[wiki/concepts/progressive-tool-discovery]]"
+created: 2026-08-29T16:48:21Z
+timestamp: 2026-08-29T17:10:09Z
+source_count: 4
 ---
 
-# Progressive disclosure
+# Progressive Disclosure
 
-> Don't load it until the agent needs it — applied to tool schemas, and to retrieval results, with the same result: a small index up front, full detail on demand.
+> Multiple framings — see Definition
 
 ## Definition
 
-The pattern shows up twice in this wiki, at two different layers, which is the
-best evidence that it is a real pattern and not a trick.
+Four sources apply this label, at two different grains, and only one of the four reaches for a different term for its own pattern.
 
-**For tools:** instead of putting every tool definition in the context window,
-expose one search capability; the model queries it, loads the schema it needs, and
-only then calls the tool. The architecture note prices the difference at roughly
-50K tokens versus 200 tokens plus a 300-token schema load, and insists this is the
-client's job, not the protocol's
-[[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]].
+Three sources converge on the grain of **one agent's context**, and all three trace to the same course and codebase. `decode`'s ARCHITECTURE.md describes the mechanism directly: skills load in three tiers — a catalog line (name + one line) always in the prompt, the full body only when `skill(name)` is called, and a project skill's bundled `references/`, `examples/`, `scripts/` surfacing as an on-demand trailer. [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]] Lesson 1 of the same course names skills as one of six harness modules — "workflows loaded only on invocation" — without yet showing the mechanism. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]] Lesson 4 restates the identical three tiers and adds the reason they exist: upfront tool schemas alone can cost 7–9% of the context window before any work begins. [[wiki/sources/article-context-engineering-for-coding-agents]]
 
-**For retrieval:** deep search writes one markdown file per node and edge to disk
-and returns a YAML index of one-line summaries; the harness reads individual files
-on demand [[wiki/sources/agentic-graphrag-via-mcp-servers]]. Same shape, different
-payload.
+The GraphRAG report describes a different shape — a 3-layer pattern for wiring an MCP server into any harness — at the grain of **capability across environments**, and its own vocabulary for it is "progressive enhancement," not "progressive disclosure": Layer 1 (the MCP server — tools, instructions, transport) is protocol-standard and works everywhere, while Layers 2 (skills) and 3 (hooks) are Claude-Code-specific enrichments that other harnesses (OpenCode, Cursor, Windsurf) simply don't get, falling back to tool docstrings alone. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
+
+> Synthesis: both are instances of "reveal more only where it can be used," but at different grains — the `decode` course discloses skill *content* over time within one agent's context budget, while the GraphRAG report discloses integration *richness* across harness environments. Treat the three `decode`-course sources as one well-documented witness rather than three independent confirmations (see Tensions); the GraphRAG report is the only independent voice and system in the set, and it names its own pattern "progressive enhancement," a term closer to web development's graceful degradation than to on-demand context loading.
 
 ## Key claims
 
-- Loading every tool into the context window is the dominant 2025 pattern and the source of every "MCP causes context bloat" complaint. [[wiki/sources/the-future-of-mcp-vs-skills]], [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
-- The protocol already supports deferred loading; most harnesses have simply not built it. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
-- Claude Code shipped tool search and saw a large reduction in tool-context usage. [[wiki/sources/the-future-of-mcp-vs-skills]]
-- A broad graph query can return hundreds of nodes; returning an index plus files keeps the context lean while leaving the full result set reachable. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- The index entries carry a one-line `context` field precisely so the model can decide what to open without opening anything. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
-- The same rule covers server discovery, tool discovery and skill discovery: don't load it until it is needed. [[wiki/sources/system-architecture-of-future-ai-apps-ui-tui-ide-extension]]
-- The same pattern serves retrieval: return a lightweight index over files on disk and let the agent open only what it needs. [[wiki/sources/retrieval-strategies]]
-- Deep search is the named tool for it — a wide traversal whose result is an index, not a dump. [[wiki/sources/mcp-servers-for-continual-learning-via-graphrag]]
+- `decode`'s skills subsystem implements a three-tier reveal: always-loaded catalog line, on-call skill body, on-demand bundled files (`references/`, `examples/`, `scripts/`). [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
+- The same three-tier skill loading is restated across the course's own marketing/teaching material: named as a harness module in lesson 1, then given a concrete cost justification in lesson 4 — upfront tool schemas alone can cost 7–9% of the context window before any work begins. [[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]], [[wiki/sources/article-context-engineering-for-coding-agents]]
+- The GraphRAG report's own three-layer MCP-to-harness pattern (server / skills / hooks) is explicitly framed as layers of decreasing portability, with only the MCP server layer guaranteed to work in a harness that lacks the other two. [[wiki/sources/agentic-graphrag-via-mcp-servers]]
+- Quote: "Layer 1 is portable. Layers 2 and 3 are progressive enhancements that make the experience richer in harnesses that support them, while degrading gracefully in those that don't." [[wiki/sources/agentic-graphrag-via-mcp-servers]]
 
 ## Relationships
 
-- **[[wiki/concepts/agent-harness]]**: the layer that owns the pattern for tools.
-- **[[wiki/concepts/programmatic-tool-calling]]**: the other half of the harness upgrade — one saves schema tokens, the other saves round-trips.
+- **Skills**: the catalog-then-body-then-bundle tiering is the concrete mechanism behind the disclosure claim, corroborated identically by the repo and both Substack lessons. [[wiki/concepts/skills]]
+- **MCP**: the GraphRAG report's layered server/skills/hooks structure is an MCP integration pattern; progressive disclosure/enhancement is what determines how much of it activates in a given harness. [[wiki/concepts/mcp]]
+- **Agent harness**: all four sources tie the pattern to harness capability — what a harness can surface (skill bodies, hooks) bounds what gets progressively revealed. [[wiki/concepts/agent-harness]]
+- **Progressive tool discovery**: a separate, already-existing concept page about deferring tool-schema loading in an agent runtime. `article-context-engineering-for-coding-agents` cites both concepts side by side without merging them, which supports keeping them distinct: this page is about skill/capability content, that one is scoped to tool schemas. [[wiki/concepts/progressive-tool-discovery]], [[wiki/sources/article-context-engineering-for-coding-agents]]
 
-> Synthesis: Both instances share one insight worth generalizing: the expensive thing is not retrieval but *materialization into context*, so the artefact you return should be an index whenever the full set might not be read.
+## Tensions
+
+- The sources use the phrase for different mechanisms. The `decode` course means "reveal more *content* over time, within one context" (catalog → body → bundle). The GraphRAG report's own language — "progressive enhancement" — means "reveal more *capability* across environments" (docstrings-only → skills → hooks, depending on what the harness supports), a term with roots in web development's graceful-degradation idea rather than in on-demand context loading. Treat them as related but non-identical until a future source ties them together explicitly.
+- False-corroboration risk: three of the four sources (the repo's ARCHITECTURE.md and both Substack articles) describe the same underlying artifact — the `decode` codebase and course — and the two articles are both authored by Paul Iusztin, who also writes the course the repo implements. Their agreement on "three tiers, catalog always loaded" is one well-sourced account of one system, not three independent replications. The GraphRAG report remains the only source in this set describing an unrelated system.

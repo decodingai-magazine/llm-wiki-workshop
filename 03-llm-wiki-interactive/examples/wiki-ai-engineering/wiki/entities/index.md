@@ -2,13 +2,12 @@
 
 # Entities
 
-- [[wiki/entities/anthropic|Anthropic]] — Author of MCP and Claude Code, and the party shipping the protocol extensions — remote transport, authorization, elicitation, tasks — that the roadmap depends on.
-- [[wiki/entities/claude-code|Claude Code]] — Anthropic's coding agent, used across these notes both as the reference harness for skills and as the prebuilt orchestrator you get to skip building.
-- [[wiki/entities/david-soria-parra|David Soria Parra]] — MCP co-creator at Anthropic, the source of the connectivity-stack framing that organizes most of this wiki.
-- [[wiki/entities/fastmcp|FastMCP]] — The Python MCP framework that became the practical default for building servers, and whose skills provider is the concrete implementation the notes evaluate.
-- [[wiki/entities/langchain|LangChain]] — The framework these notes started with and left — used throughout the wiki as the worked example of a data model you cannot configure your way out of.
-- [[wiki/entities/mcp|MCP (Model Context Protocol)]] — The open protocol for connecting agents to tools, data and UI, treated across these notes as one layer of a connectivity stack rather than as the whole of it.
-- [[wiki/entities/modal|Modal]] — The serverless GPU platform used as the "open weights you serve yourself" tier — scale-to-zero compute behind the same interface as the hosted APIs.
-- [[wiki/entities/mongodb|MongoDB]] — The database this wiki's memory layer runs on — documents, vectors, graph traversal and an event log in one cluster, with its limits stated as clearly as its strengths.
-- [[wiki/entities/prefect|Prefect]] — The workflow orchestrator behind every pipeline in this wiki, argued into the agent runtime itself, and the vendor behind the MCP framework the servers are built with.
-- [[wiki/entities/voyage-ai|Voyage AI]] — The embedding provider chosen for its native database integration, with contextualized chunk embeddings and a multimodal model as the specific draws.
+- [[wiki/entities/claude-code|Claude Code]] — Anthropic's coding-agent harness — an MCP client/orchestrator and a comparison baseline for permission modes, memory and sandboxing in six article sources and a four-lesson course, and, per an inde...
+- [[wiki/entities/david-soria-parra|David Soria Parra]] — Anthropic engineer and MCP co-creator whose "Future of MCP" talk frames agent architecture as four decomposing layers, with connectivity built from skills, CLIs and MCP together.
+- [[wiki/entities/fastmcp|FastMCP]] — A Python SDK for building MCP servers and clients, built by Prefect, used across these sources as a thin delivery layer that adds no business logic of its own.
+- [[wiki/entities/kitaru|Kitaru]] — ZenML's durable-execution runtime that backs decode's headless remote mode, orchestrating checkpointed, replayable agent flows in parallel on Modal.
+- [[wiki/entities/modal|Modal]] — A serverless cloud platform that the Decode teaching codebase uses in two distinct roles — a GPU/inference backend for self-hosted LLMs, and a remote sandbox backend for isolated tool execution.
+- [[wiki/entities/mongodb|MongoDB]] — A document database used across these sources as a single store for operational data, vector search, and knowledge-graph traversal — pitched as an alternative to polyglot persistence for AI agent m...
+- [[wiki/entities/opik|Opik]] — The tracing platform decode wires into its agent loop via OTLP spans, used both to debug the loop during development and to run live-scored production evals.
+- [[wiki/entities/prefect|Prefect]] — A workflow-orchestration company that both orchestrates agent data/memory pipelines directly and, through its FastMCP project, builds the de facto default Python SDK for MCP servers.
+- [[wiki/entities/pydantic-ai|Pydantic AI]] — The Python agent framework — a typed Agent object with tools and a structured, deferrable output_type — that decode's entire agent loop is built directly on top of, imported rather than abstracted ...

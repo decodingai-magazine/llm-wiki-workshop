@@ -1,72 +1,58 @@
 ---
 type: source
 title: The Bare-Bones Coding Agent Loop
-description: The implementation lesson — one agent loop, nine tools, three input modes (steer, follow-up, abort), and the session log that makes a turn replayable.
+description: A build log for Decode, a from-scratch Pydantic AI coding agent, arguing the harness — not the model — is what makes a coding agent good, and walking through its ReAct loop, 9-tool set, swappable LLM providers, and terminal steering queues.
 origin: article
 original_path: https://www.decodingai.com/p/the-coding-agent-loop
 source_url: https://www.decodingai.com/p/the-coding-agent-loop
 authors: ["Paul Iusztin"]
 published_date: "2026-07-28T13:54:35+00:00"
 raw_file: raw/article-the-coding-agent-loop.md
-created: 2026-08-29T10:45:00Z
-timestamp: 2026-08-29T10:45:00Z
+created: 2026-08-29T17:03:54Z
+timestamp: 2026-08-29T17:03:54Z
 entities:
   - "[[wiki/entities/claude-code]]"
+  - "[[wiki/entities/pi]]"
   - "[[wiki/entities/modal]]"
+  - "[[wiki/entities/opik]]"
 concepts:
   - "[[wiki/concepts/agent-harness]]"
-  - "[[wiki/concepts/agentic-coding-loop]]"
-  - "[[wiki/concepts/provider-abstraction]]"
-  - "[[wiki/concepts/observability]]"
-  - "[[wiki/concepts/context-rot]]"
+  - "[[wiki/concepts/cli]]"
+  - "[[wiki/concepts/agent-loop]]"
 ---
 
 # The Bare-Bones Coding Agent Loop
 
-> [[raw/article-the-coding-agent-loop|Raw]] · article · [Original](https://www.decodingai.com/p/the-coding-agent-loop)
+> [[raw/article-the-coding-agent-loop|Raw]] · article · [decodingai.com](https://www.decodingai.com/p/the-coding-agent-loop)
 
 ## Summary
 
-Lesson two builds the loop the previous article designed, and its most useful
-claim is about proportion: **"the tools are 90% of why this is a coding agent and
-not any other kind of AI agent."** The minimum set is four — `read`, `write`,
-`edit`, `bash` — which one referenced agent ships in under 1,000 tokens of prompt
-plus definitions and still places top-10 on a public benchmark. Around them sit
-`glob`, `grep`, `todo_write`, `web_fetch` and `ask_user`.
+Lesson 2 of the open-source course *Building a Coding Agent From Scratch*, this article builds Decode: a bare-bones coding agent in Python on top of Pydantic AI, deliberately scoped to reach feature parity with Mario Zechner's minimalist Pi harness before later lessons add Claude-Code/OpenCode-style features such as memory, skills and sandboxing. Its opening claim — from a LangChain Terminal-Bench experiment where swapping only the harness under a fixed model moved a coding agent from ~30th place to the top 5 — sets the piece's thesis: the harness, not the model, is what makes a coding agent good.
 
-The `edit` tool gets the most attention, and deservedly: it is a find-and-replace
-whose difficulty is entirely in what the model *cannot see*. Line-ending
-conventions and byte-order marks are normalized away so a match never fails on
-invisible characters; a miss retries with whitespace collapsed; and the match must
-be **unique** — zero hits returns "not found", two or more returns "ambiguous",
-and both come back to the model as a retry rather than an error.
+It then walks one turn end-to-end. An `AgentTurnHandler` async generator chains model-call "steps" through `agent.iter`, exposing exactly two yield points — `Boundary.MODEL_REQUEST` for steering and `Boundary.WOULD_STOP` for follow-ups — and deliberately carries no max-step cap, trusting the model's own text-instead-of-tool-call signal that it is done. Nine tools cover the lifecycle plan (`todo_write`) → explore (`read`/`glob`/`grep`) → apply (`write`/`edit`, gated behind an approval prompt) → execute (`bash`), with `web_fetch` and `ask_user` rounding out the set; Pi's 4-tool minimalism (`read`, `write`, `edit`, `bash`) is the recurring philosophical counterpoint.
 
-The harness state reaches tools by dependency injection: a single deps object
-carrying the working directory, an event sink, the permission gate, two resolver
-callbacks and the task list. Tools therefore reach the terminal without importing
-the UI, and tests swap the object.
-
-The interaction section is the other half. A TUI can take over the viewport or
-append to scrollback; this one appends, keeping scrollback and search. Input
-arriving mid-turn cannot be injected immediately without corrupting a tool call,
-so it is buffered and released at boundaries in three modes: **steering** (runs
-between tool calls), **follow-up** (held until the turn ends), and **cooperative
-abort** (stops at the next boundary and clears both queues).
+The rest covers infrastructure made explicit as trade-offs rather than defaults: three swappable LLM providers (Modal, OpenRouter, Gemini) behind one `_build_model()` switch, framed as buy-the-model vs. buy-the-serving vs. serve-it-yourself; Opik/OTLP tracing wired in from day one to make the loop debuggable; and a TUI that buffers keystrokes into separate steering/follow-up queues so mid-turn input never corrupts a running tool call, with session state persisted as an append-only per-session JSONL log instead of a database.
 
 ## Key claims
 
-- The tools are what make it a *coding* agent; the loop itself is generic. [[raw/article-the-coding-agent-loop#The Core Tools|cite]]
-- Four tools — read, write, edit, bash — are enough to be competitive on a public benchmark. [[raw/article-the-coding-agent-loop#The Core Tools|cite]]
-- `edit` must normalize invisible formatting the model was never shown, and must refuse ambiguous matches. [[raw/article-the-coding-agent-loop#The Core Tools|cite]]
-- A failed edit returns a retry to the model rather than an error to the user — the loop self-corrects. [[raw/article-the-coding-agent-loop#The Core Tools|cite]]
-- Harness state is injected into every tool call, so tools never import the interface and are trivially testable. [[raw/article-the-coding-agent-loop#The Core Tools|cite]]
-- Mid-turn input must be buffered and released at boundaries; injecting it immediately corrupts the current tool call. [[raw/article-the-coding-agent-loop#The TUI and the Queues|cite]]
-- Three input modes cover the interaction surface: steer, follow up, abort — with abort clearing both queues to protect the history. [[raw/article-the-coding-agent-loop#The TUI and the Queues|cite]]
-- A plan stored as a file on disk is argued to beat an in-memory TODO list the agent has to track. [[raw/article-the-coding-agent-loop#The Core Tools|cite]]
+- Changing only the harness on the same model moved a coding agent from ~30th place to the top 5 on LangChain's Terminal-Bench, which the article treats as proof that the harness — not the model — is the real lever. [[raw/article-the-coding-agent-loop#The Bare-Bones Coding Agent Loop|cite]]
+- The turn lifecycle is plan → explore → apply → execute → observe, mapped onto tools as `todo_write` (plan), `read`/`glob`/`grep` (explore), `write`/`edit` (apply, stopping for a human verdict), and `bash` (execute), with a failure or exit code feeding the next pass as the observation. [[raw/article-the-coding-agent-loop#The Agent Loop|cite]]
+- The loop has no max-steps knob by design, following Pi's principle that it should just loop until the agent says it's done; a step cap is a guess, and the signal actually worth watching is the context window. [[raw/article-the-coding-agent-loop#The Agent Loop|cite]]
+- All provider knowledge is isolated in one `_build_model()` function selected by an `LLM_PROVIDER` env var, covering three build-vs-buy tiers — Gemini (buy the model), OpenRouter (buy the serving), Modal (serve open weights yourself) — with Modal as the default because it bills GPU-time instead of tokens and scales to zero. [[raw/article-the-coding-agent-loop#The LLM Providers|cite]]
+- Pi ships exactly `read`, `write`, `edit`, and `bash` in under 1,000 tokens of prompt plus definitions and still lands top-10 on Terminal-Bench 2.0, which matters because Pydantic AI adds every registered tool's schema to the system prompt, so each extra tool has a real context-window cost. [[raw/article-the-coding-agent-loop#The Core Tools|cite]]
+- The TUI buffers keystrokes into two queues — steering (plain Enter, drained before each model call) and follow-up (Alt+Enter, drained only once a turn would stop) — plus a cooperative Esc-abort that clears both, because injecting text mid-tool-call would corrupt the running turn. [[raw/article-the-coding-agent-loop#The TUI and the Queues|cite]]
+
+## Notable quotes
+
+> "In LangChain's Terminal-Bench experiment, changing only the harness (with the same model) moved a coding agent from ~30th place into the top 5: the harness, not the model, is what makes a coding agent good."
+> — [[raw/article-the-coding-agent-loop#The Bare-Bones Coding Agent Loop|location]]
+
+> "In reality, the tools are 90% of why this is a coding agent and not any other kind of AI agent."
+> — [[raw/article-the-coding-agent-loop#The Core Tools|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/modal]]
-- **Concepts**: [[wiki/concepts/agent-harness]], [[wiki/concepts/agentic-coding-loop]], [[wiki/concepts/provider-abstraction]], [[wiki/concepts/observability]], [[wiki/concepts/context-rot]]
+- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/pi]], [[wiki/entities/modal]], [[wiki/entities/opik]]
+- **Concepts**: [[wiki/concepts/agent-harness]], [[wiki/concepts/cli]], [[wiki/concepts/agent-loop]]
 
-> Synthesis: The most concrete tool-design source in the wiki, and its lesson generalizes past coding agents — the hard part of a tool is not the operation but the failure modes the model cannot see.
+> Synthesis: A hands-on build log, not a theory piece — its wiki value is a concrete, code-level reference implementation of the ReAct coding-agent loop (steering boundaries, tool-count-as-context-cost, provider abstraction) that other sources on agent harnesses and CLIs can be checked against rather than restated.

@@ -1,31 +1,25 @@
 ---
 type: source
 title: Agentic GraphRAG via MCP Servers
-description: An end-to-end technical report on a digital-twin memory — ETL into MongoDB, LLM graph extraction, hybrid retrieval, and a six-tool FastMCP server that any harness can drive.
+description: A build report for a FastMCP knowledge-graph server — a single-collection MongoDB graph, three retrieval strategies, and a 3-layer pattern (server, skills, hooks) for wiring it into Claude Code and other MCP harnesses.
 origin: local
 original_path: data_input_examples/notes/02-medium/Agentic GraphRAG via MCP Servers.md
 source_url: null
 authors: []
 published_date: null
 raw_file: raw/agentic-graphrag-via-mcp-servers.md
-created: 2026-08-29T09:20:00Z
-timestamp: 2026-08-29T09:20:00Z
+created: 2026-08-29T16:08:58Z
+timestamp: 2026-08-29T16:08:58Z
 entities:
-  - "[[wiki/entities/mcp]]"
   - "[[wiki/entities/fastmcp]]"
-  - "[[wiki/entities/mongodb]]"
   - "[[wiki/entities/claude-code]]"
-  - "[[wiki/entities/prefect]]"
+  - "[[wiki/entities/mongodb]]"
 concepts:
+  - "[[wiki/concepts/graphrag]]"
   - "[[wiki/concepts/knowledge-graph]]"
-  - "[[wiki/concepts/unified-memory]]"
-  - "[[wiki/concepts/agent-memory]]"
-  - "[[wiki/concepts/hybrid-search]]"
+  - "[[wiki/concepts/mcp]]"
   - "[[wiki/concepts/progressive-disclosure]]"
-  - "[[wiki/concepts/mcp-server-design]]"
-  - "[[wiki/concepts/agent-skills]]"
-  - "[[wiki/concepts/agent-harness]]"
-  - "[[wiki/concepts/context-layer]]"
+  - "[[wiki/concepts/hybrid-search]]"
 ---
 
 # Agentic GraphRAG via MCP Servers
@@ -34,52 +28,40 @@ concepts:
 
 ## Summary
 
-The most complete build description in the wiki: an end-to-end report on a
-personal digital twin, from ingestion to the MCP server a harness talks to. Five
-ETL pipelines (Substack RSS and articles, arXiv via HuggingFace, local files,
-conversations) normalize everything into one `documents` collection, deduplicated
-by a unique `source_uri` — the same "identity is the source URI" move this wiki
-makes with raw paths. Unresolved references become **LATENT placeholder
-documents** that get upgraded when the target is ingested later.
+An end-to-end architecture report for a personal "digital twin" memory system: five ETL pipelines normalize heterogeneous sources into one MongoDB `documents` collection, an LLM+rules extraction pipeline turns that content into a single-collection knowledge graph of typed nodes and edges, and three query strategies read it back with different precision/breadth trade-offs. The report's center of gravity, though, is the delivery layer — how that memory is exposed as a FastMCP server and wired into Claude Code (and, in principle, any MCP-compatible harness) via six thin tool wrappers that add zero business logic of their own.
 
-A five-stage memory pipeline turns documents into a knowledge graph: chunk at 512
-tokens, LLM-extract nodes and edges per chunk against a fixed ontology, add
-*structural* entries deterministically (document and chunk nodes, `part_of`,
-`next`, `mentions`, `referenced` edges), normalize with fuzzy matching at 0.85,
-then bulk-upsert idempotently. The ontology is small and enforced in code — six
-node types, eight edge types — so the LLM cannot invent an edge the schema
-forbids.
+```mermaid
+flowchart TD
+    H[Harness: Claude Code / OpenCode / Cursor] -->|stdio JSON-RPC| M[FastMCP server]
+    M --> Q[search_memory / query_memory / deep_search_memory]
+    M --> I[ingest_url / ingest_file / ingest_conversation]
+    Q --> KG[(MongoDB: knowledge_graph)]
+    I --> KG
+    I --> D[(MongoDB: documents)]
+```
 
-Retrieval offers three strategies with different shapes: hybrid vector + text
-search fused by RRF and expanded one hop through `$graphLookup`; a natural
-language query compiled by the LLM into a validated MongoDB aggregation pipeline;
-and a deep search that writes one markdown file per node to disk and returns a
-YAML index for the harness to read selectively.
-
-The last third is the part other notes only assert: the server is a thin
-delegation layer that owns zero business logic, and the harness integration is
-three stacked layers — the MCP server (portable everywhere), skills (Claude Code
-only, teaching tool selection), and hooks (Claude Code only, auto-ingesting each
-conversation). Layer 1 works in every harness; 2 and 3 degrade gracefully.
+Its argument is that an MCP integration naturally splits into three layers of decreasing portability: the MCP server itself (universal), skills (harness-specific tool-selection guidance), and hooks (harness-specific automation like auto-ingesting a conversation on session end). Only Claude Code, in this report, has all three.
 
 ## Key claims
 
-- The MCP layer is a delivery mechanism, not a logic layer — every tool handler delegates to business logic that batch pipelines call identically. [[raw/agentic-graphrag-via-mcp-servers#6. Building the GraphRAG FastMCP Server|cite]]
-- Nodes and edges share one collection discriminated by `kind`, which is what makes `$graphLookup` multi-hop traversal and single-index maintenance possible. [[raw/agentic-graphrag-via-mcp-servers#3. Knowledge Graph Data Model|cite]]
-- Six tools are enough: three read (`search_memory`, `query_memory`, `deep_search_memory`) and three write (`ingest_url`, `ingest_file`, `ingest_conversation`). [[raw/agentic-graphrag-via-mcp-servers#7. MCP Tool Design: Search + Write|cite]]
-- Deep search implements progressive disclosure: write per-node markdown to disk, return a YAML index, let the harness read only what it needs. [[raw/agentic-graphrag-via-mcp-servers#7. MCP Tool Design: Search + Write|cite]]
-- Skills tell the model *what it should do* where tool docstrings only say *what it can do* — a decision tree for picking between the three search tools. [[raw/agentic-graphrag-via-mcp-servers#8. Skills: Teaching the Harness When to Use Each Tool|cite]]
-- Ingestion runs inline rather than through Prefect because the user is waiting: one `ingest_url` call goes from URL to queryable graph. [[raw/agentic-graphrag-via-mcp-servers#7. MCP Tool Design: Search + Write|cite]]
-- Embeddings are always stripped from tool output — a 384-dim array costs ~1500 tokens and tells the model nothing. [[raw/agentic-graphrag-via-mcp-servers#7. MCP Tool Design: Search + Write|cite]]
+- All five source pipelines (Substack RSS, Substack articles, ArXiv via HuggingFace, local files, conversations) implement a common `BaseETL` contract and land in one `documents` collection; a referenced-but-not-yet-ingested URL is stored as a `LATENT` placeholder document that gets upgraded with real content once it is later ingested. [[raw/agentic-graphrag-via-mcp-servers#1. Data Pipelines (ETL Layer)|cite]]
+- Nodes and edges live together in a single `knowledge_graph` MongoDB collection, discriminated by a `kind` field and addressed by composite string IDs (`person:paul iusztin`), specifically so `$graphLookup` can do multi-hop traversal without joining across collections. [[raw/agentic-graphrag-via-mcp-servers#3. Knowledge Graph Data Model|cite]]
+- Three query strategies exist because no single one covers every question shape: `search_memory` fuses vector and text search via Reciprocal Rank Fusion then expands one hop as the forgiving default; `query_memory` has an LLM translate natural language into a validated (write-blocked, whitelisted) MongoDB aggregation pipeline for counts and precise filters, with one self-correction retry on error; `deep_search_memory` runs a much wider search and writes results to disk as individual files plus a YAML index, so the harness reads only what it needs. [[raw/agentic-graphrag-via-mcp-servers#5. Query Logic (3 Strategies)|cite]]
+- Every MCP tool is a thin delegate — extract lifespan context, call an existing business-logic function, strip the embedding field, return a string — so the same extraction/query code path runs whether it's triggered by a real-time MCP call or a batch Prefect flow. [[raw/agentic-graphrag-via-mcp-servers#6. Building the GraphRAG FastMCP Server|cite]]
+- The report generalizes its own setup into a 3-layer pattern for connecting any MCP server to any harness: Layer 1 (the MCP server — tools, instructions, transport) is protocol-standard and works everywhere; Layer 2 (skills) and Layer 3 (hooks) are Claude-Code-specific progressive enhancements that other harnesses (OpenCode, Cursor, Windsurf) simply don't get, falling back to tool docstrings alone. [[raw/agentic-graphrag-via-mcp-servers#9. Hooking the MCP Server to a Harness (Claude Code, OpenCode, etc.)|cite]]
+- A `Stop` hook auto-ingests each Claude Code conversation once per session (via a sentinel file that blocks the turn with an instruction to run the ingestion skill), which the report frames as a self-sustaining loop that grows the graph without any deliberate user action. [[raw/agentic-graphrag-via-mcp-servers#9. Hooking the MCP Server to a Harness (Claude Code, OpenCode, etc.)|cite]]
 
 ## Notable quotes
+
+> "The MCP layer is a delivery mechanism, not a logic layer."
+> — [[raw/agentic-graphrag-via-mcp-servers#6. Building the GraphRAG FastMCP Server|location]]
 
 > "Layer 1 is portable. Layers 2 and 3 are progressive enhancements that make the experience richer in harnesses that support them, while degrading gracefully in those that don't."
 > — [[raw/agentic-graphrag-via-mcp-servers#9. Hooking the MCP Server to a Harness (Claude Code, OpenCode, etc.)|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/fastmcp]], [[wiki/entities/mongodb]], [[wiki/entities/claude-code]], [[wiki/entities/prefect]]
-- **Concepts**: [[wiki/concepts/knowledge-graph]], [[wiki/concepts/unified-memory]], [[wiki/concepts/agent-memory]], [[wiki/concepts/hybrid-search]], [[wiki/concepts/progressive-disclosure]], [[wiki/concepts/mcp-server-design]], [[wiki/concepts/agent-skills]], [[wiki/concepts/agent-harness]], [[wiki/concepts/context-layer]]
+- **Entities**: [[wiki/entities/fastmcp]], [[wiki/entities/claude-code]], [[wiki/entities/mongodb]]
+- **Concepts**: [[wiki/concepts/graphrag]], [[wiki/concepts/knowledge-graph]], [[wiki/concepts/mcp]], [[wiki/concepts/progressive-disclosure]], [[wiki/concepts/hybrid-search]]
 
-> Synthesis: This is the note that turns the wiki's abstractions into a bill of materials — several claims other sources make as principles ("design for the agent", "progressive discovery") appear here as file paths and default parameter values.
+> Synthesis: First source in this wiki, so every claim here is currently a single witness — a builder's own report on a system they built, strong on implementation detail but not yet corroborated; GraphRAG, progressive disclosure and hybrid search are the concepts most likely to gain a second, independent source.

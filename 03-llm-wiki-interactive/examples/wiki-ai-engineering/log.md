@@ -1,60 +1,56 @@
 # Log
 
-## 2026-08-29 ingest | 5 notes from data_input_examples/notes/01-easy
+## 2026-08-29 ingest | 4 articles from data_input_examples/substack_articles.md
 
-- Created `wiki-ai-engineering/` and ingested 5 notes; 0 skipped (empty wiki)
-- Source pages: `how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs`, `the-future-of-mcp-vs-skills`, `the-future-of-mcp-why-the-future-of-agents-is-mcp-skills`, `the-right-way-of-building-agents-with-mcp-servers`, `why-mcp-is-not-dead`
-- New entity pages (≥2 mentions): `mcp` (5), `claude-code` (4), `fastmcp` (4), `prefect` (3), `anthropic` (2)
-- New concept pages (≥2 mentions): `agent-skills` (4), `cli-tools` (3), `connectivity-stack` (3), `mcp-primitives` (3), `agent-harness`, `governance`, `mcp-apps`, `mcp-server-design`, `server-side-orchestration`, `skills-over-mcp`, `unified-memory` (2 each)
-- Waiting at 1 mention: `agent-memory`, `agentic-invocation`, `durable-execution`, `knowledge-graph`, `programmatic-tool-calling`, `progressive-disclosure`, `david-soria-parra`, `mongodb`, `obsidian`
-- Wrote `overview.md`, regenerated all `index.md` files
+- `fetch_article.py` on all 4 URLs: title/subtitle/author/published-date from page metadata, 32k–51k chars of body, no paywall warnings
+- Source pages: `article-building-a-coding-agent-from-scratch-system-design`, `article-the-coding-agent-loop`, `article-run-coding-agents-safely`, `article-context-engineering-for-coding-agents` — all four from the same course as the previously-ingested repo
+- Reconciled 3 slug collisions before running the tail (writers can't see 1-mention promissory slugs already used by other source-like pages, only materialized pages): `agent-sandboxing`(repo)/`sandboxing`(2 articles) → standardized on `sandboxing`; `permission-layer`(article)/`permission-gate`(repo) → standardized on `permission-gate`; `compaction`(article)/`context-compaction`(repo+article) → standardized on `context-compaction`
+- New entity pages (≥2 mentions): `modal` (4), `opik` (3), `kitaru` (2), `pydantic-ai` (2)
+- New concept pages (≥2 mentions): `sandboxing` (3), `context-compaction` (3), `agent-loop` (2), `permission-gate` (2)
+- Updated pages (new article sources merged in): `claude-code` (7 → 11), `agent-harness` (2 → 6), `agent-memory` (3 → 5, Tensions section preserved), `skills` (5 → 7), `cli` (4 → 5), `progressive-disclosure` (2 → 4), `progressive-tool-discovery` (2 → 3)
+- Not touched: `mcp`, `mcp-applications`, `graphrag`, `knowledge-graph`, `programmatic-tool-calling`, `fastmcp`, `mongodb`, `prefect`, `david-soria-parra` — none of the 4 articles reference these; `decode`'s tool set is flat and has no MCP layer
+- New entities/concepts at 1 mention (article-only so far): `abhishek-bhardwaj`, `codex`, `docker`, `decode-agent`, `pi`, `terminal-bench`, `ty`; `agent-skills`, `lsp-server`, `steering-queue`
+- Rewrote `overview.md` (4th theme now reads "four working parts instead of one abstraction" — agent-loop, permission-gate, context-compaction and sandboxing all graduated from repo-only to multi-source this run); regenerated all `index.md` files — `build_index_md.py` reported 0 errors, 0 warnings
+- Final state: 14 note/article sources + 1 repo = 15 source-like pages, 9 entities, 15 concepts, 39 pages total
 
-## 2026-08-29 ingest | 10 notes from data_input_examples/notes/02-medium
+## 2026-08-29 query | how the coding agent's loop works
 
-- Ingested 5 new notes; skipped 5 already present (`how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs`, `the-future-of-mcp-vs-skills`, `the-future-of-mcp-why-the-future-of-agents-is-mcp-skills`, `the-right-way-of-building-agents-with-mcp-servers`, `why-mcp-is-not-dead` — all first seen under `data_input_examples/notes/01-easy/`)
-- Source pages: `agentic-graphrag-via-mcp-servers`, `mongodb-for-an-ai-agent-unified-memory`, `owning-your-context-layer`, `stop-using-mcp-servers-to-access-your-mongodb-postgres`, `system-architecture-of-future-ai-apps-ui-tui-ide-extension`
-- New pages: entities `mongodb` (4), `david-soria-parra` (2); concepts `knowledge-graph` (4), `agent-memory` (3), `progressive-disclosure` (3), `context-layer` (2), `durable-execution` (2), `hybrid-search` (2), `programmatic-tool-calling` (2)
-- Updated 15 pages (new sources + claims); `created` preserved on all of them
-- Not touched: `server-side-orchestration` — still at 2 mentions, and no new source page referenced it
-- Waiting at 1 mention: `agentic-invocation`, `append-only-log`, `obsidian`
-- Rewrote `overview.md`, regenerated all `index.md` files
+- question: "how does the coding agent's loop actually work?"
+- pages used: 2 (`wiki/concepts/agent-loop`, `wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE`)
+- answer: `decode`'s turn is a multi-leg async-generator loop yielding at two boundaries (MODEL_REQUEST, WOULD_STOP), no step cap, gated tool calls deferred to a PermissionGate rather than blocking, history healed against crashed legs
+- gap noticed: none — the concept page and the repo's own architecture page already agree at two zoom levels (rationale vs. mechanics); did not need to escalate to `raw/` or the dedicated article source page
 
-## 2026-08-29 ingest | 10 notes from data_input_examples/notes/02-medium (re-run)
+## 2026-08-29 ingest | youtube.com/watch?v=sJpop1juVBQ
 
-- All 10 inputs skipped — every raw path already exists; nothing copied, no page rewritten
-- `build_index_md.py` re-run: output byte-identical to the previous run
-- Logged for the record: the run happened, it just changed nothing
+- Routed to the `youtube` adapter (`fetch_youtube.py`), which is a deliberate skeleton — it raised `NotImplementedError` pointing at `SOURCES.md § How to add a source`
+- Nothing ingested; no files written. This is the workshop's own extension exercise, not a bug
 
-## 2026-08-29 query | MCP server vs. CLI
+## 2026-08-29 ingest | repo github://decodingai-magazine/building-a-coding-agent-from-scratch-course (re-run)
 
-- question: "what do my notes say about when to use an MCP server vs. a CLI?"
-- pages used: 4 (`wiki/concepts/connectivity-stack`, `wiki/concepts/cli-tools`, `wiki/concepts/governance`, `wiki/sources/stop-using-mcp-servers-to-access-your-mongodb-postgres`)
-- answer: CLI when you own the machine (local, sandboxed, pre-trained tool, throwaway scripts); server when you own the users (distribution, governance, auth, non-local clients) — the sources agree on the boundary and disagree only on where a given case falls
-- gap noticed: nothing in the wiki covers how a harness should arbitrate when a skill, a CLI and an MCP tool all offer the same capability
-
-## 2026-08-29 ingest | 50 notes from data_input_examples/notes/03-hard
-
-- Ingested 40 new notes; skipped 10 already present (matched by raw path, not by the directory given)
-- Spawned 40 `source_writer` agents in parallel batches; the orchestrator read no raw file — only receipts
-- New entity pages: `langchain` (3), `voyage-ai` (3), `modal` (2)
-- New concept pages (19): `graphrag-ingestion` (10), `append-only-log` (11), `embeddings` (12), `entity-resolution` (8), `materialized-view` (8), `graph-extraction` (6), `infrastructure-over-frameworks` (5), `knowledge-freshness` (5), `pipeline-parallelism` (5), `database-scaling` (4), `inference-economics` (4), `agentic-search` (3), `graph-visualization` (3), `provider-abstraction` (3), `agentic-coding-loop` (2), `context-rot` (2), `data-fragmentation` (2), `graph-communities` (2), `read-write-separation` (2)
-- Resolved from hollow: `knowledge-graph` 4 → 22 sources, `durable-execution` 2 → 13, `hybrid-search` 2 → 13, `unified-memory` 5 → 14
-- Rewrote 6 pages whose corpus had changed shape (`knowledge-graph`, `unified-memory`, `durable-execution`, `hybrid-search`, `mongodb`, `prefect`); merged new claims into 9 more
-- Thin notes got thin pages, as designed: `constraints`, `marketing`, `feedback-from-v1` reference nothing at all
-- Noted duplication: `graphrag-presentation` re-contains two other ingested notes verbatim; the two task-runner notes overlap heavily. Recorded on the pages so the ≥2 threshold is not read as agreement.
-- Still waiting at 1 mention: `agentic-invocation`, `continual-learning`, `rag-evaluation`, `reasoning-memory`, `neo4j`, `obsidian`
+- `clone_repo.py`: `git fetch` + `reset --hard` ran, action `updated`, but sha is unchanged (`6ee643fbfeb10d3f9b463bf2a6cdfb64671b8aea`) — the remote hasn't moved since the last ingest
+- No new commit to reflect, so `repo_writer` was not re-run and the tail did not run: `ARCHITECTURE.md`'s existing permalinks are still pinned to the current SHA and stay valid
+- Nothing changed; logged for the record
 
 ## 2026-08-29 ingest | repo github://decodingai-magazine/building-a-coding-agent-from-scratch-course
 
-- `clone_repo.py`: action `cloned`, sha `6ee643fbfeb10d3f9b463bf2a6cdfb64671b8aea`, 98 MB under `raw/repos/.github-decodingai-magazine-…/` (hidden from Obsidian, gitignored)
-- `repo_writer` (mode `architecture`) wrote `wiki/repos/github-…/ARCHITECTURE.md` — 234 lines, 6 sections, mermaid per section, permalinks pinned to the SHA
-- The repo page is source-like: it pushed `agent-harness` 7 → 8 and `context-rot` 2 → 3, and materialized nothing on its own
-- `wiki/repos/index.md` generated; the wiki root index gained a Repos row
+- `clone_repo.py`: action `cloned`, sha `6ee643fbfeb10d3f9b463bf2a6cdfb64671b8aea`, into `raw/repos/.github-decodingai-magazine-building-a-coding-agent-from-scratch-course/` (hidden from Obsidian, gitignored)
+- `repo_writer` (mode `architecture`, opus) wrote `wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE.md` — 278 lines, permalinks pinned to the SHA
+- New concept pages (≥2 mentions, both newly qualifying): `agent-harness` (2: repo + system-architecture-of-future-ai-apps note), `progressive-disclosure` (2: repo + agentic-graphrag note — distinct slug from the existing `progressive-tool-discovery`)
+- Updated pages (repo added as a source alongside existing article/note sources): `claude-code` (6 → 7), `agent-memory` (2 → 3, gained a `## Tensions` section — MongoDB/MCP frame memory as infrastructure to provision, `decode` treats it as two capped markdown files), `skills` (4 → 5), `cli` (3 → 4)
+- The repo did not touch `mcp`, `mcp-applications`, `progressive-tool-discovery` or `programmatic-tool-calling` — `decode` has no MCP layer and a flat, fixed tool list, so those pages are unchanged
+- New entities at 1 mention (repo's only witness so far): `pydantic-ai`, `modal`, `opik`, `kitaru`
+- New concepts at 1 mention (repo's only witness so far): `agent-loop`, `permission-gate`, `agent-sandboxing`, `subagents`, `context-compaction`, `durable-execution`
+- Rewrote `overview.md` — added a fourth theme ("the harness itself, made concrete") and flagged the repo's role explicitly: second source on `agent-harness`, sole witness on six more concepts
+- Regenerated all `index.md` files including the new `wiki/repos/index.md` — `build_index_md.py` reported 0 errors, 0 warnings
 
-## 2026-08-29 ingest | 2 articles from data_input_examples/substack_links.md
+## 2026-08-29 ingest | 10 notes from data_input_examples/notes/02-medium
 
-- `fetch_article.py` on both URLs: title, subtitle, author and published date from page metadata; 39k and 51k chars of body; no paywall warnings
-- Source pages written for both; `observability` materialized at 2 mentions
-- `agent-harness` reached 10 sources — notes, an article and a codebase now back the same claims
-- `build_index_md.py` reported 4 `unparseable YAML frontmatter` errors: descriptions containing `: `. Fixed by quoting; rule added to `CONVENTIONS.md` §5.
-- Final state: 53 source-like pages (50 notes · 2 articles · 1 repo), 10 entities, 38 concepts, 101 pages total
+- Created `wiki-ai-engineering/` fresh (previous wiki deleted); ingested 10 notes, 0 skipped
+- 2 notes carried attachments (`the-context-layer.png`, `the-future-of-mcp-why-the-future-of-agen-image.png`); both copied to `raw/assets/`
+- Spawned 10 `source_writer` agents in parallel; orchestrator read no raw file, only receipts
+- Corrected one inconsistency before running the tail: `the-future-of-mcp-vs-skills.md` had classified `mcp` under `entities:` while every other new page used `concepts:` — moved it to `concepts:` to avoid splitting the mention count across two namespaces for the same slug
+- Source pages: `agentic-graphrag-via-mcp-servers`, `how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs`, `mongodb-for-an-ai-agent-unified-memory`, `owning-your-context-layer`, `stop-using-mcp-servers-to-access-your-mongodb-postgres`, `system-architecture-of-future-ai-apps-ui-tui-ide-extension`, `the-future-of-mcp-vs-skills`, `the-future-of-mcp-why-the-future-of-agents-is-mcp-skills`, `the-right-way-of-building-agents-with-mcp-servers`, `why-mcp-is-not-dead`
+- New entity pages (≥2 mentions): `claude-code` (6), `fastmcp` (5), `mongodb` (3), `david-soria-parra` (2), `prefect` (2)
+- New concept pages (≥2 mentions): `mcp` (9), `skills` (4), `cli` (3), `agent-memory` (2), `graphrag` (2), `knowledge-graph` (2), `mcp-applications` (2), `programmatic-tool-calling` (2), `progressive-tool-discovery` (2)
+- Waiting at 1 mention: `agent-architecture`, `agent-harness`, `agent-skills`, `anthropic`, `claude-md`, `cloudflare`, `context-layer`, `event-sourcing`, `hybrid-search`, `maxime-labonne`, `mongosh`, `orchestrator-placement`, `prefect-horizon`, `progressive-disclosure`, `unified-memory`, `vector-search`
+- Wrote `overview.md` (3 themes: agent memory as a data-layer problem, plural connectivity, harness tool-use efficiency), regenerated all `index.md` files — `build_index_md.py` reported 0 errors, 0 warnings
