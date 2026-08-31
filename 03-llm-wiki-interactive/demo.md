@@ -3,12 +3,12 @@
 Run from this directory (`cd 03-llm-wiki-interactive && claude`). Paths are
 relative to it. You only type prompts.
 
-**Start point.** `examples/wiki-ai-engineering/` is layer 02's end state — 50
+**Start point.** `examples/wiki-ai-engineering-before/` is layer 02's end state — 50
 notes, one repo, two articles: 53 source-like pages, 10 entities, 38 concepts —
 with nothing asked of it yet. Copy it:
 
 ```bash
-cp -r examples/wiki-ai-engineering .
+cp -r examples/wiki-03-ai-engineering-before .
 ```
 
 The repo clone is not part of it (`raw/repos/` is gitignored, ~100 MB). The skill

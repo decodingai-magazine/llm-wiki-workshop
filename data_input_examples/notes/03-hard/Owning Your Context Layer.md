@@ -167,7 +167,7 @@ It also provides a generous freemium plan. Where I add all of the above just wit
 
 ### Media
 
-![[assets/the-context-layer.png]]
+![[data_input_examples/notes/03-hard/assets/the-context-layer.png]]
 
 ---
 
