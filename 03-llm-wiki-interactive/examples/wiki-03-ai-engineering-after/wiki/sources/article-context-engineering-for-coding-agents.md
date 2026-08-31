@@ -12,22 +12,22 @@ raw_file: raw/article-context-engineering-for-coding-agents.md
 created: 2026-08-29T17:02:29Z
 timestamp: 2026-08-29T17:02:29Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
+  - "[[wiki/entities/claude-code]]"
   - "[[wiki/entities/decode-agent]]"
   - "[[wiki/entities/ty]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-disclosure]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-tool-discovery]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/context-compaction]]"
+  - "[[wiki/concepts/agent-harness]]"
+  - "[[wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/progressive-disclosure]]"
+  - "[[wiki/concepts/progressive-tool-discovery]]"
+  - "[[wiki/concepts/context-compaction]]"
   - "[[wiki/concepts/lsp-server]]"
 ---
 
 # Context Engineering for Coding Agents
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents|Raw]] · article · Paul Iusztin, 2026-08-25
+> [[raw/article-context-engineering-for-coding-agents|Raw]] · article · Paul Iusztin, 2026-08-25
 
 ## Summary
 
@@ -50,27 +50,27 @@ flowchart LR
 
 ## Key claims
 
-- The harness, not the model, determines agent quality: changing only the harness moved a coding agent from ~30th place to the top 5 on Terminal-Bench with the same underlying model. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#Context Engineering for Coding Agents|cite]]
-- `AGENTS.md` is hand-written project context (root-most file wins, ~300-line target with a ~600-line guardrail) while `.decode/MEMORY.md` is auto-extracted: one LLM-written summary sentence appended per session, capped at 200 lines / 25,000 bytes with oldest lines dropped first, mirroring Claude Code's auto-memory. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#Memory: Stop repeating your instructions|cite]]
-- Skills load through 3 tiers of progressive disclosure — a one-line catalog entry always in context, the full `SKILL.md` body on invocation, and bundled files read or executed only on demand — because upfront tool schemas alone can cost 7-9% of the context window before any work begins. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#Skills: Never load what you can reference|cite]]
-- The LSP server `ty` (Astral, Rust) feeds the agent through two channels: an on-demand `lsp` tool with `definition`/`references`/`hover`/`diagnostics` ops, and a passive Diagnostics Enricher that appends up to 10 type errors to every successful file edit or write without costing an extra turn. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#The LSP server: Replace guessing with precision|cite]]
-- Compaction runs in three escalating modes: `/clear` (wipe everything after a memory write-back), full compaction at 80% capacity (LLM summary into a six-part template plus a ~20,000-token tail snapped to a Compaction Boundary), and microcompaction at 60% capacity (no LLM call — old tool outputs are replaced in place with a placeholder string). [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#Compaction: Delete before the window rots|cite]]
-- A measured `/compact` run dropped usage from ~57% (~149,539 tokens) to ~8% of a 262,144-token window. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#Compaction: Delete before the window rots|cite]]
+- The harness, not the model, determines agent quality: changing only the harness moved a coding agent from ~30th place to the top 5 on Terminal-Bench with the same underlying model. [[raw/article-context-engineering-for-coding-agents#Context Engineering for Coding Agents|cite]]
+- `AGENTS.md` is hand-written project context (root-most file wins, ~300-line target with a ~600-line guardrail) while `.decode/MEMORY.md` is auto-extracted: one LLM-written summary sentence appended per session, capped at 200 lines / 25,000 bytes with oldest lines dropped first, mirroring Claude Code's auto-memory. [[raw/article-context-engineering-for-coding-agents#Memory: Stop repeating your instructions|cite]]
+- Skills load through 3 tiers of progressive disclosure — a one-line catalog entry always in context, the full `SKILL.md` body on invocation, and bundled files read or executed only on demand — because upfront tool schemas alone can cost 7-9% of the context window before any work begins. [[raw/article-context-engineering-for-coding-agents#Skills: Never load what you can reference|cite]]
+- The LSP server `ty` (Astral, Rust) feeds the agent through two channels: an on-demand `lsp` tool with `definition`/`references`/`hover`/`diagnostics` ops, and a passive Diagnostics Enricher that appends up to 10 type errors to every successful file edit or write without costing an extra turn. [[raw/article-context-engineering-for-coding-agents#The LSP server: Replace guessing with precision|cite]]
+- Compaction runs in three escalating modes: `/clear` (wipe everything after a memory write-back), full compaction at 80% capacity (LLM summary into a six-part template plus a ~20,000-token tail snapped to a Compaction Boundary), and microcompaction at 60% capacity (no LLM call — old tool outputs are replaced in place with a placeholder string). [[raw/article-context-engineering-for-coding-agents#Compaction: Delete before the window rots|cite]]
+- A measured `/compact` run dropped usage from ~57% (~149,539 tokens) to ~8% of a 262,144-token window. [[raw/article-context-engineering-for-coding-agents#Compaction: Delete before the window rots|cite]]
 
 ## Notable quotes
 
 > "Every AI application that wraps an agent is a harness!"
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#Context Engineering for Coding Agents|location]]
+> — [[raw/article-context-engineering-for-coding-agents#Context Engineering for Coding Agents|location]]
 
 > "The LSP server is the fastest way to feed in code-related signal."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#The LSP server: Replace guessing with precision|location]]
+> — [[raw/article-context-engineering-for-coding-agents#The LSP server: Replace guessing with precision|location]]
 
 > "The harness owns the list it feeds the model, so replacing the list IS the compaction."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/article-context-engineering-for-coding-agents#Compaction: Delete before the window rots|location]]
+> — [[raw/article-context-engineering-for-coding-agents#Compaction: Delete before the window rots|location]]
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]], [[wiki/entities/decode-agent]], [[wiki/entities/ty]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-disclosure]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-tool-discovery]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/context-compaction]], [[wiki/concepts/lsp-server]]
+- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/decode-agent]], [[wiki/entities/ty]]
+- **Concepts**: [[wiki/concepts/agent-harness]], [[wiki/concepts/agent-memory]], [[wiki/concepts/skills]], [[wiki/concepts/progressive-disclosure]], [[wiki/concepts/progressive-tool-discovery]], [[wiki/concepts/context-compaction]], [[wiki/concepts/lsp-server]]
 
 > Synthesis: A code-level dissection of context engineering for coding agents specifically — it names and implements the mechanisms (memory files, skill tiers, LSP feedback, compaction thresholds) that other, more abstract sources on agent harnesses and memory tend to gesture at.

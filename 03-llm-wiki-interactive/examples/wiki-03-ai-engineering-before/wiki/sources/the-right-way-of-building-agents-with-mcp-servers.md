@@ -11,19 +11,19 @@ raw_file: raw/the-right-way-of-building-agents-with-mcp-servers.md
 created: 2026-08-29T16:09:27Z
 timestamp: 2026-08-29T16:09:27Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/prefect]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
+  - "[[wiki/entities/fastmcp]]"
+  - "[[wiki/entities/prefect]]"
+  - "[[wiki/entities/claude-code]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/knowledge-graph]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/knowledge-graph]]"
+  - "[[wiki/concepts/agent-memory]]"
   - "[[wiki/concepts/orchestrator-placement]]"
 ---
 
 # The Right Way of Building Agents With MCP Servers
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|Raw]] · local
+> [[raw/the-right-way-of-building-agents-with-mcp-servers|Raw]] · local
 
 ## Summary
 
@@ -77,41 +77,41 @@ flowchart LR
 - The data pipeline ingests a dataset or URI and normalizes it into a document saved
   to a data warehouse; the memory pipeline then turns those documents into knowledge-graph
   objects (entities/relationships) plus summary embeddings and metadata (source,
-  author, dates), and saves the result to memory. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+  author, dates), and saves the result to memory. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
 - The MCP server exposes memory access as tools (knowledge-graph search,
   knowledge-graph write) and as "prompts" — predefined procedures like "update
   episodic memory," "write technical article," and "write social media post" — that
-  tell the orchestrator which tools to combine and how. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+  tell the orchestrator which tools to combine and how. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
 - Episodic memory (what a specific user did at a moment, e.g. "celebrated New Year's
   Eve in the mountains in December 2025") is distinguished from semantic memory
-  (general preferences, e.g. writing or style preferences). [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+  (general preferences, e.g. writing or style preferences). [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
 - The custom MCP server is composed with prebuilt MCP servers (web search, image
   generation, Google Drive search) so the agent can reach functionality the author
-  does not want to implement himself. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+  does not want to implement himself. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
 - Two architectural options are laid out for where a custom orchestrator should live:
   packaged inside the MCP server and exposed as a single tool (so any client,
   including a pre-built one like Claude Code, can call it), or built on the MCP
   client side against the raw exposed tools and prompts — the author states he has
-  implemented both and cannot yet choose which is architecturally better. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+  implemented both and cannot yet choose which is architecturally better. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
 - On tooling, Prefect orchestrates the data, memory, and retrieval pipelines, and
-  FastMCP implements both the MCP server and the client-side connection to it. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
+  FastMCP implements both the MCP server and the client-side connection to it. [[raw/the-right-way-of-building-agents-with-mcp-servers|cite]]
 
 ## Notable quotes
 
 > "The real question here is: where should we put this custom orchestrator? Should we
 > put it on the MCP server side, or should we put it on the client side?"
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|location]]
+> — [[raw/the-right-way-of-building-agents-with-mcp-servers|location]]
 
 > "Programmatically, both work—I implemented both. But from the architectural system
 > design point of view, which solution is better? I cannot really choose, and I think
 > it's a very important architectural decision that propagates through the entire
 > application."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|location]]
+> — [[raw/the-right-way-of-building-agents-with-mcp-servers|location]]
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/prefect]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/knowledge-graph]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]], [[wiki/concepts/orchestrator-placement]]
+- **Entities**: [[wiki/entities/fastmcp]], [[wiki/entities/prefect]], [[wiki/entities/claude-code]]
+- **Concepts**: [[wiki/concepts/mcp]], [[wiki/concepts/knowledge-graph]], [[wiki/concepts/agent-memory]], [[wiki/concepts/orchestrator-placement]]
 
 > Synthesis: This is a working draft, not a conclusion — the author explicitly frames
 > the server-side-vs-client-side orchestrator placement as an open question he wants

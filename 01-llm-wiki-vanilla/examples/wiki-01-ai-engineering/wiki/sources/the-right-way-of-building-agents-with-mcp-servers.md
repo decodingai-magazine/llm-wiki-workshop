@@ -12,17 +12,17 @@ created: 2026-08-29T15:32:43Z
 timestamp: 2026-08-29T15:32:43Z
 entities:
   - "[[wiki/entities/mcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/prefect]]"
+  - "[[wiki/entities/claude-code]]"
+  - "[[wiki/entities/fastmcp]]"
+  - "[[wiki/entities/prefect]]"
 concepts:
   - "[[wiki/concepts/orchestration]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/agent-memory]]"
 ---
 
 # The Right Way of Building Agents With MCP Servers
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers|Raw]] · local
+> [[raw/the-right-way-of-building-agents-with-mcp-servers|Raw]] · local
 
 ## Summary
 
@@ -32,21 +32,21 @@ The note's real question is architectural: once you compose your own MCP server 
 
 ## Key claims
 
-- The memory pipeline turns ingested documents into knowledge-graph objects via an extractor (entities and relationships) plus an embedding model over document summaries, alongside source/author/date metadata. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
-- Knowledge-graph search and write tools are exposed on the MCP server, and specialized prompts (e.g. "update episodic memory," "write technical article") tell the orchestrator how to combine those tools; episodic memory covers user events, semantic memory covers preferences and style. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
-- The custom MCP server is composed with prebuilt MCP servers (web search, image generation, Google Drive) to produce one combined set of tools and prompts that any MCP client can connect to. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
-- Two architectural options are on the table: (1) keep the custom orchestrator inside the MCP server and expose only it as a tool, or (2) expose the raw tools/prompts and build the custom orchestrator on the MCP client side — both are implemented and working, but the author has not settled which is architecturally better. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
-- Where the orchestrator lives determines the client shape: it can be Claude Code using the pre-built logic directly, or a custom Python/FastAPI or TypeScript/React client hosting the MCP client and its own planning logic. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
-- The whole stack is orchestrated with Prefect (data pipeline, memory pipeline, retrieval) and implemented with FastMCP on both the server and the client-side connector. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
+- The memory pipeline turns ingested documents into knowledge-graph objects via an extractor (entities and relationships) plus an embedding model over document summaries, alongside source/author/date metadata. [[raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
+- Knowledge-graph search and write tools are exposed on the MCP server, and specialized prompts (e.g. "update episodic memory," "write technical article") tell the orchestrator how to combine those tools; episodic memory covers user events, semantic memory covers preferences and style. [[raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
+- The custom MCP server is composed with prebuilt MCP servers (web search, image generation, Google Drive) to produce one combined set of tools and prompts that any MCP client can connect to. [[raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
+- Two architectural options are on the table: (1) keep the custom orchestrator inside the MCP server and expose only it as a tool, or (2) expose the raw tools/prompts and build the custom orchestrator on the MCP client side — both are implemented and working, but the author has not settled which is architecturally better. [[raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
+- Where the orchestrator lives determines the client shape: it can be Claude Code using the pre-built logic directly, or a custom Python/FastAPI or TypeScript/React client hosting the MCP client and its own planning logic. [[raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
+- The whole stack is orchestrated with Prefect (data pipeline, memory pipeline, retrieval) and implemented with FastMCP on both the server and the client-side connector. [[raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|cite]]
 
 ## Notable quotes
 
 > "The real question here is: where should we put this custom orchestrator? Should we put it on the MCP server side, or should we put it on the client side?"
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|location]]
+> — [[raw/the-right-way-of-building-agents-with-mcp-servers#The Right Way of Building Agents With MCP Servers|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/mcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/prefect]]
-- **Concepts**: [[wiki/concepts/orchestration]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]]
+- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/claude-code]], [[wiki/entities/fastmcp]], [[wiki/entities/prefect]]
+- **Concepts**: [[wiki/concepts/orchestration]], [[wiki/concepts/agent-memory]]
 
-> Synthesis: The wiki's most concrete worked example of [[wiki/concepts/orchestration]] placement and of an [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]] design — the only source that shows the actual pipeline rather than arguing about it in the abstract.
+> Synthesis: The wiki's most concrete worked example of [[wiki/concepts/orchestration]] placement and of an [[wiki/concepts/agent-memory]] design — the only source that shows the actual pipeline rather than arguing about it in the abstract.

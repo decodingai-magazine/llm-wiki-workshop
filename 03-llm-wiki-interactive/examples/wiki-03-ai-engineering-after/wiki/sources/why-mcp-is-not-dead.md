@@ -11,16 +11,16 @@ raw_file: raw/why-mcp-is-not-dead.md
 created: 2026-08-29T16:10:55Z
 timestamp: 2026-08-29T16:10:55Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
+  - "[[wiki/entities/claude-code]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/cli]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/cli]]"
+  - "[[wiki/concepts/skills]]"
 ---
 
 # Why MCP is Not Dead
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead|Raw]] · local
+> [[raw/why-mcp-is-not-dead|Raw]] · local
 
 ## Summary
 
@@ -46,30 +46,30 @@ different jobs, not competitors.
 ## Key claims
 
 - "MCP is dead" mistakes a personal-tooling preference (CLIs, `llms.txt`, skills) for a
-  verdict on MCP's fitness for business-scale deployment. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+  verdict on MCP's fitness for business-scale deployment. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
 - Distributing business logic via CLI-plus-markdown-files to "thousands or millions" of
-  customer machines is unworkable, and offers no governance or security story. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+  customer machines is unworkable, and offers no governance or security story. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
 - MCP servers keep data in the owner's own storage while still distributing access to
-  multiple clients and harnesses (Claude Code, OpenCode, OpenClaw) at once. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+  multiple clients and harnesses (Claude Code, OpenCode, OpenClaw) at once. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
 - In the author's own Personal Assistant project, business logic that is too specific
   and too cloud-hosted for a CLI or skill files is instead exposed as MCP tools, while
-  MongoDB and Prefect are still accessed by CLI during development. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+  MongoDB and Prefect are still accessed by CLI during development. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
 - Siloed third-party services (Notion, Readwise) are only safely reachable through their
   MCP servers, whereas purely local files (Obsidian) are managed directly by Claude Code
-  or its own CLI. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
+  or its own CLI. [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|cite]]
 
 ## Notable quotes
 
 > "MCP is NOT dead." You were just using it wrong.
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead#Why MCP is Not Dead|location]]
+> — [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|location]]
 
 > "First thing we have to do is install this CLI on everyones machines then we have to setup a bunch of markdown files on all of these machines…" people will laugh at you
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/why-mcp-is-not-dead#Why MCP is Not Dead|location]]
+> — [[raw/why-mcp-is-not-dead#Why MCP is Not Dead|location]]
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/cli]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]
+- **Entities**: [[wiki/entities/claude-code]]
+- **Concepts**: [[wiki/concepts/mcp]], [[wiki/concepts/cli]], [[wiki/concepts/skills]]
 
 > Synthesis: A practitioner's reaction to a viral "MCP is dead" post rather than new
 > research — its lasting contribution is the personal-vs-business-scale framing for

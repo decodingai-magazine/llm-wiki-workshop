@@ -12,18 +12,18 @@ created: 2026-08-29T15:32:43Z
 timestamp: 2026-08-29T15:32:43Z
 entities:
   - "[[wiki/entities/mcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]"
+  - "[[wiki/entities/claude-code]]"
+  - "[[wiki/entities/fastmcp]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/cli]]"
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/cli]]"
   - "[[wiki/concepts/agent-connectivity]]"
   - "[[wiki/concepts/orchestration]]"
 ---
 
 # The Future of MCP vs. Skills
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills|Raw]] · local
+> [[raw/the-future-of-mcp-vs-skills|Raw]] · local
 
 ## Summary
 
@@ -33,21 +33,21 @@ The second half is more technical: it argues for progressive tool discovery over
 
 ## Key claims
 
-- MCP crossed 110M monthly downloads in 18 months — roughly twice the adoption speed of React — driven by adoption across OpenAI's agents SDK, Google ADK, LangChain, and enterprise integrations. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills#MCP Ecosystem Growth & Milestones|cite]]
-- 2026 knowledge-work agents need connectivity to multiple SaaS applications and shared drives rather than a local sandboxed compiler loop, and "connectivity is not one" — there is no single tool for every connectivity problem. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills#2026 Agent Development Paradigm Shift|cite]]
-- A three-layer connectivity architecture is proposed: Skills for reusable domain knowledge, CLI for local-sandbox productivity (and LLM training-data familiarity), and MCP for rich semantics, platform independence, and enterprise governance. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills#MCP Layer|cite]]
-- Progressive discovery (deferring tool loading via a tool-search mechanism) and programmatic/code-mode tool calling (having the model write and execute composing code in an isolate rather than chaining tool calls turn by turn) both reduce context bloat and orchestration latency. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills#Technical Implementation Improvements|cite]]
-- MCP server authors should design for the agent the way they would design for themselves as a human user, rather than mechanically converting REST APIs one-to-one into MCP servers. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills#Server Design Philosophy Revolution|cite]]
-- A stateless transport protocol (from Google, landing around June) is coming to make MCP servers as easy to scale and deploy as any stateless REST service, alongside async task primitives, SDK v2 for TypeScript/Python, cross-app access, and server discovery. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills#Technical Roadmap & Core Infrastructure Improvements|cite]]
+- MCP crossed 110M monthly downloads in 18 months — roughly twice the adoption speed of React — driven by adoption across OpenAI's agents SDK, Google ADK, LangChain, and enterprise integrations. [[raw/the-future-of-mcp-vs-skills#MCP Ecosystem Growth & Milestones|cite]]
+- 2026 knowledge-work agents need connectivity to multiple SaaS applications and shared drives rather than a local sandboxed compiler loop, and "connectivity is not one" — there is no single tool for every connectivity problem. [[raw/the-future-of-mcp-vs-skills#2026 Agent Development Paradigm Shift|cite]]
+- A three-layer connectivity architecture is proposed: Skills for reusable domain knowledge, CLI for local-sandbox productivity (and LLM training-data familiarity), and MCP for rich semantics, platform independence, and enterprise governance. [[raw/the-future-of-mcp-vs-skills#MCP Layer|cite]]
+- Progressive discovery (deferring tool loading via a tool-search mechanism) and programmatic/code-mode tool calling (having the model write and execute composing code in an isolate rather than chaining tool calls turn by turn) both reduce context bloat and orchestration latency. [[raw/the-future-of-mcp-vs-skills#Technical Implementation Improvements|cite]]
+- MCP server authors should design for the agent the way they would design for themselves as a human user, rather than mechanically converting REST APIs one-to-one into MCP servers. [[raw/the-future-of-mcp-vs-skills#Server Design Philosophy Revolution|cite]]
+- A stateless transport protocol (from Google, landing around June) is coming to make MCP servers as easy to scale and deploy as any stateless REST service, alongside async task primitives, SDK v2 for TypeScript/Python, cross-app access, and server discovery. [[raw/the-future-of-mcp-vs-skills#Technical Roadmap & Core Infrastructure Improvements|cite]]
 
 ## Notable quotes
 
 > "So this is all to say that I think in 2026 we're going to start building agents that use all of them. They don't use one thing, they use all of it."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/the-future-of-mcp-vs-skills#MCP Layer|location]]
+> — [[raw/the-future-of-mcp-vs-skills#MCP Layer|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/mcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/cli]], [[wiki/concepts/agent-connectivity]], [[wiki/concepts/orchestration]]
+- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/claude-code]], [[wiki/entities/fastmcp]]
+- **Concepts**: [[wiki/concepts/skills]], [[wiki/concepts/cli]], [[wiki/concepts/agent-connectivity]], [[wiki/concepts/orchestration]]
 
-> Synthesis: The most detailed primary account of the "skills + CLI + MCP together" thesis that [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]] later condenses into a four-layer architecture diagram from the same talk.
+> Synthesis: The most detailed primary account of the "skills + CLI + MCP together" thesis that [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]] later condenses into a four-layer architecture diagram from the same talk.

@@ -3,23 +3,23 @@ type: repo_note
 title: How a subagent is spawned and what the parent gets back
 description: Traces the agent -> _spawn_child -> _run_attempt call chain to show exactly how a child's deps are narrowed, how its report becomes a truncated section, and how a raise or a bad report is handled.
 original_path: github://decodingai-magazine/building-a-coding-agent-from-scratch-course#how-a-subagent-is-spawned-and-what-the-parent-gets-back
-repo: "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
+repo: "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
 commit_sha: 6ee643fbfeb10d3f9b463bf2a6cdfb64671b8aea
 question: in the coding agent repo, how does the agent spawn a subagent, and what does the parent actually get back when it finishes?
-spawned_by_question: "[[2026-08-31-how-a-subagent-is-spawned-and-what-the-parent-gets-back]]"
+spawned_by_question: "[[wiki/questions/2026-08-31-how-a-subagent-is-spawned-and-what-the-parent-gets-back]]"
 created: 2026-08-31T14:45:35Z
 timestamp: 2026-08-31T14:45:35Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/pydantic-ai]]"
+  - "[[wiki/entities/pydantic-ai]]"
 concepts:
-  - "[[subagents]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/permission-gate]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-loop]]"
+  - "[[wiki/concepts/subagents]]"
+  - "[[wiki/concepts/permission-gate]]"
+  - "[[wiki/concepts/agent-loop]]"
 ---
 
 # How a subagent is spawned and what the parent gets back
 
-> Answers [[2026-08-31-how-a-subagent-is-spawned-and-what-the-parent-gets-back]] against `building-a-coding-agent-from-scratch-course` @ `6ee643f`
+> Answers [[wiki/questions/2026-08-31-how-a-subagent-is-spawned-and-what-the-parent-gets-back]] against `building-a-coding-agent-from-scratch-course` @ `6ee643f`
 
 `ARCHITECTURE.md`'s "Subagent fan-out" section already covers the shape (width cap, semaphore,
 substance guard, byte-budgeted concatenation, no synthesis call). This note answers what it left
@@ -135,7 +135,7 @@ only traces the call chain in `tools/agent.py` (+ `truncate.py`) that the questi
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/pydantic-ai]] — `Agent.run()`, `RunContext`, `ModelRetry`, `DeferredToolRequests`, `UsageLimits`, and the `event_stream_handler`/`FunctionToolCallEvent` seam are all pydantic-ai primitives the spawn mechanism is built directly on top of.
-- **Concepts**: [[subagents]] — this note is the mechanical detail behind the fan-out pattern the ARCHITECTURE page names. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/permission-gate]] — the child's bypass gate is a fresh, separately-scoped instance, not a mode flip on the parent's gate. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-loop]] — the child is not a second loop; it's the same installed `Agent` re-entered via a nested `run()`, sharing the parent's model and HTTP client.
+- **Entities**: [[wiki/entities/pydantic-ai]] — `Agent.run()`, `RunContext`, `ModelRetry`, `DeferredToolRequests`, `UsageLimits`, and the `event_stream_handler`/`FunctionToolCallEvent` seam are all pydantic-ai primitives the spawn mechanism is built directly on top of.
+- **Concepts**: [[wiki/concepts/subagents]] — this note is the mechanical detail behind the fan-out pattern the ARCHITECTURE page names. [[wiki/concepts/permission-gate]] — the child's bypass gate is a fresh, separately-scoped instance, not a mode flip on the parent's gate. [[wiki/concepts/agent-loop]] — the child is not a second loop; it's the same installed `Agent` re-entered via a nested `run()`, sharing the parent's model and HTTP client.
 
 > Synthesis: spawning is a direct nested `Agent.run()` on the one installed Agent with narrowed, single-use `AgentDeps`; the parent gets back one harness-built string — N budget-truncated, line-boundary-snapped sections concatenated under `## Subagent i` headings plus a fixed footer — with zero synthesis LLM call and zero exception ever crossing the `_spawn_child` boundary.

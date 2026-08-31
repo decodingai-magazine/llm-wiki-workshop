@@ -5,11 +5,11 @@ description: ARCHITECTURE.md sketches the fan-out shape; went to the code for _s
 asked_on: 2026-08-31
 created: 2026-08-31T14:44:23Z
 timestamp: 2026-08-31T14:45:35Z
-answer_doc: "[[how-a-subagent-is-spawned-and-what-the-parent-gets-back]]"
+answer_doc: "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/how-a-subagent-is-spawned-and-what-the-parent-gets-back]]"
 sources_cited:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
-  - "[[how-a-subagent-is-spawned-and-what-the-parent-gets-back]]"
-  - "[[subagents]]"
+  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
+  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/how-a-subagent-is-spawned-and-what-the-parent-gets-back]]"
+  - "[[wiki/concepts/subagents]]"
 ---
 
 # in the coding agent repo, how does the agent spawn a subagent, and what does the parent actually get back when it finishes?
@@ -18,7 +18,7 @@ sources_cited:
 
 ## Answer
 
-Full answer: [[how-a-subagent-is-spawned-and-what-the-parent-gets-back|How a subagent is spawned and what the parent gets back]]
+Full answer: [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/how-a-subagent-is-spawned-and-what-the-parent-gets-back|How a subagent is spawned and what the parent gets back]]
 
 - Spawn is a direct nested `Agent.run()`, same installed Agent.
 - Child gets a fresh, bypass-mode `PermissionGate` — not a flag flip.

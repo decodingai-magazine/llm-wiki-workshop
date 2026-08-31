@@ -12,16 +12,16 @@ created: 2026-08-29T15:32:43Z
 timestamp: 2026-08-29T15:32:43Z
 entities:
   - "[[wiki/entities/mcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]"
+  - "[[wiki/entities/claude-code]]"
+  - "[[wiki/entities/fastmcp]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]"
+  - "[[wiki/concepts/skills]]"
   - "[[wiki/concepts/orchestration]]"
 ---
 
 # How to integrate Skills into MCP servers: MCP Prompts vs. Skills
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs|Raw]] · local
+> [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs|Raw]] · local
 
 ## Summary
 
@@ -31,21 +31,21 @@ The second half is an architectural deep-dive on tool execution — where code r
 
 ## Key claims
 
-- Claude Code auto-detects MCP Tools and native `.claude/skills/` and calls both agentically, but MCP Resources and Prompts, though auto-detected, must be explicitly invoked by the user. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#MCP Primitives vs Claude Code Native Skills|cite]]
-- "Skills" do not exist anywhere in the raw MCP specification (revision 2025-11-25) — the word appears in no protocol message, schema type, capability declaration, or method definition. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Are NOT Part of the MCP Protocol|cite]]
-- FastMCP packages skills as MCP resources (`skill://name/SKILL.md`, `_manifest`, supporting files) — a packaging convention layered on the protocol, not a new architectural primitive. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|cite]]
-- Multiple coding agents (Claude Code, GitHub Copilot, Gemini CLI, Cline, Codex) independently converged on a folder-with-`SKILL.md` convention, but each handles it natively rather than through MCP. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills as a Cross-Agent Ecosystem Convention|cite]]
-- Server-side orchestration — one composite tool running every step in a single request — guarantees execution order; client-side, tool-by-tool orchestration risks the model skipping or reordering steps. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Client-Side vs. Server-Side Orchestration|cite]]
-- Developer-owned instructions belong in MCP tool descriptions or prompts; user-owned workflows belong in `.claude/skills/` — FastMCP's `SkillsDirectoryProvider` blurs this line because MCP resources aren't consumed agentically by Claude Code. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skill Ownership: Developer vs User|cite]]
+- Claude Code auto-detects MCP Tools and native `.claude/skills/` and calls both agentically, but MCP Resources and Prompts, though auto-detected, must be explicitly invoked by the user. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#MCP Primitives vs Claude Code Native Skills|cite]]
+- "Skills" do not exist anywhere in the raw MCP specification (revision 2025-11-25) — the word appears in no protocol message, schema type, capability declaration, or method definition. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Are NOT Part of the MCP Protocol|cite]]
+- FastMCP packages skills as MCP resources (`skill://name/SKILL.md`, `_manifest`, supporting files) — a packaging convention layered on the protocol, not a new architectural primitive. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|cite]]
+- Multiple coding agents (Claude Code, GitHub Copilot, Gemini CLI, Cline, Codex) independently converged on a folder-with-`SKILL.md` convention, but each handles it natively rather than through MCP. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills as a Cross-Agent Ecosystem Convention|cite]]
+- Server-side orchestration — one composite tool running every step in a single request — guarantees execution order; client-side, tool-by-tool orchestration risks the model skipping or reordering steps. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Client-Side vs. Server-Side Orchestration|cite]]
+- Developer-owned instructions belong in MCP tool descriptions or prompts; user-owned workflows belong in `.claude/skills/` — FastMCP's `SkillsDirectoryProvider` blurs this line because MCP resources aren't consumed agentically by Claude Code. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skill Ownership: Developer vs User|cite]]
 
 ## Notable quotes
 
 > "A skill is not a separate concept. It's a prompt, a resource, or a bundle of both. Calling them 'skills' is a packaging decision, not an architectural one."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|location]]
+> — [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|location]]
 
 ## Connections
 
-- **Entities**: [[wiki/entities/mcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]], [[wiki/concepts/orchestration]]
+- **Entities**: [[wiki/entities/mcp]], [[wiki/entities/claude-code]], [[wiki/entities/fastmcp]]
+- **Concepts**: [[wiki/concepts/skills]], [[wiki/concepts/orchestration]]
 
-> Synthesis: The most protocol-literal treatment in the wiki of the "skills aren't MCP" claim — it grounds the looser, talk-derived framing in [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/sources/the-future-of-mcp-vs-skills]] and [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]] in the actual spec text.
+> Synthesis: The most protocol-literal treatment in the wiki of the "skills aren't MCP" claim — it grounds the looser, talk-derived framing in [[wiki/sources/the-future-of-mcp-vs-skills]] and [[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]] in the actual spec text.

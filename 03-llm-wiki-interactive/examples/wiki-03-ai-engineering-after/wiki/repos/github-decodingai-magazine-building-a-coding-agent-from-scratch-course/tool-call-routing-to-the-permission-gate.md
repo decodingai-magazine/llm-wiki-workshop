@@ -3,24 +3,24 @@ type: repo_note
 title: Tool call routing to the permission gate
 description: Traces exactly how a gated tool call reaches PermissionGate.check() and what suspends while it waits — an in-process asyncio.Future in the TUI, a durable Kitaru flow-scope wait under `--hitl`, where `agent/loop.py` never runs at all.
 original_path: github://decodingai-magazine/building-a-coding-agent-from-scratch-course#tool-call-routing-to-the-permission-gate
-repo: "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
+repo: "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
 commit_sha: 6ee643fbfeb10d3f9b463bf2a6cdfb64671b8aea
 question: in the coding agent repo, how does a tool call actually get routed to the permission gate, and what happens while it waits for the human?
-spawned_by_question: "[[2026-08-31-tool-call-routing-to-the-permission-gate]]"
+spawned_by_question: "[[wiki/questions/2026-08-31-tool-call-routing-to-the-permission-gate]]"
 created: 2026-08-31T14:32:06Z
 timestamp: 2026-08-31T14:32:06Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/kitaru]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/pydantic-ai]]"
+  - "[[wiki/entities/kitaru]]"
+  - "[[wiki/entities/pydantic-ai]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/permission-gate]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-loop]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]]"
+  - "[[wiki/concepts/permission-gate]]"
+  - "[[wiki/concepts/agent-loop]]"
+  - "[[wiki/concepts/agent-harness]]"
 ---
 
 # Tool call routing to the permission gate
 
-> Answers [[2026-08-31-tool-call-routing-to-the-permission-gate]] against `building-a-coding-agent-from-scratch-course` @ `6ee643f`
+> Answers [[wiki/questions/2026-08-31-tool-call-routing-to-the-permission-gate]] against `building-a-coding-agent-from-scratch-course` @ `6ee643f`
 
 `ARCHITECTURE.md` already covers the gate's policy matrix and sketches the deferred-resume shape. This note fills the two things it doesn't: the exact call path from a tool body to `gate.check()`, and the mechanics of the wait itself — in the interactive TUI and under headless `--hitl`, which turn out to be two structurally different mechanisms, not one durable version of the other.
 
@@ -89,7 +89,7 @@ Not read for this note: the `kitaru.adapters.pydantic_ai` package itself (extern
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/kitaru]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/pydantic-ai]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/permission-gate]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-loop]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]]
+- **Entities**: [[wiki/entities/kitaru]], [[wiki/entities/pydantic-ai]]
+- **Concepts**: [[wiki/concepts/permission-gate]], [[wiki/concepts/agent-loop]], [[wiki/concepts/agent-harness]]
 
 > Synthesis: the gate itself is pure policy (per ARCHITECTURE.md); this note is about the two very different waiting rooms decode builds around it — an ephemeral in-process `Future` that owns the TUI's one input surface outright, versus a Kitaru durable checkpoint that a human resolves from an entirely separate terminal — both converging on the same `ApprovalRequired`/`DeferredToolRequests` pydantic-ai primitive at the tool boundary.

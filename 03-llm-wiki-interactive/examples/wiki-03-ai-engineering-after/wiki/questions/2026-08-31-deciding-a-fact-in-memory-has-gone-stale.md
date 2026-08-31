@@ -5,15 +5,15 @@ description: "Found a consistent negative: no memory architecture in the wiki de
 asked_on: 2026-08-31
 created: 2026-08-31T14:14:39Z
 timestamp: 2026-08-31T14:14:39Z
-answer_doc: "[[staleness-in-agent-memory]]"
+answer_doc: "[[wiki/notes/staleness-in-agent-memory]]"
 sources_cited:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/sources/article-context-engineering-for-coding-agents]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/sources/agentic-graphrag-via-mcp-servers]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/sources/mongodb-for-an-ai-agent-unified-memory]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/graphrag]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/context-compaction]]"
+  - "[[wiki/concepts/agent-memory]]"
+  - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
+  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
+  - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
+  - "[[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]"
+  - "[[wiki/concepts/graphrag]]"
+  - "[[wiki/concepts/context-compaction]]"
 ---
 
 # how do I decide that a fact in the memory has gone stale?
@@ -22,7 +22,7 @@ sources_cited:
 
 ## Answer
 
-Full answer: [[staleness-in-agent-memory|Deciding a stored fact has gone stale]]
+Full answer: [[wiki/notes/staleness-in-agent-memory|Deciding a stored fact has gone stale]]
 
 - No source here detects staleness. None.
 - `decode` avoids it: don't index what you re-read.

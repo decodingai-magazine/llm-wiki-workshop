@@ -6,7 +6,7 @@ The future of MCP. Why the future of agents is MCP, skills and CLIs combined (ba
 
 Readwise source with all the notes: [https://read.readwise.io/archive/read/01kpmy78m7aq4tsm1dawdjnmh0](https://read.readwise.io/archive/read/01kpmy78m7aq4tsm1dawdjnmh0)
 
-![[01-llm-wiki-vanilla/examples/wiki-ai-engineering/raw/assets/the-future-of-mcp-why-the-future-of-agen-image.png]]
+![[assets/the-future-of-mcp-why-the-future-of-agen-image.png]]
 
 ### Post
 

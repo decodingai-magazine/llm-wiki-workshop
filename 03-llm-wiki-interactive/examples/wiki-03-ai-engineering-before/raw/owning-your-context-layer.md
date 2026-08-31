@@ -167,7 +167,7 @@ It also provides a generous freemium plan. Where I add all of the above just wit
 
 ### Media
 
-![[03-llm-wiki-interactive/examples/wiki-ai-engineering/raw/assets/the-context-layer.png]]
+![[assets/the-context-layer.png]]
 
 ---
 

@@ -2,5 +2,5 @@
 
 # Notes
 
-- [[append-only-log-vs-in-place-update|Append-only logs vs. in-place updates]] — The wiki's sources choose per storage layer rather than per system, and the deciding factor is who writes — an automated, fallible writer earns a log where a single human editor does not.
-- [[staleness-in-agent-memory|Deciding a stored fact has gone stale]] — No source in this wiki detects staleness; they avoid storing invalidatable facts, evict by age, or let recency silently win — and the one working detector is a type checker, not a memory system.
+- [[wiki/notes/append-only-log-vs-in-place-update|Append-only logs vs. in-place updates]] — The wiki's sources choose per storage layer rather than per system, and the deciding factor is who writes — an automated, fallible writer earns a log where a single human editor does not.
+- [[wiki/notes/staleness-in-agent-memory|Deciding a stored fact has gone stale]] — No source in this wiki detects staleness; they avoid storing invalidatable facts, evict by age, or let recency silently win — and the one working detector is a type checker, not a memory system.

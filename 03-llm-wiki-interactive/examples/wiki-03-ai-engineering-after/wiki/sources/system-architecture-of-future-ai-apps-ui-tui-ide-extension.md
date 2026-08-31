@@ -11,21 +11,21 @@ raw_file: raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension.md
 created: 2026-08-29T16:10:14Z
 timestamp: 2026-08-29T16:10:14Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/david-soria-parra]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
+  - "[[wiki/entities/david-soria-parra]]"
+  - "[[wiki/entities/claude-code]]"
   - "[[wiki/entities/cloudflare]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-tool-discovery]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/programmatic-tool-calling]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp-applications]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/agent-harness]]"
+  - "[[wiki/concepts/progressive-tool-discovery]]"
+  - "[[wiki/concepts/programmatic-tool-calling]]"
+  - "[[wiki/concepts/mcp-applications]]"
+  - "[[wiki/concepts/skills]]"
 ---
 
 # System architecture of future AI apps: UI/TUI/IDE extension ↔ harness ↔ connectivity
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension|Raw]] · local
+> [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension|Raw]] · local
 
 ## Summary
 
@@ -35,27 +35,27 @@ The bulk of the argument lives in the harness and connectivity layers. The harne
 
 ## Key claims
 
-- Future AI-app architecture converges on four layers — presentation, harness, connectivity, MCP servers — each undergoing its own decomposition. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#1. The Big Picture|cite]]
-- "2024 was demos. 2025 was coding agents. 2026 is connectivity": knowledge-worker agents (unlike sandboxed coding agents) must reach many SaaS apps, so no layer is optional. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#1. The Big Picture|cite]]
-- The harness, not the protocol, decides what happens with the bytes MCP moves; its two priority upgrades are progressive tool discovery via `tool_search` and programmatic tool calling ("code mode") through a sandboxed execution environment. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#3. Layer 2 — The Harness|cite]]
-- Connectivity is not one mechanism: skills carry stable domain knowledge, CLIs win for pre-trained/composable/local tasks (`git`, `gh`, `kubectl`), and MCP clients handle everything needing remote access, auth, or rich semantics. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#4. Layer 3 — Connectivity (Skills, CLIs, MCP Clients)|cite]]
-- Good MCP servers should be task-shaped product surfaces (tools + UI + skills + tasks), not one-to-one REST wrappers; Cloudflare's server — one JavaScript-execution tool instead of 80 endpoint tools — is DSP's canonical example. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#5.2 Server-Side Execution Environments|cite]]
-- Near-term (June '26) MCP spec work adds a stateless transport, an improved async task primitive, v2 SDKs, cross-app auth via corporate IdPs, and well-known-URL server discovery. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#5.4 Infrastructure Coming Down the Line|cite]]
+- Future AI-app architecture converges on four layers — presentation, harness, connectivity, MCP servers — each undergoing its own decomposition. [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#1. The Big Picture|cite]]
+- "2024 was demos. 2025 was coding agents. 2026 is connectivity": knowledge-worker agents (unlike sandboxed coding agents) must reach many SaaS apps, so no layer is optional. [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#1. The Big Picture|cite]]
+- The harness, not the protocol, decides what happens with the bytes MCP moves; its two priority upgrades are progressive tool discovery via `tool_search` and programmatic tool calling ("code mode") through a sandboxed execution environment. [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#3. Layer 2 — The Harness|cite]]
+- Connectivity is not one mechanism: skills carry stable domain knowledge, CLIs win for pre-trained/composable/local tasks (`git`, `gh`, `kubectl`), and MCP clients handle everything needing remote access, auth, or rich semantics. [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#4. Layer 3 — Connectivity (Skills, CLIs, MCP Clients)|cite]]
+- Good MCP servers should be task-shaped product surfaces (tools + UI + skills + tasks), not one-to-one REST wrappers; Cloudflare's server — one JavaScript-execution tool instead of 80 endpoint tools — is DSP's canonical example. [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#5.2 Server-Side Execution Environments|cite]]
+- Near-term (June '26) MCP spec work adds a stateless transport, an improved async task primitive, v2 SDKs, cross-app auth via corporate IdPs, and well-known-URL server discovery. [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#5.4 Infrastructure Coming Down the Line|cite]]
 
 ## Notable quotes
 
 > "If you're a CLI you just have a hard time rendering HTML."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#2. Layer 1 — Presentation (UI / TUI / IDE Extension)|location]]
+> — [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#2. Layer 1 — Presentation (UI / TUI / IDE Extension)|location]]
 
 > "Every time I see someone building another REST to MCP server conversion tool, I'm — it's a bit cringe."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#5.1 Stop Wrapping REST APIs One-to-One|location]]
+> — [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#5.1 Stop Wrapping REST APIs One-to-One|location]]
 
 > "You do one call and you can filter that. The model will automatically remove things from the JSON and just continue."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#3.2 Programmatic Tool Calling (Code Mode)|location]]
+> — [[raw/system-architecture-of-future-ai-apps-ui-tui-ide-extension#3.2 Programmatic Tool Calling (Code Mode)|location]]
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/david-soria-parra]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]], [[wiki/entities/cloudflare]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-tool-discovery]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/programmatic-tool-calling]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp-applications]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]
+- **Entities**: [[wiki/entities/david-soria-parra]], [[wiki/entities/claude-code]], [[wiki/entities/cloudflare]]
+- **Concepts**: [[wiki/concepts/mcp]], [[wiki/concepts/agent-harness]], [[wiki/concepts/progressive-tool-discovery]], [[wiki/concepts/programmatic-tool-calling]], [[wiki/concepts/mcp-applications]], [[wiki/concepts/skills]]
 
 > Synthesis: This is a structured secondhand account of one talk (DSP's "The Future of MCP"), not firsthand argument — its four-layer vocabulary (presentation/harness/connectivity/servers) is a strong candidate for the wiki's baseline framing of agent architecture until another source corroborates or complicates it.

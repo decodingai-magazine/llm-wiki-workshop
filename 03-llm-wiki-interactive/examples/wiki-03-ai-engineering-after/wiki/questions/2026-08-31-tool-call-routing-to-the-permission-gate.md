@@ -5,11 +5,11 @@ description: Went past the architecture page into the code, and found two struct
 asked_on: 2026-08-31
 created: 2026-08-31T14:32:06Z
 timestamp: 2026-08-31T14:32:06Z
-answer_doc: "[[tool-call-routing-to-the-permission-gate]]"
+answer_doc: "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-routing-to-the-permission-gate]]"
 sources_cited:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/permission-gate]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-loop]]"
+  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
+  - "[[wiki/concepts/permission-gate]]"
+  - "[[wiki/concepts/agent-loop]]"
 ---
 
 # in the coding agent repo, how does a tool call actually get routed to the permission gate, and what happens while it waits for the human?
@@ -18,7 +18,7 @@ sources_cited:
 
 ## Answer
 
-Full answer: [[tool-call-routing-to-the-permission-gate|Tool call routing to the permission gate]]
+Full answer: [[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/tool-call-routing-to-the-permission-gate|Tool call routing to the permission gate]]
 
 - Every gated tool body raises `ApprovalRequired`.
 - pydantic-ai bundles a whole round into one `DeferredToolRequests`.

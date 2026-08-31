@@ -5,14 +5,14 @@ description: Tests the wiki's storage rule against the one personal knowledge gr
 asked_on: 2026-08-31
 created: 2026-08-31T14:05:21Z
 timestamp: 2026-08-31T14:05:21Z
-answer_doc: "[[append-only-log-vs-in-place-update]]"
+answer_doc: "[[wiki/notes/append-only-log-vs-in-place-update]]"
 sources_cited:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/sources/agentic-graphrag-via-mcp-servers]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/sources/mongodb-for-an-ai-agent-unified-memory]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/knowledge-graph]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/graphrag]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/mongodb]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/context-compaction]]"
+  - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
+  - "[[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]"
+  - "[[wiki/concepts/knowledge-graph]]"
+  - "[[wiki/concepts/graphrag]]"
+  - "[[wiki/entities/mongodb]]"
+  - "[[wiki/concepts/context-compaction]]"
 ---
 
 # is event sourcing actually worth it for a personal knowledge graph?
@@ -21,7 +21,7 @@ sources_cited:
 
 ## Answer
 
-Full answer: [[append-only-log-vs-in-place-update|Append-only logs vs. in-place updates]] — see "Does a personal knowledge graph clear the bar?"
+Full answer: [[wiki/notes/append-only-log-vs-in-place-update|Append-only logs vs. in-place updates]] — see "Does a personal knowledge graph clear the bar?"
 
 - Usually not, on the wiki's evidence.
 - The wiki's one personal KG has no event log.

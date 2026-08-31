@@ -11,23 +11,23 @@ clone_path: raw/repos/.github-decodingai-magazine-building-a-coding-agent-from-s
 created: 2026-08-29T16:41:02Z
 timestamp: 2026-08-29T16:41:02Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/pydantic-ai]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/modal]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/opik]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/kitaru]]"
+  - "[[wiki/entities/claude-code]]"
+  - "[[wiki/entities/pydantic-ai]]"
+  - "[[wiki/entities/modal]]"
+  - "[[wiki/entities/opik]]"
+  - "[[wiki/entities/kitaru]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-loop]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/permission-gate]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/sandboxing]]"
-  - "[[subagents]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/context-compaction]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-disclosure]]"
+  - "[[wiki/concepts/agent-harness]]"
+  - "[[wiki/concepts/agent-loop]]"
+  - "[[wiki/concepts/permission-gate]]"
+  - "[[wiki/concepts/sandboxing]]"
+  - "[[wiki/concepts/subagents]]"
+  - "[[wiki/concepts/context-compaction]]"
+  - "[[wiki/concepts/agent-memory]]"
+  - "[[wiki/concepts/skills]]"
+  - "[[wiki/concepts/progressive-disclosure]]"
   - "[[wiki/concepts/durable-execution]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/cli]]"
+  - "[[wiki/concepts/cli]]"
 ---
 
 # building-a-coding-agent-from-scratch-course — Architecture
@@ -272,7 +272,7 @@ Compaction is a **two-tier, cheapest-first cascade** checked at `WOULD_STOP`, an
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/pydantic-ai]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/modal]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/opik]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/kitaru]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-harness]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-loop]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/permission-gate]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/sandboxing]], [[subagents]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/context-compaction]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/agent-memory]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/progressive-disclosure]], [[wiki/concepts/durable-execution]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/cli]]
+- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/pydantic-ai]], [[wiki/entities/modal]], [[wiki/entities/opik]], [[wiki/entities/kitaru]]
+- **Concepts**: [[wiki/concepts/agent-harness]], [[wiki/concepts/agent-loop]], [[wiki/concepts/permission-gate]], [[wiki/concepts/sandboxing]], [[wiki/concepts/subagents]], [[wiki/concepts/context-compaction]], [[wiki/concepts/agent-memory]], [[wiki/concepts/skills]], [[wiki/concepts/progressive-disclosure]], [[wiki/concepts/durable-execution]], [[wiki/concepts/cli]]
 
 > Synthesis: this is the codebase that makes the wiki's harness talk concrete — where notes and articles assert that skills, memory and permissions matter, `decode` shows the exact seams they occupy, and its explicit debt to Claude Code's leaked source makes it the closest readable reconstruction of that design the wiki has.

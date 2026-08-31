@@ -7,10 +7,10 @@ title: ai-engineering — Wiki
 
 # ai-engineering — Wiki
 
-- [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/overview|Overview]]
+- [[wiki/overview|Overview]]
 
 ## Browse
 
-- [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/sources/index|Sources]] (5)
-- [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/entities/index|Entities]] (4)
-- [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/concepts/index|Concepts]] (5)
+- [[wiki/sources/index|Sources]] (5)
+- [[wiki/entities/index|Entities]] (4)
+- [[wiki/concepts/index|Concepts]] (5)

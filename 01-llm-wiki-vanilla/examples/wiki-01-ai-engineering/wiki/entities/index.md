@@ -2,7 +2,7 @@
 
 # Entities
 
-- [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/entities/claude-code|Claude Code]] — Anthropic's terminal-based coding agent and MCP client, which also natively runs skills placed in `.claude/skills/`.
-- [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/entities/fastmcp|FastMCP]] — The de facto default Python SDK for building MCP servers and clients, maintained by Prefect.
+- [[wiki/entities/claude-code|Claude Code]] — Anthropic's terminal-based coding agent and MCP client, which also natively runs skills placed in `.claude/skills/`.
+- [[wiki/entities/fastmcp|FastMCP]] — The de facto default Python SDK for building MCP servers and clients, maintained by Prefect.
 - [[wiki/entities/mcp|Model Context Protocol (MCP)]] — An open protocol from Anthropic that lets AI agents connect to tools, data sources, and business logic through a standardized client-server architecture.
-- [[01-llm-wiki-vanilla/examples/wiki-ai-engineering/wiki/entities/prefect|Prefect]] — The company behind FastMCP, also used as the workflow orchestrator for the data/memory/retrieval pipelines that feed MCP servers.
+- [[wiki/entities/prefect|Prefect]] — The company behind FastMCP, also used as the workflow orchestrator for the data/memory/retrieval pipelines that feed MCP servers.

@@ -11,16 +11,16 @@ raw_file: raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs.md
 created: 2026-08-29T16:08:31Z
 timestamp: 2026-08-29T16:08:31Z
 entities:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]"
+  - "[[wiki/entities/claude-code]]"
+  - "[[wiki/entities/fastmcp]]"
 concepts:
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]]"
-  - "[[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/skills]]"
 ---
 
 # How to integrate Skills into MCP servers: MCP Prompts vs. Skills
 
-> [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs|Raw]] · local
+> [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs|Raw]] · local
 
 ## Summary
 
@@ -48,42 +48,42 @@ free to reorder.
 - Claude Code only auto-invokes MCP Tools and its native `.claude/skills/`
   directory agentically; MCP Resources and MCP Prompts are both auto-detected/
   listable but never triggered without an explicit reference or user action.
-  [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Summary Table|cite]]
+  [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Summary Table|cite]]
 - "Skills" do not exist in the raw MCP protocol (revision 2025-11-25) — the word
   appears in no protocol message, schema type, capability declaration or method
-  definition. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Are NOT Part of the MCP Protocol|cite]]
+  definition. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Are NOT Part of the MCP Protocol|cite]]
 - FastMCP packages skills as MCP resources via `SkillsDirectoryProvider`; by
   FastMCP's own description this is "a packaging decision, not an architectural
   one," so a skill exposed this way is discoverable by any MCP client but not
-  agentically callable by Claude Code. [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|cite]]
+  agentically callable by Claude Code. [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|cite]]
 - Because MCP resources aren't consumed agentically, skills shipped through
   `SkillsDirectoryProvider` fall into a "dead zone" — neither developer-owned
   instructions (which belong in tool descriptions or prompts) nor user-owned
-  skills (which belong in `.claude/skills/`). [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skill Ownership: Developer vs User|cite]]
+  skills (which belong in `.claude/skills/`). [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skill Ownership: Developer vs User|cite]]
 - Five coding agents (Claude Code, GitHub Copilot, Gemini CLI, Cline, Codex) have
   independently converged on a folder-plus-`SKILL.md` convention, but each handles
   it as a native, agent-specific mechanism rather than through MCP.
-  [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills as a Cross-Agent Ecosystem Convention|cite]]
+  [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills as a Cross-Agent Ecosystem Convention|cite]]
 - For deterministic pipelines, the note recommends server-side orchestration —
   one composite MCP tool calling helper functions in a single request, which
   guarantees execution order and can't be skipped or reordered by the model —
   over client-side, prompt-guided orchestration, which costs multiple round-trips
   and lets the AI reorder or drop steps.
-  [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Server-Side Orchestration (Recommended for Deterministic Pipelines)|cite]]
+  [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Server-Side Orchestration (Recommended for Deterministic Pipelines)|cite]]
 
 ## Notable quotes
 
 > "A skill is not a separate concept. It's a prompt, a resource, or a bundle of
 > both. Calling them 'skills' is a packaging decision, not an architectural one."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|location]]
+> — [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#FastMCP's Skill Abstraction|location]]
 
 > "There is no `/skills/list` or `/skills/execute` in the MCP protocol."
-> — [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Don't Exist in MCP|location]]
+> — [[raw/how-to-integrate-skills-into-mcp-servers-mcp-prompts-vs#Skills Don't Exist in MCP|location]]
 
 ## Connections
 
-- **Entities**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/claude-code]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/fastmcp]]
-- **Concepts**: [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/mcp]], [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/skills]]
+- **Entities**: [[wiki/entities/claude-code]], [[wiki/entities/fastmcp]]
+- **Concepts**: [[wiki/concepts/mcp]], [[wiki/concepts/skills]]
 
 > Synthesis: The note's second half (the "AI Twin" guide) restates the same
 > Tools/Resources/Prompts distinction from its first half in more tutorial form —

@@ -7,14 +7,14 @@ title: ai-engineering — Wiki
 
 # ai-engineering — Wiki
 
-- [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/overview|Overview]]
-- [[open-questions|Open questions]]
+- [[wiki/overview|Overview]]
+- [[wiki/open-questions|Open questions]]
 
 ## Browse
 
-- [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/sources/index|Sources]] (14)
-- [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/entities/index|Entities]] (9)
-- [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/concepts/index|Concepts]] (16)
-- [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/questions/index|Questions]] (5)
-- [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/notes/index|Notes]] (2)
-- [[03-llm-wiki-interactive/examples/wiki-ai-engineering-after/wiki/repos/index|Repos]] (3)
+- [[wiki/sources/index|Sources]] (14)
+- [[wiki/entities/index|Entities]] (9)
+- [[wiki/concepts/index|Concepts]] (16)
+- [[wiki/questions/index|Questions]] (5)
+- [[wiki/notes/index|Notes]] (2)
+- [[wiki/repos/index|Repos]] (3)
