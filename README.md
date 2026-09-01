@@ -83,7 +83,7 @@ backs it, and one rule governs what exists at all:
 
 One note mentioning something is a fact about the note. Two notes mentioning it is
 a fact about your knowledge. That single threshold is what stops the wiki filling
-with stubs .
+with stubs.
 
 <img src="assets/one_ingested_item.png" alt="What happens to one ingested item: copied to raw/, distilled into a source page with key insights, entities and concepts — and when a concept reaches ≥2 sources, a synthesized concept page materializes" width="800"/>
 
@@ -118,17 +118,11 @@ Growing from 14 sources to 135:
 </table>
 
 <details>
-<summary><strong>What a page actually looks like</strong> — a real concept page from the layer 02 reference run (click to expand)</summary>
+<summary><strong>What a page actually looks like</strong> — a real concept page from `02-llm-wiki-ingest` (click to expand)</summary>
 
 <br/>
 
-Seven source-like pages — notes, articles **and a codebase** — engage with agent
-memory, so [`wiki/concepts/agent-memory.md`](02-llm-wiki-ingest/examples/wiki-02-ai-engineering/wiki/concepts/agent-memory.md)
-exists. Frontmatter is the contract; every claim in the body cites the source
-page that backs it; disagreements between sources get their own `Tensions`
-section; and the LLM's own judgment is fenced off as `> Synthesis:` — here,
-noticing that six of the seven sources are one practitioner's voice, not
-independent confirmation. Excerpt (full page at the link):
+Full page at [`wiki/concepts/agent-memory.md`](02-llm-wiki-ingest/examples/wiki-02-ai-engineering/wiki/concepts/agent-memory.md):
 
 ```markdown
 ---
@@ -180,6 +174,8 @@ lands squarely on the file-based side and hardens it […]
 > agreement still reads as one voice across time, not independent
 > confirmation. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
 > remains the sole architecturally independent, vendor-framed source […]
+
+... # Other details
 ```
 
 </details>
@@ -229,7 +225,7 @@ uv run --script 01-llm-wiki-vanilla/.agents/skills/01-llm-wiki-vanilla/scripts/c
   --wiki-dir 01-llm-wiki-vanilla/examples/wiki-01-ai-engineering
 ```
 
-If it prints a mention table with potential 12 entities/concepts where only 9 qualify.
+It should print a mention table with 12 candidate entities/concepts, of which only 9 pass the ≥2 threshold — if you see that, your setup works.
 
 ## How to run it
 
@@ -312,7 +308,7 @@ We track all questions, create new notes as compositions of multiple concepts or
 **Run it** — [`03-llm-wiki-interactive/demo.md`](03-llm-wiki-interactive/demo.md):
 
 ```bash
-cp -r examples/wiki-03-ai-engineering-before .
+cp -r examples/wiki-03-ai-engineering-before wiki-ai-engineering
 ```
 
 ```
