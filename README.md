@@ -7,7 +7,7 @@ idea to the previous one: vanilla, scale ingestion and make it interactive to le
 <p>
   <img src="https://img.shields.io/badge/type-open--source_workshop-8a2be2" alt="Open-source workshop">
   <img src="https://img.shields.io/badge/exercises-3-4c8eda" alt="3 exercises">
-  <img src="https://img.shields.io/badge/ingests-notes_%2F_repos_%2F_articles-2ea44f" alt="Ingests notes, repos and articles">
+  <img src="https://img.shields.io/badge/works_with-notes_%2F_repos_%2F_articles-2ea44f" alt="Works with notes, repos and articles">
   <img src="https://img.shields.io/badge/runs_on-any_agent_harness-orange" alt="Runs on any agent harness">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT license">
 </p>
