@@ -2,19 +2,20 @@
 
 **Build an LLM wiki that an agent writes, an agent reads, and that gets better every time
 you use it.** Three exercises, each a complete working system, each adding exactly one
-idea to the previous one: vanilla, scale ingestion and make it interactive to learn from every query.
+idea to the previous one: the vanilla mechanic, ingestion at scale, and interactivity that learns from every query.
 
 <p>
   <img src="https://img.shields.io/badge/type-open--source_workshop-8a2be2" alt="Open-source workshop">
   <img src="https://img.shields.io/badge/exercises-3-4c8eda" alt="3 exercises">
-  <img src="https://img.shields.io/badge/works_with-notes_%2F_repos_%2F_articles-2ea44f" alt="Works with notes, repos and articles">
+  <img src="https://img.shields.io/badge/how-self--paced-2ea44f" alt="Self-paced">
+  <img src="https://img.shields.io/badge/materials-video%2C_code-e0a010" alt="Materials: video and code">
   <img src="https://img.shields.io/badge/runs_on-any_agent_harness-orange" alt="Runs on any agent harness">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT license">
 </p>
 
 <img src="assets/llm_wiki_architecture.png" alt="LLM wiki architecture: notes, repos, articles and videos are ingested into an immutable raw/ layer, transformed into wiki/, and queried by an agent" width="800"/>
 
-> **5 minutes Quickstart:**
+> **5-minute Quickstart:**
 >
 > ```bash
 > git clone https://github.com/decodingai-magazine/llm-wiki-workshop.git
@@ -60,13 +61,13 @@ order, since each builds on the last:
    is the smallest — ideally as an Obsidian vault. You'll see the two halves
    (`raw/` vs `wiki/`), every claim carrying its citation, and what the ≥2
    threshold chose to write, before running anything yourself.
-2. **Run one layer's demo. ~30 min.** Install the
+2. **Run one exercise's demo. ~30 min.** Install the
    [prerequisites](#prerequisites), `cd 01-llm-wiki-vanilla`, open your harness,
    and type the prompts in [`demo.md`](01-llm-wiki-vanilla/demo.md). Every
    prompt comes with one thing to verify.
-3. **Work through all three layers. ~2–3 h.** Layers 01 and 02 start from
-   nothing; layer 03 starts from a committed copy of layer 02's end state. Read
-   each layer's `CHANGES-FROM-PREVIOUS.md` first to see exactly which files the
+3. **Work through all three exercises. ~2–3 h.** Exercises 01 and 02 start from
+   nothing; exercise 03 starts from a committed copy of exercise 02's end state. Read
+   each exercise's `CHANGES-FROM-PREVIOUS.md` first to see exactly which files the
    new idea touched — that diff is the lesson.
 
 ## What an "LLM wiki" is
@@ -87,7 +88,7 @@ with stubs.
 
 <img src="assets/one_ingested_item.png" alt="What happens to one ingested item: copied to raw/, distilled into a source page with key insights, entities and concepts — and when a concept reaches ≥2 sources, a synthesized concept page materializes" width="800"/>
 
-The navigation is done via progressive disclosure through the hierarchy of indexes:
+Navigation works via progressive disclosure through a hierarchy of indexes:
 
 <img src="assets/how_the_index_works.png" alt="How the index works: source, concept and entity pages feed per-directory index files, which feed the root index.md, the overview and the log" width="800"/>
 
@@ -108,11 +109,11 @@ Growing from 14 sources to 135:
 
 <table>
 <tr>
-<td align="center"><img src="assets/obsidian_graph_02_llm_wiki_ingest.png" alt="Obsidian graph of layer 02's reference run: colored concept and entity hubs surrounded by source pages and hollow nodes waiting for a second mention"/></td>
+<td align="center"><img src="assets/obsidian_graph_02_llm_wiki_ingest.png" alt="Obsidian graph of exercise 02's reference run: colored concept and entity hubs surrounded by source pages and hollow nodes waiting for a second mention"/></td>
 <td align="center"><img src="assets/obsidian_graph_book.png" alt="Obsidian graph of a mature LLM wiki built from a real corpus: a dense, connected knowledge graph"/></td>
 </tr>
 <tr>
-<td align="center"><em>Layer 02's reference run — 14 sources, 17 nodes</em></td>
+<td align="center"><em>Exercise 02's reference run — 14 sources, 17 nodes</em></td>
 <td align="center"><em>The same system after months on a real corpus — 135 sources, 120 nodes</em></td>
 </tr>
 </table>
@@ -184,11 +185,11 @@ lands squarely on the file-based side and hardens it […]
 
 Each exercise builds on the previous one. You can do them independently as well.
 
-| Layer | Adds | The idea it teaches | Read the diff |
+| Exercise | Adds | The idea it teaches | Read the diff |
 |---|---|---|---|
-| **[01 · vanilla](#layer-01--vanilla)** | the whole mechanic, inline | Identity is the raw path, the ≥2 threshold, the index is a cache. Hard cap: 10 notes per run. | — |
-| **[02 · ingest](#layer-02--ingest-at-scale)** | subagents + adapters | Fan-out is context engineering: each raw file is read **once**, by one agent, and the orchestrator only ever sees receipts. Anything with a URI becomes a source. | [CHANGES](02-llm-wiki-ingest/CHANGES-FROM-PREVIOUS.md) |
-| **[03 · interactive](#layer-03--interactive)** | questions, notes, repo answers | The wiki learns from being used — and the interesting design work is deciding what **not** to count as evidence. | [CHANGES](03-llm-wiki-interactive/CHANGES-FROM-PREVIOUS.md) |
+| **[01 · vanilla](#exercise-01--vanilla)** | the whole mechanic, inline | Identity is the raw path; the ≥2 threshold decides what exists; the index is a cache. Hard cap: 10 notes per run. | — |
+| **[02 · ingest](#exercise-02--ingest-at-scale)** | subagents + adapters | Fan-out is context engineering: each raw file is read **once**, by one agent, and the orchestrator only ever sees receipts. Anything with a URI becomes a source. | [CHANGES](02-llm-wiki-ingest/CHANGES-FROM-PREVIOUS.md) |
+| **[03 · interactive](#exercise-03--interactive)** | questions, notes, repo answers | The wiki learns from being used — and the interesting design work is deciding what **not** to count as evidence. | [CHANGES](03-llm-wiki-interactive/CHANGES-FROM-PREVIOUS.md) |
 
 ## 📬 Learn more on LLM Wikis and agent memory
 
@@ -203,9 +204,9 @@ Each exercise builds on the previous one. You can do them independently as well.
 | | |
 |---|---|
 | **Skills** | Comfortable in a terminal. No coding required — you only type prompts. |
-| **Level** | Anyone who has used an AI coding assistant; the layers teach the rest. |
-| **Time** | ~30 min per layer, ~2–3 h for all three. |
-| **Cost** | $0 beyond your harness's LLM usage — no API keys, no accounts. The optional 50-note ingest closing layer 02 is the only token-heavy step. |
+| **Level** | Anyone who has used an AI coding assistant. |
+| **Time** | ~30 min per exercise, ~2–3 h for all three. |
+| **Cost** | $0 beyond your harness's LLM usage. |
 
 ## Setup
 
@@ -229,7 +230,7 @@ It should print a mention table with 12 candidate entities/concepts, of which on
 
 ## How to run it
 
-Each layer is a self-contained project with its own skill. Start in one, open your
+Each exercise is a self-contained project with its own skill. Start in one, open your
 harness there, and work through its `demo.md`:
 
 ```bash
@@ -240,7 +241,7 @@ claude                     # or your harness
 ```
 ## The inputs
 
-[`data_input_examples/`](data_input_examples/) holds a few notes, a GitHub repo and Substack article URLs as examples:
+[`data_input_examples/`](data_input_examples/) holds a few notes, a GitHub repo URL and Substack article URLs as examples:
 
 | Input                    | What                                                  |
 | ------------------------ | ----------------------------------------------------- |
@@ -254,7 +255,7 @@ The tiers are nested (5 ⊂ 10 ⊂ 50) and a note's identity is its filename.
 
 ---
 
-## Layer 01 — vanilla
+## Exercise 01 — vanilla
 
 **Goal: see the whole mechanic with zero moving parts.** One skill, two scripts, no
 subagents, no web.
@@ -273,7 +274,7 @@ subagents, no web.
 /01-llm-wiki-vanilla what do my notes say about when to use an MCP server vs. a CLI?
 ```
 
-## Layer 02 — ingest at scale
+## Exercise 02 — ingest at scale
 
 **Goal: remove the ceiling, and let anything with a URI become a source.**
 
@@ -282,7 +283,7 @@ markdown in `agents/`: `source_writer` reads one raw file.
 
 <img src="assets/fan_out_parallelism.png" alt="Fan-out parallelism: each URI is fetched into raw/, read by its own source writer, aggregated by page writers, then the overview writer — the orchestrator only ever sees receipts" width="800"/>
 
-Plus, adding support for GitHub repositories and web articles. Can be easily extended to other sources such as YouTube videos or Reddit threads.
+This exercise also adds support for GitHub repositories and web articles, and can easily be extended to other sources such as YouTube videos or Reddit threads.
 
 <img src="assets/source_adapter_interface.png" alt="The adapter interface: every origin — local files, articles, repos, videos, threads — maps a URI through its own script to one raw artifact plus one receipt with the same fields" width="800"/>
 
@@ -294,7 +295,7 @@ Plus, adding support for GitHub repositories and web articles. Can be easily ext
 /02-llm-wiki-ingest ingest https://www.decodingai.com/p/building-a-coding-agent-from-scratch-system-design https://www.decodingai.com/p/the-coding-agent-loop
 ```
 
-## Layer 03 — interactive
+## Exercise 03 — interactive
 
 **Goal: make interaction a second way for the graph to grow.**
 
@@ -303,7 +304,7 @@ Plus, adding support for GitHub repositories and web articles. Can be easily ext
 Capture user or agent interaction within the wiki (`questions/`, `notes/`,
 `open-questions.md`) so the knowledge base grows organically as users interact with it.
 
-We track all questions, create new notes as compositions of multiple concepts or entities, and keep track of open questions. Plus, growing notes based on repositories on top of the default ones.
+We track all questions, create new notes as compositions of multiple concepts or entities, and keep track of open questions. On top of the default notes, the wiki also grows notes based on repositories.
 
 **Run it** — [`03-llm-wiki-interactive/demo.md`](03-llm-wiki-interactive/demo.md):
 
@@ -339,13 +340,13 @@ cp -r examples/wiki-03-ai-engineering-before wiki-ai-engineering
 
 ## Questions and troubleshooting
 
-For any questions or issues open a [GitHub issue](https://github.com/decodingai-magazine/llm-wiki-workshop/issues)
+For any questions or issues, open a [GitHub issue](https://github.com/decodingai-magazine/llm-wiki-workshop/issues).
 
 ## FAQ
 
 **Do I need Claude Code?**
 No. Any harness that can load a skill, read and write files, and run shell
-commands works — nothing pins a model or a tool name. Layers 02–03 also want
+commands works — nothing pins a model or a tool name. Exercises 02–03 also want
 subagents; without them, run the `agents/*.md` files as sequential prompts.
 
 **Can I point it at my own notes?**
