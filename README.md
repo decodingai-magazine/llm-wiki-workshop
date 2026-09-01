@@ -117,49 +117,68 @@ This is what one looks like as an Obsidian graph — and what it grows into:
 </table>
 
 <details>
-<summary><strong>What a page actually looks like</strong> — a real concept page from the layer 01 reference run (click to expand)</summary>
+<summary><strong>What a page actually looks like</strong> — a real concept page from the layer 02 reference run (click to expand)</summary>
 
 <br/>
 
-Three sources engaged with CLIs, so [`wiki/concepts/cli.md`](01-llm-wiki-vanilla/examples/wiki-01-ai-engineering/wiki/concepts/cli.md)
+Seven source-like pages — notes, articles **and a codebase** — engage with agent
+memory, so [`wiki/concepts/agent-memory.md`](02-llm-wiki-ingest/examples/wiki-02-ai-engineering/wiki/concepts/agent-memory.md)
 exists. Frontmatter is the contract; every claim in the body cites the source
-page that backs it; the LLM's own judgment is fenced off as `> Synthesis:`.
+page that backs it; disagreements between sources get their own `Tensions`
+section; and the LLM's own judgment is fenced off as `> Synthesis:` — here,
+noticing that six of the seven sources are one practitioner's voice, not
+independent confirmation. Excerpt (full page at the link):
 
 ```markdown
 ---
 type: concept
-title: CLI (as a connectivity layer)
-description: Command-line tools as an agent connectivity layer — fast to adopt
-  in sandboxed, local-execution contexts, but hard to govern once distributed.
+title: Agent Memory
+description: The persistent layer that lets an agent reuse context across a
+  session or across interactions — framed across sources either as a queryable
+  knowledge graph reached through MCP tools, or as flat markdown files loaded
+  wholesale into the system prompt at session start.
 sources:
-  - "[[wiki/sources/the-future-of-mcp-vs-skills]]"
-  - "[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]"
-  - "[[wiki/sources/why-mcp-is-not-dead]]"
+  - "[[wiki/sources/agentic-graphrag-via-mcp-servers]]"
+  - "[[wiki/sources/article-building-a-coding-agent-from-scratch-system-design]]"
+  - "[[wiki/sources/article-context-engineering-for-coding-agents]]"
+  - "[[wiki/sources/article-the-coding-agent-loop]]"
+  - "[[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]"
+  - "[[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]"
+  - "[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]"
 related:
-  - "[[wiki/concepts/agent-connectivity]]"
-  - "[[wiki/entities/mcp]]"
-created: 2026-08-29T15:32:43Z
-timestamp: 2026-08-29T15:32:43Z
-source_count: 3
+  - "[[wiki/concepts/graphrag]]"
+  - "[[wiki/concepts/mcp]]"
+  - "[[wiki/concepts/agent-harness]]"
+created: 2026-08-31T17:23:45Z
+timestamp: 2026-08-31T20:15:00Z
+source_count: 7
 ---
 
-# CLI (as a connectivity layer)
+# Agent Memory
 
-> The connectivity layer every source treats as the easy, ungoverned default —
-> great alone, until governance or multi-user distribution enters the picture.
+> Multiple framings — see Definition
 
 ## Key claims
 
-- CLIs are popular with local coding agents because they're easy to compose in
-  a shell and automatically discoverable by a model, and they benefit from
-  being well-represented in LLM training data (e.g., git, GitHub CLIs).
-  [[wiki/sources/the-future-of-mcp-vs-skills]]
-- CLIs work well for personal setups but don't scale to business distribution:
-  installing a CLI on every customer's machine, with no governance model, is a
-  non-starter. [[wiki/sources/why-mcp-is-not-dead]]
+- A knowledge graph — typed nodes and edges extracted from ingested documents
+  — is the recurring representation across the three MCP-based sources […]
+  [[wiki/sources/agentic-graphrag-via-mcp-servers]], [[wiki/sources/the-right-way-of-building-agents-with-mcp-servers]]
+- Decode's memory is prompt-embedded, not tool-mediated: assembled once at
+  session start, with `.decode/MEMORY.md` periodically rewritten in place […]
+  [[wiki/sources/article-context-engineering-for-coding-agents]]
 
-> Synthesis: The layer every source treats as the easy default — the ceiling it
-> hits (governance, distribution) is exactly the floor MCP is argued to start from.
+## Tensions
+
+Two incompatible architectures share the name "agent memory" here. […] Neither
+cluster reconciles the two — likely a scale question (personal knowledge base
+vs. single coding session) that no source states directly.
+[[wiki/repos/github-decodingai-magazine-building-a-coding-agent-from-scratch-course/ARCHITECTURE]]
+lands squarely on the file-based side and hardens it […]
+
+> Synthesis: Six of seven sources trace to one practitioner […] so their
+> agreement still reads as one voice across time, not independent
+> confirmation. [[wiki/sources/mongodb-for-an-ai-agent-unified-memory]]
+> remains the sole architecturally independent, vendor-framed source […]
 ```
 
 </details>
