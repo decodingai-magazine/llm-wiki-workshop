@@ -26,9 +26,24 @@ No wiki exists yet, so the skill proposes a slug. Accept `ai-engineering`.
 
 ## 2. Query it
 
+#### Question 1
+
 ```
 /01-llm-wiki-vanilla what do my notes say about when to use an MCP server vs. a CLI?
 ```
+
+#### Question 2
+
+```
+/01-llm-wiki-vanilla how should I integrate skills into MCP servers?
+```
+
+#### Question 3
+
+```
+/01-llm-wiki-vanilla what is the right way of building MCP servers?
+```
+
 
 **Verify**
 

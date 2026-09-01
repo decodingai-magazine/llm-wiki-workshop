@@ -47,7 +47,7 @@ sees) and spawns `repo_writer`.
       page now lists it under `sources:` next to a note. A codebase and a note are
       two independent witnesses; that is what pushed the page over the threshold.
 
-## 3. Ingest two articles
+## 3. Ingest four articles
 
 ```
 /02-llm-wiki-ingest ingest the substack articles from ../data_input_examples/substack_articles.md
@@ -72,7 +72,7 @@ sees) and spawns `repo_writer`.
       origin would have been skipped here; repos are the exception because the
       code moves.
 
-## 5. Ingest a YouTube URL — fail loudly
+## 5. Ingest a YouTube URL (fail loudly)
 
 ```
 /02-llm-wiki-ingest ingest https://www.youtube.com/watch?v=sJpop1juVBQ
@@ -87,8 +87,22 @@ sees) and spawns `repo_writer`.
 
 ## 6. Query across origins
 
+#### Question 1
+
 ```
 /02-llm-wiki-ingest how does the coding agent's loop actually work?
+```
+
+#### Question 2
+
+```
+/02-llm-wiki-ingest how does agentic graphrag work?
+```
+
+#### Question 3
+
+```
+/02-llm-wiki-ingest What are some essential context engineering techniques for coding agents?
 ```
 
 **Verify**
