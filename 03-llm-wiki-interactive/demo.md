@@ -3,12 +3,12 @@
 Run from this directory (`cd 03-llm-wiki-interactive && claude`). Paths are
 relative to it. You only type prompts.
 
-**Start point.** `examples/wiki-ai-engineering-before/` is layer 02's end state — 50
-notes, one repo, two articles: 53 source-like pages, 10 entities, 38 concepts —
-with nothing asked of it yet. Copy it:
+**Start point.** `examples/wiki-03-ai-engineering-before/` is layer 02's end state —
+10 notes, one repo, four articles: 15 source-like pages, 9 entities, 15 concepts —
+with nothing asked of it yet. Copy it under the name the steps below use:
 
 ```bash
-cp -r examples/wiki-03-ai-engineering-before .
+cp -r examples/wiki-03-ai-engineering-before wiki-ai-engineering
 ```
 
 The repo clone is not part of it (`raw/repos/` is gitignored, ~100 MB). The skill
@@ -51,7 +51,8 @@ clones it by itself the first time a question needs the code.
 
 - [ ] The answer says plainly that the wiki does not cover this, and says what it
       *does* have (a mechanism — the log — but no policy); `wiki/open-questions.md`
-      gained a dated entry, and no note was written.
+      gained a dated entry, and the saved note records that negative finding —
+      what the sources do instead of detecting staleness — citing only wiki pages.
 
 ## 4. A question that needs the code
 
@@ -89,7 +90,8 @@ routing, clones the repo, and spawns `repo_writer` in question mode.
 
 **Verify**
 
-- [ ] `open-questions.md` has a second entry, marked as flagged by you. Nothing
+- [ ] `open-questions.md` gained a new entry — this one flagged by you rather
+      than found while answering. Nothing
       resolves it automatically: the next ingest whose sources appear to address
       it says so in its report, and a human decides.
 
@@ -110,5 +112,5 @@ in Obsidian.
 ## If you want to start over
 
 ```bash
-rm -rf wiki-ai-engineering && cp -r examples/wiki-ai-engineering .
+rm -rf wiki-ai-engineering && cp -r examples/wiki-03-ai-engineering-before wiki-ai-engineering
 ```

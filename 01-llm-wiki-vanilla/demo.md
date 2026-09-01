@@ -3,7 +3,7 @@
 Run from this directory (`cd 01-llm-wiki-vanilla && claude`). Paths are relative
 to it. You only type prompts — the skill runs every script itself.
 
-`examples/wiki-ai-engineering/` is a committed run of these steps, so you can read
+`examples/wiki-01-ai-engineering/` is a committed run of these steps, so you can read
 the output before producing your own.
 
 ---
@@ -61,18 +61,3 @@ Open `wiki-ai-engineering/` as a vault.
       list; they fill themselves in as you ingest more.
 - [ ] Open `raw/the-future-of-mcp-….md`: the image renders, because `raw/assets/`
       travelled with the note.
-
----
-
-## If you want to start over
-
-```bash
-rm -rf wiki-ai-engineering
-```
-
-Nothing else in the layer holds state.
-
-Curious about the cap? `ingest ../data_input_examples/notes/03-hard/` and the
-skill refuses: 40 new notes against a ceiling of 10, nothing written. This layer
-reads every note into one context, and one context is a hard ceiling — layer 02
-exists to remove it.

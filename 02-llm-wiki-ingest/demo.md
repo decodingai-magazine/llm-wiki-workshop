@@ -8,10 +8,10 @@ article URLs come from `../data_input_examples/github_repositories.md` and
 `../data_input_examples/substack_articles.md` — swap them there and every step
 below follows.
 
-`examples/wiki-ai-engineering/` is where this demo ends up **including step 7**:
-50 notes, the repo and both articles. (Its `log.md` shows the notes arriving in
-three batches rather than two — it was grown from layer 01's run — but the pages
-are what these steps produce.)
+`examples/wiki-02-ai-engineering/` is where this demo ends up **through step 3**:
+the 10 notes, the repo and all four articles. (Its `log.md` shows the articles
+arriving before the repo — the order changes nothing — and step 7 is not
+included; the pages are what these steps produce.)
 
 ---
 
@@ -81,7 +81,7 @@ sees) and spawns `repo_writer`.
 **Verify**
 
 - [ ] The skill reports that the adapter is not implemented, and **nothing was
-      written** — no raw file, no page, no log entry. Wiring it up is the exercise
+      ingested** — no raw file, no page. Wiring it up is the exercise
       in `SOURCES.md § How to add a source`; the hard part is not the transcript,
       it is choosing the raw path. (Hint: the video id, never the title.)
 
