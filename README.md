@@ -32,7 +32,13 @@ idea to the previous one: vanilla, scale ingestion and make it interactive to le
 
 ## Slides & video
 
-🎬 Video and 📑 slides — *coming soon*.
+📑 The presentation is available [here](https://canva.link/1k5z1bkoxq1pkhd) ↓
+
+<a href="https://canva.link/1k5z1bkoxq1pkhd" target="_blank">
+  <img src="assets/presentation_thumbnail.png" alt="LLM Wikis From First Principles — the workshop presentation" width="600"/>
+</a>
+
+🎬 Video — *coming soon*.
 
 <!-- When the recording is live, replace the line above with the clickable thumbnail:
 
@@ -41,8 +47,6 @@ idea to the previous one: vanilla, scale ingestion and make it interactive to le
 <a href="https://www.youtube.com/watch?v=VIDEO_ID">
   <img src="https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg" alt="Watch the workshop" style="width:100%; max-width:600px;">
 </a>
-
-📑 Slides [here](SLIDES_URL).
 -->
 
 ## How to use this repo
@@ -433,6 +437,16 @@ pages too, and they correctly connect to almost nothing.
 5. **Regimes, not permissions.** Reading a source can never change what the wiki
    says that source means — otherwise the same question asked twice leaves two
    different wikis behind.
+
+## Resources
+
+| Resource | What it is |
+|---|---|
+| [Introducing the Open Knowledge Format](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) | Google Cloud's introduction to OKF and why a shared shape for knowledge bundles matters. |
+| [Open Knowledge Format (OKF) spec](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md) | The spec the `wiki/` bundle aligns with: markdown + frontmatter, path is identity, the index is a rebuildable cache. `CONVENTIONS.md` §10 lists what we honour and where we diverge. |
+| [Andrej Karpathy's `llm-wiki` gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | The idea file this pattern traces back to: an LLM that incrementally builds and maintains a persistent wiki, instead of re-deriving answers from raw documents on every query. |
+| [Turn 10,994 Notes Into Memory](https://www.decodingai.com/p/llm-wiki-agent-memory) · [video](https://www.youtube.com/watch?v=ZRM_TfEZcIo) | The Decoding AI lesson behind this workshop — an LLM wiki as agent memory, run against a real 10,994-note corpus. |
+| [LangChain's OpenWiki](https://github.com/langchain-ai/openwiki) | A CLI that writes and maintains agent documentation for your codebase — the same pattern, pointed at code. |
 
 ## Layout
 
