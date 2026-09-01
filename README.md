@@ -6,8 +6,8 @@ idea to the previous one: vanilla, scale ingestion and make it interactive to le
 
 <p>
   <img src="https://img.shields.io/badge/type-open--source_workshop-8a2be2" alt="Open-source workshop">
-  <img src="https://img.shields.io/badge/layers-3-4c8eda" alt="3 layers">
-  <img src="https://img.shields.io/badge/notes_to_ingest-50-2ea44f" alt="50 notes to ingest">
+  <img src="https://img.shields.io/badge/layers-3-4c8eda" alt="3 exercises">
+  <img src="https://img.shields.io/badge/ingests-notes_%2F_repos_%2F_articles-2ea44f" alt="Ingests notes, repos and articles">
   <img src="https://img.shields.io/badge/runs_on-any_agent_harness-orange" alt="Runs on any agent harness">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT license">
 </p>
@@ -499,11 +499,11 @@ navigates natively, `git` is the audit log, and dedup is an `ls`. See
 If this workshop was useful, consider starring the repository so others can find
 it too.
 
----
-
 ## License
 
 MIT — see [LICENSE](LICENSE). Take the contracts, the scripts and the page
 templates and point them at your own notes.
+
+---
 
 Built by [Decoding AI](https://www.decodingai.com).
