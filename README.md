@@ -4,19 +4,42 @@
 you use it.** Three layers, each a complete working system, each adding exactly one
 idea to the previous one.
 
-```
-raw/note.md ──► wiki/sources/note.md ──► ≥2 mentions ──► wiki/concepts/mcp.md
-                                                     ↘   wiki/overview.md
-                                                     ↘   wiki/index.md   (generated)
-                                                     ↘   log.md          (append-only)
-```
+<img src="assets/llm_wiki_architecture.png" alt="LLM wiki architecture: notes, repos, articles and videos are ingested into an immutable raw/ layer, transformed into wiki/, and queried by an agent" width="800"/>
 
 ## Slides & video
 
-| | |
-|---|---|
-| 📺 **Video** — the workshop, end to end | *to be added* |
-| 🖼 **Slides** | *to be added* |
+🎬 Video and 📑 slides — *coming soon*.
+
+<!-- When the recording is live, replace the line above with the clickable thumbnail:
+
+🎬 Full workshop available on [YouTube](https://www.youtube.com/watch?v=VIDEO_ID) ↓
+
+<a href="https://www.youtube.com/watch?v=VIDEO_ID">
+  <img src="https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg" alt="Watch the workshop" style="width:100%; max-width:600px;">
+</a>
+
+📑 Slides [here](SLIDES_URL).
+-->
+
+## How to use this repo
+
+Three ways in. Pick the one that fits the time you have — or do all three in
+order, since each builds on the last:
+
+1. **Read a finished wiki. ~15 min, nothing to install.** Open a committed
+   reference run —
+   [`01-llm-wiki-vanilla/examples/wiki-01-ai-engineering/`](01-llm-wiki-vanilla/examples/wiki-01-ai-engineering/)
+   is the smallest — ideally as an Obsidian vault. You'll see the two halves
+   (`raw/` vs `wiki/`), every claim carrying its citation, and what the ≥2
+   threshold chose to write, before running anything yourself.
+2. **Run one layer's demo. ~30 min.** Install the
+   [prerequisites](#prerequisites), `cd 01-llm-wiki-vanilla`, open your harness,
+   and type the prompts in [`demo.md`](01-llm-wiki-vanilla/demo.md). Every
+   prompt comes with one thing to verify.
+3. **Work through all three layers. ~2–3 h.** Layers 01 and 02 start from
+   nothing; layer 03 starts from a committed copy of layer 02's end state. Read
+   each layer's `CHANGES-FROM-PREVIOUS.md` first to see exactly which files the
+   new idea touched — that diff is the lesson.
 
 ## What an "LLM wiki" is
 
@@ -34,8 +57,84 @@ One note mentioning something is a fact about the note. Two notes mentioning it 
 a fact about your knowledge. That single threshold is what stops the wiki filling
 with stubs — and watching it fire is the most useful five minutes of the workshop.
 
+<img src="assets/one_ingested_item.png" alt="What happens to one ingested item: copied to raw/, distilled into a source page with key insights, entities and concepts — and when a concept reaches ≥2 sources, a synthesized concept page materializes" width="800"/>
+
 The navigation (`index.md` files) is a **derived cache**: delete it, re-run one
 script, get identical bytes back. Nothing has to be kept in sync by hand.
+
+<img src="assets/how_the_index_works.png" alt="How the index works: source, concept and entity pages feed per-directory index files, which feed the root index.md, the overview and the log" width="800"/>
+
+<table>
+<tr>
+<td align="center"><img src="assets/obsidian_graph_02_llm_wiki_ingest_master_index.png" alt="Obsidian graph with the root index.md highlighted, linking out to each section index"/></td>
+<td align="center"><img src="assets/obsidian_graph_02_llm_wiki_ingest_concepts_index.png" alt="Obsidian graph with concepts/index.md highlighted, linking out to every concept page"/></td>
+</tr>
+<tr>
+<td align="center"><em>The master <code>index.md</code> — one hop to every section</em></td>
+<td align="center"><em><code>concepts/index.md</code> — one hop to every concept page</em></td>
+</tr>
+</table>
+
+This is what one looks like as an Obsidian graph — and what it grows into:
+
+<table>
+<tr>
+<td align="center"><img src="assets/obsidian_graph_02_llm_wiki_ingest.png" alt="Obsidian graph of layer 02's reference run: colored concept and entity hubs surrounded by source pages and hollow nodes waiting for a second mention"/></td>
+<td align="center"><img src="assets/obsidian_graph_book.png" alt="Obsidian graph of a mature LLM wiki built from a real corpus: a dense, connected knowledge graph"/></td>
+</tr>
+<tr>
+<td align="center"><em>Layer 02's reference run — 14 sources, 17 nodes</em></td>
+<td align="center"><em>The same system after months on a real corpus — 135 sources, 120 nodes</em></td>
+</tr>
+</table>
+
+<details>
+<summary><strong>What a page actually looks like</strong> — a real concept page from the layer 01 reference run (click to expand)</summary>
+
+<br/>
+
+Three sources engaged with CLIs, so [`wiki/concepts/cli.md`](01-llm-wiki-vanilla/examples/wiki-01-ai-engineering/wiki/concepts/cli.md)
+exists. Frontmatter is the contract; every claim in the body cites the source
+page that backs it; the LLM's own judgment is fenced off as `> Synthesis:`.
+
+```markdown
+---
+type: concept
+title: CLI (as a connectivity layer)
+description: Command-line tools as an agent connectivity layer — fast to adopt
+  in sandboxed, local-execution contexts, but hard to govern once distributed.
+sources:
+  - "[[wiki/sources/the-future-of-mcp-vs-skills]]"
+  - "[[wiki/sources/the-future-of-mcp-why-the-future-of-agents-is-mcp-skills]]"
+  - "[[wiki/sources/why-mcp-is-not-dead]]"
+related:
+  - "[[wiki/concepts/agent-connectivity]]"
+  - "[[wiki/entities/mcp]]"
+created: 2026-08-29T15:32:43Z
+timestamp: 2026-08-29T15:32:43Z
+source_count: 3
+---
+
+# CLI (as a connectivity layer)
+
+> The connectivity layer every source treats as the easy, ungoverned default —
+> great alone, until governance or multi-user distribution enters the picture.
+
+## Key claims
+
+- CLIs are popular with local coding agents because they're easy to compose in
+  a shell and automatically discoverable by a model, and they benefit from
+  being well-represented in LLM training data (e.g., git, GitHub CLIs).
+  [[wiki/sources/the-future-of-mcp-vs-skills]]
+- CLIs work well for personal setups but don't scale to business distribution:
+  installing a CLI on every customer's machine, with no governance model, is a
+  non-starter. [[wiki/sources/why-mcp-is-not-dead]]
+
+> Synthesis: The layer every source treats as the easy default — the ceiling it
+> hits (governance, distribution) is exactly the floor MCP is argued to start from.
+```
+
+</details>
 
 ## The three layers
 
@@ -55,25 +154,54 @@ Layer 01's cap is not a safety rail — it is the honest ceiling of doing everyt
 one context; feed it the 50-note batch and it refuses. Removing the cause rather than
 raising the number is how layer 02 earns its complexity.
 
+## 📬 Learn more on LLM Wikis and agent memory
+
+> Join 40k+ engineers reading [the Decoding AI Magazine](https://www.decodingai.com/) and watching [the Decoding AI YouTube channel](https://www.youtube.com/@itsdecodingai) to learn to design LLM wikis and advanced agent-memory techniques.
+
+<a href="https://www.decodingai.com/" target="_blank">
+  <img src="assets/decodingai.jpg" alt="Decoding AI Magazine" width="100%"/>
+</a>
+
 ## Prerequisites
 
 This is the only place they are listed. Install these once and every skill in every
 layer works out of the box — the skills run the scripts, clone the repos and fetch
 the articles themselves. You only ever type prompts.
 
-- **An agent harness** that can load a skill, read and write files, and run shell
-  commands. Claude Code is the reference: run `claude` inside a layer directory and
-  it finds the skill through `.claude/skills`. Anything equivalent works — nothing
-  here pins a model or a tool name. Layers 02–03 also want a way to spawn
-  subagents; if yours cannot, run the `agents/*.md` files as sequential prompts.
-- **Python ≥3.12** and [`uv`](https://docs.astral.sh/uv/). The scripts are PEP 723
-  single files; `uv` installs their dependencies the first time a skill runs one —
-  no virtualenv, no install step.
-- **`git` and `curl`**, for the repo and article adapters in layers 02–03. No
+| Requirement | Check | Install |
+|---|---|---|
+| An agent harness (Claude Code is the reference) | `claude --version` | [claude.com/claude-code](https://claude.com/claude-code) |
+| Python ≥3.12 | `python3 --version` | `uv python install 3.12` or [python.org](https://www.python.org/downloads/) |
+| [`uv`](https://docs.astral.sh/uv/) | `uv --version` | `curl -LsSf https://astral.sh/uv/install.sh \| sh` ([docs](https://docs.astral.sh/uv/getting-started/installation/)) |
+| `git` + `curl` | `git --version`, `curl --version` | pre-installed on macOS/Linux |
+| Obsidian (optional, recommended) | — | [obsidian.md](https://obsidian.md) |
+
+What each is for:
+
+- **The harness** must load a skill, read and write files, and run shell commands.
+  Run `claude` inside a layer directory and it finds the skill through
+  `.claude/skills`; anything equivalent works — nothing here pins a model or a
+  tool name. Layers 02–03 also want a way to spawn subagents; if yours cannot,
+  run the `agents/*.md` files as sequential prompts.
+- **`uv`** is why there is no install step: the scripts are PEP 723 single files,
+  and `uv` installs their dependencies the first time a skill runs one — no
+  virtualenv.
+- **`git` and `curl`** feed the repo and article adapters in layers 02–03. No
   GitHub token: the demo repo is public and cloned shallow.
-- **Obsidian**, optional but recommended — it is how you check your work. Open a
-  layer's `wiki-ai-engineering/` as a vault and the graph view shows the wiki's
-  shape, including the hollow nodes that mark ideas waiting for a second source.
+- **Obsidian** is how you check your work. Open a layer's `wiki-ai-engineering/`
+  as a vault and the graph view shows the wiki's shape, including the hollow
+  nodes that mark ideas waiting for a second source.
+
+**Verify the setup** — from the repo root, run one of the workshop's scripts
+against a committed reference run:
+
+```bash
+uv run --script 01-llm-wiki-vanilla/.agents/skills/01-llm-wiki-vanilla/scripts/count_mentions.py \
+  --wiki-dir 01-llm-wiki-vanilla/examples/wiki-01-ai-engineering
+```
+
+If it prints a mention table (12 slugs, 9 qualifying), `uv` and Python are wired
+and every layer's scripts will run.
 
 ## How to run it
 
@@ -144,6 +272,8 @@ because one context has to hold all of them.
 `raw/` only if a page genuinely fails. Every claim carries a wikilink; the only
 file that changes is `log.md`. If the wiki does not know, it says so.
 
+<img src="assets/progressive_disclosure_query.png" alt="Querying via progressive disclosure: the agent walks index.md, then a section index, then concept/entity pages, then source pages, and reaches raw/ only as a last resort" width="800"/>
+
 **Run it** — [`01-llm-wiki-vanilla/demo.md`](01-llm-wiki-vanilla/demo.md): ingest
 the 5 easy notes, ask one question, look at the graph.
 
@@ -161,15 +291,7 @@ same list drawn as a graph.
 
 **Goal: remove the ceiling, and let anything with a URI become a source.**
 
-```
-                    ┌── source_writer ── wiki/sources/a.md ──┐
-raw artifacts ──────┼── source_writer ── wiki/sources/b.md ──┼── receipts ──► orchestrator
-                    └── repo_writer ──── wiki/repos/…/ARCHITECTURE.md ─┘          │
-                                                                                  ▼
-                                                         count_mentions → page_writer × N
-                                                                        → overview_writer
-                                                                        → build_index_md
-```
+<img src="assets/fan_out_parallelism.png" alt="Fan-out parallelism: each URI is fetched into raw/, read by its own source writer, aggregated by page writers, then the overview writer — the orchestrator only ever sees receipts" width="800"/>
 
 **Ingest changes who reads.** Every page is written by a subagent defined as plain
 markdown in `agents/`: `source_writer` reads one raw file — the only agent allowed
@@ -186,6 +308,8 @@ SHA-pinned permalinks) ship; YouTube is a skeleton that fails loudly, and wiring
 up is the exercise. Repos are the one origin that **refreshes** instead of skipping,
 because the code moves. A repo page is source-like: a codebase and a note are two
 independent witnesses, so together they can materialize a concept.
+
+<img src="assets/source_adapter_interface.png" alt="The adapter interface: every origin — local files, articles, repos, videos, threads — maps a URI through its own script to one raw artifact plus one receipt with the same fields" width="800"/>
 
 **Query** is unchanged, except that code questions start at `ARCHITECTURE.md` — it
 exists so nobody has to read the clone.
@@ -210,14 +334,7 @@ pages the noisy notes produce. Noise is cheap; the threshold made it so.
 
 **Goal: make interaction a second way for the graph to grow.**
 
-```
-question ──► answer from wiki pages ──┬─► wiki/questions/<date>-<slug>.md   (always)
-                                      ├─► wiki/notes/<slug>.md             (if ≥2 pages cited)
-                                      ├─► wiki/open-questions.md           (if it can't answer)
-                                      └─► wiki/repos/<repo>/<slug>.md      (if it needs the code)
-                                                    │
-                                                    └─► the ingest tail runs ─► concept pages grow
-```
+<img src="assets/interactive_llm_wiki_workflow.png" alt="The interactive workflow: every question leaves a question page; answers that earn it become notes; unanswerable questions land in open-questions.md; code questions produce a repo note that re-enters through ingest" width="800"/>
 
 **Ingest is unchanged.** **Query now writes back**, under three write regimes:
 ingest-owned pages (`raw/`, `sources/`, `entities/`, `concepts/`, `overview.md`,
@@ -255,6 +372,14 @@ question → repo note → recount → updated page; and `git status` on the ing
 pages: the only ones that changed are the ones the tail touched.
 
 ---
+
+## 📬 Learn more on LLM Wikis and agent memory
+
+> Join 40k+ engineers reading [the Decoding AI Magazine](https://www.decodingai.com/) and watching [the Decoding AI YouTube channel](https://www.youtube.com/@itsdecodingai) to learn to design LLM wikis and advanced agent-memory techniques.
+
+<a href="https://www.decodingai.com/" target="_blank">
+  <img src="assets/decodingai.jpg" alt="Decoding AI Magazine" width="100%"/>
+</a>
 
 ## What the reference runs actually contain
 
@@ -295,5 +420,9 @@ This is the only README. Each layer's `demo.md` is its walkthrough. Live runs
 
 ---
 
-Built by [Decoding AI](https://www.decodingai.com). MIT licensed — take the
-contracts, the scripts and the page templates and point them at your own notes.
+## License
+
+MIT — see [LICENSE](LICENSE). Take the contracts, the scripts and the page
+templates and point them at your own notes.
+
+Built by [Decoding AI](https://www.decodingai.com).
