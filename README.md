@@ -4,7 +4,31 @@
 you use it.** Three layers, each a complete working system, each adding exactly one
 idea to the previous one.
 
+<p>
+  <img src="https://img.shields.io/badge/type-open--source_workshop-8a2be2" alt="Open-source workshop">
+  <img src="https://img.shields.io/badge/layers-3-4c8eda" alt="3 layers">
+  <img src="https://img.shields.io/badge/notes_to_ingest-50-2ea44f" alt="50 notes to ingest">
+  <img src="https://img.shields.io/badge/runs_on-any_agent_harness-orange" alt="Runs on any agent harness">
+  <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT license">
+</p>
+
 <img src="assets/llm_wiki_architecture.png" alt="LLM wiki architecture: notes, repos, articles and videos are ingested into an immutable raw/ layer, transformed into wiki/, and queried by an agent" width="800"/>
+
+> **Try it first — 5 minutes:**
+>
+> ```bash
+> git clone https://github.com/decodingai-magazine/llm-wiki-workshop.git
+> cd llm-wiki-workshop/01-llm-wiki-vanilla
+> claude          # or your harness
+> ```
+>
+> Then type one prompt and watch a wiki appear:
+>
+> ```
+> /01-llm-wiki-vanilla ingest ../data_input_examples/notes/01-easy/
+> ```
+>
+> [Prerequisites](#prerequisites) · [full walkthrough](01-llm-wiki-vanilla/demo.md)
 
 ## Slides & video
 
@@ -167,6 +191,13 @@ raising the number is how layer 02 earns its complexity.
 This is the only place they are listed. Install these once and every skill in every
 layer works out of the box — the skills run the scripts, clone the repos and fetch
 the articles themselves. You only ever type prompts.
+
+| | |
+|---|---|
+| **Skills** | Comfortable in a terminal. No coding required — you only type prompts. |
+| **Level** | Anyone who has used an AI coding assistant; the layers teach the rest. |
+| **Time** | ~30 min per layer, ~2–3 h for all three. |
+| **Cost** | $0 beyond your harness's LLM usage — no API keys, no accounts. The optional 50-note ingest closing layer 02 is the only token-heavy step. |
 
 | Requirement | Check | Install |
 |---|---|---|
@@ -417,6 +448,56 @@ llm-wiki-workshop/
 This is the only README. Each layer's `demo.md` is its walkthrough. Live runs
 (`<layer>/wiki-*/`) and repo clones are gitignored; the committed runs under
 `examples/` are the ones to read.
+
+## Questions and troubleshooting
+
+Open a [GitHub issue](https://github.com/decodingai-magazine/llm-wiki-workshop/issues)
+for setup trouble, questions about the contracts, or anything a demo step doesn't
+explain.
+
+## FAQ
+
+**Do I need Claude Code?**
+No. Any harness that can load a skill, read and write files, and run shell
+commands works — nothing pins a model or a tool name. Layers 02–03 also want
+subagents; without them, run the `agents/*.md` files as sequential prompts.
+
+**Can I point it at my own notes?**
+Yes — that is the point. Pass any directory of markdown to an ingest prompt, and
+swap the URLs in `data_input_examples/*.md` for your own articles and repos. The
+fixture exists only so every reader can reproduce the same wiki.
+
+**Is Obsidian required?**
+No — it is the inspection tool, not a dependency. Everything is plain markdown;
+Obsidian's graph view just makes the threshold visible (hollow nodes are ideas
+waiting for a second source).
+
+**Why markdown files instead of a database?**
+Because the wiki's reader is an LLM: markdown with frontmatter is what a model
+navigates natively, `git` is the audit log, and dedup is an `ls`. See
+[the five ideas](#the-five-ideas-in-order-of-how-much-theyll-change-your-systems).
+
+## 👨‍🏫 Author
+
+<table style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td width="15%" align="center" style="border: none;">
+      <a href="https://www.pauliusztin.ai/" target="_blank">
+        <img src="https://github.com/iusztinpaul.png" width="100" style="border-radius: 50%;" alt="Paul Iusztin"/>
+      </a>
+      <br/>
+      <b>Paul Iusztin</b>
+    </td>
+    <td width="85%" style="border: none;">
+      Senior AI Engineer, Educator & Founder of Decoding AI. Author of the best-selling <a href="https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072">LLM Engineer's Handbook</a>.
+    </td>
+  </tr>
+</table>
+
+## ⭐ One more thing
+
+If this workshop was useful, consider starring the repository so others can find
+it too.
 
 ---
 
