@@ -1,8 +1,8 @@
-# The LLM Wiki Workshop
+# LLM Wikis From First Principles - Workshop
 
-**Build a wiki that an LLM writes, an LLM reads, and that gets better every time
-you use it.** Three layers, each a complete working system, each adding exactly one
-idea to the previous one.
+**Build an LLM wiki that an agent writes, an agent reads, and that gets better every time
+you use it.** Three exercises, each a complete working system, each adding exactly one
+idea to the previous one: vanilla, scale ingestion and make it interactive to learn from every query.
 
 <p>
   <img src="https://img.shields.io/badge/type-open--source_workshop-8a2be2" alt="Open-source workshop">
