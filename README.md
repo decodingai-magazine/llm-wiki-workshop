@@ -193,7 +193,7 @@ Each exercise builds on the previous one. You can do them independently as well.
 
 ## 📬 Learn more on LLM Wikis and agent memory
 
-> Join 40k+ engineers reading [the Decoding AI Magazine](https://www.decodingai.com/) and watching [the Decoding AI YouTube channel](https://www.youtube.com/@itsdecodingai) to learn to design LLM wikis and advanced agent-memory techniques.
+> Join 44k+ engineers reading [the Decoding AI Magazine](https://www.decodingai.com/) and watching [the Decoding AI YouTube channel](https://www.youtube.com/@itsdecodingai) to learn to design LLM wikis and advanced agent-memory techniques.
 
 <a href="https://www.decodingai.com/" target="_blank">
   <img src="assets/decodingai.jpg" alt="Decoding AI Magazine" width="100%"/>
@@ -322,7 +322,7 @@ cp -r examples/wiki-03-ai-engineering-before wiki-ai-engineering
 
 ## 📬 Learn more on LLM Wikis and agent memory
 
-> Join 40k+ engineers reading [the Decoding AI Magazine](https://www.decodingai.com/) and watching [the Decoding AI YouTube channel](https://www.youtube.com/@itsdecodingai) to learn to design LLM wikis and advanced agent-memory techniques.
+> Join 44k+ engineers reading [the Decoding AI Magazine](https://www.decodingai.com/) and watching [the Decoding AI YouTube channel](https://www.youtube.com/@itsdecodingai) to learn to design LLM wikis and advanced agent-memory techniques.
 
 <a href="https://www.decodingai.com/" target="_blank">
   <img src="assets/decodingai.jpg" alt="Decoding AI Magazine" width="100%"/>
@@ -336,6 +336,7 @@ cp -r examples/wiki-03-ai-engineering-before wiki-ai-engineering
 | [Open Knowledge Format (OKF) spec](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md) | The spec the `wiki/` bundle aligns with: markdown + frontmatter, path is identity, the index is a rebuildable cache. `CONVENTIONS.md` §10 lists what we honour and where we diverge. |
 | [Andrej Karpathy's `llm-wiki` gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | The idea file this pattern traces back to: an LLM that incrementally builds and maintains a persistent wiki, instead of re-deriving answers from raw documents on every query. |
 | [Turn 10,994 Notes Into Memory](https://www.decodingai.com/p/llm-wiki-agent-memory) · [video](https://www.youtube.com/watch?v=ZRM_TfEZcIo) | The Decoding AI lesson behind this workshop — an LLM wiki as agent memory, run against a real 10,994-note corpus. |
+| [Engineering Your Own AI Assistant - Paul Iusztin](https://www.youtube.com/watch?v=TDP3tIKxqlc) | Podcast between Paul Iusztin and Alexey Grigorev. |
 | [LangChain's OpenWiki](https://github.com/langchain-ai/openwiki) | A CLI that writes and maintains agent documentation for your codebase — the same pattern, pointed at code. |
 
 ## Questions and troubleshooting
