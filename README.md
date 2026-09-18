@@ -39,16 +39,11 @@ idea to the previous one: the vanilla mechanic, ingestion at scale, and interact
   <img src="assets/presentation_thumbnail.png" alt="LLM Wikis From First Principles — the workshop presentation" width="600"/>
 </a>
 
-🎬 Video — *coming soon*.
+🎬 Full workshop available on [YouTube](https://www.youtube.com/watch?v=f5xRFWRdyKA) ↓
 
-<!-- When the recording is live, replace the line above with the clickable thumbnail:
-
-🎬 Full workshop available on [YouTube](https://www.youtube.com/watch?v=VIDEO_ID) ↓
-
-<a href="https://www.youtube.com/watch?v=VIDEO_ID">
-  <img src="https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg" alt="Watch the workshop" style="width:100%; max-width:600px;">
+<a href="https://www.youtube.com/watch?v=f5xRFWRdyKA">
+  <img src="https://img.youtube.com/vi/f5xRFWRdyKA/maxresdefault.jpg" alt="Watch the workshop" style="width:100%; max-width:600px;">
 </a>
--->
 
 ## How to use this repo
 
